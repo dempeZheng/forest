@@ -19,35 +19,25 @@ import java.nio.ByteOrder;
  * To change this template use File | Settings | File Templates.
  */
 public class YYEncoder extends MessageToByteEncoder<Packet> {
+
     private static final Logger log = LoggerFactory.getLogger(YYEncoder.class);
-    private ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
 
-    public void setByteOrder(ByteOrder byteOrder) {
-        this.byteOrder = byteOrder;
-    }
-
-    public ByteOrder getByteOrder() {
-        return this.byteOrder;
-    }
-
-    protected void encode(ChannelHandlerContext ctx, Packet pk, ByteBuf outBuf)
-            throws Exception {
+    protected void encode(ChannelHandlerContext ctx, Packet pk, ByteBuf outBuf) {
         try {
             pk.marshal();
             ByteBuffer data = pk.getPack().getBuffer();
-            outBuf = outBuf.order(byteOrder);// 字节序转成YY协议的低端字节
+            outBuf = outBuf.order(ByteOrder.LITTLE_ENDIAN);// 字节序转成YY协议的低端字节
             outBuf.writeBytes(getOutBytes(data));
         } catch (Throwable e) {
-            log.error("throwable: " + e.getMessage(), e);
+            log.error(e.getMessage(), e);
             throw new EncoderException(e);
         }
 
     }
 
     protected byte[] getOutBytes(ByteBuffer data) {
-        ByteBuffer out = ByteBuffer
-                .allocate(data.limit() - data.position() + 4);
-        out.order(getByteOrder());
+        ByteBuffer out = ByteBuffer.allocate(data.limit() - data.position() + 4);
+        out.order(ByteOrder.LITTLE_ENDIAN);
         int len = data.limit() - data.position() + 4;
         // 长度包含包长度int 4个字节
         out.putInt(len);
