@@ -2,9 +2,10 @@ package com.yy.ent.srv.method;
 
 import com.yy.ent.srv.protocol.YYProto;
 import com.yy.ent.srv.util.Validate;
-import org.jboss.netty.channel.Channel;
+import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 
 /**

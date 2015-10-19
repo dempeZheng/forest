@@ -1,5 +1,6 @@
 package com.yy.ent.srv;
 
+import com.yy.ent.srv.codec.YYDecoder;
 import com.yy.ent.srv.codec.YYEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * Time: 16:41
  * To change this template use File | Settings | File Templates.
  */
-public class YYServer implements Server {
+public class YYServer {
 
     private static final Logger log = LoggerFactory.getLogger(YYServer.class);
 
@@ -41,16 +42,13 @@ public class YYServer implements Server {
         init();
     }
 
-    public void start() {
+    public void start(int port) {
         try {
-            // Start the server.
-            ChannelFuture f = b.bind(8888).sync();
-            // Wait until the server socket is closed.
+            ChannelFuture f = b.bind(port).sync();
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            log.info("server start");
+            log.info("server start:" + port);
         } finally {
-            // Shut down all event loops to terminate all threads.
             stop();
         }
     }
@@ -69,7 +67,7 @@ public class YYServer implements Server {
                     @Override
                     protected void initChannel(SocketChannel ch)
                             throws Exception {
-                        ch.pipeline().addLast(executorGroup, "decode", new YYEncoder());
+                        ch.pipeline().addLast(executorGroup, "decode", new YYDecoder());
                         ch.pipeline().addLast("encode", new YYEncoder());
                     }
                 });
