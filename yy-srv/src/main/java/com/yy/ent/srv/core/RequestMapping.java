@@ -19,11 +19,11 @@ public class RequestMapping {
     /**
      * 扫描packet下面所有的映射，初始化mapping
      */
-    public void initMapping(){
+    public void initMapping() {
 
     }
 
-    public ActionMethod tack(String uri){
+    public ActionMethod tack(String uri) {
         return mapping.get(uri);
     }
 

@@ -1,4 +1,4 @@
-package com.yy.ent.srv.core;
+package com.yy.ent.protocol;
 
 /**
  * Created with IntelliJ IDEA.

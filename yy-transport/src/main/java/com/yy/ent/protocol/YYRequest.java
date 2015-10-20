@@ -1,20 +1,47 @@
 package com.yy.ent.protocol;
 
+
+import com.yy.ent.codec.Packet;
+
 /**
  * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2015/10/19
- * Time: 16:22
+ * User: zhengdaxia
+ * Date: 15/10/17
+ * Time: 上午10:24
  * To change this template use File | Settings | File Templates.
  */
-public class YYRequest implements YYProto {
-    @Override
-    public long getUri() {
-        return 0;
+public class YYRequest implements Packet {
+
+    private Header header;
+
+    private Body body;
+
+    public YYRequest(Header header, Body body) {
+
+        this.header = header;
+        this.body = body;
+    }
+
+
+    public String uri() {
+        return header.getUri();
     }
 
     @Override
-    public int getCode() {
-        return 0;
+    public void marshall() {
+
+    }
+
+    @Override
+    public void unMarshall() {
+
+    }
+
+    public Long getRequestId() {
+        return header.getId();
+    }
+
+    public void setRequestId(Long id) {
+        header.setId(id);
     }
 }

@@ -1,6 +1,6 @@
 package com.yy.ent.srv;
 
-import com.yy.ent.srv.core.YYRequest;
+import com.yy.ent.protocol.Request;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class ServerContext {
         return ((Class) params[0]);
     }
 
-    public void doFilter(YYRequest request,
+    public void doFilter(Request request,
                          ChannelHandlerContext response) {
         localContext.set(new Context(request, response));
     }
@@ -36,11 +36,11 @@ public class ServerContext {
         localContext.remove();
     }
 
-    public YYRequest getRequest() {
+    public Request getRequest() {
         return getContext().getRequest();
     }
 
-    public void setRequest(YYRequest request) {
+    public void setRequest(Request request) {
         ChannelHandlerContext response = getContext().getResponse();
         localContext.set(new Context(request, response));
     }
@@ -61,16 +61,16 @@ public class ServerContext {
 
     static class Context {
 
-        final YYRequest request;
+        final Request request;
 
         final ChannelHandlerContext response;
 
-        Context(YYRequest request, ChannelHandlerContext response) {
+        Context(Request request, ChannelHandlerContext response) {
             this.request = request;
             this.response = response;
         }
 
-        YYRequest getRequest() {
+        Request getRequest() {
             return request;
         }
 

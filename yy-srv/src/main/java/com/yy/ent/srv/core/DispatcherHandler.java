@@ -13,7 +13,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class DispatcherHandler extends SimpleChannelInboundHandler {
 
 
-
     private ServerContext context = new ServerContext();
 
     @Override

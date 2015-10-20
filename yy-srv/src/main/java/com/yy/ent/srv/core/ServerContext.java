@@ -11,10 +11,9 @@ public class ServerContext {
 
     private RequestMapping mapping = new RequestMapping();
 
-    public ServerContext(){
+    public ServerContext() {
 
     }
-
 
 
 }

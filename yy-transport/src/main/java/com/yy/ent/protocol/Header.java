@@ -1,59 +1,34 @@
-/*
- * Copyright (c) 2011 duowan.com. 
- * All Rights Reserved.
- * This program is the confidential and proprietary information of 
- * duowan. ("Confidential Information").  You shall not disclose such
- * Confidential Information and shall use it only in accordance with
- * the terms of the license agreement you entered into with duowan.com.
- */
 package com.yy.ent.protocol;
 
 /**
- * @author hongyuan
+ * Created with IntelliJ IDEA.
+ * User: zhengdaxia
+ * Date: 15/10/17
+ * Time: 上午10:25
+ * To change this template use File | Settings | File Templates.
  */
-public class Header implements YYProto {
+public class Header {
 
-    public static final int DATA_LENGTH = 4;
+    /**
+     * 消息唯一id，用于异步消息返回信息的标识
+     */
+    private Long id;
 
-    public static final int URI_LENGTH = 4;
+    private String uri;
 
-    public static final int RES_CODE_LENGTH = 2;
-
-    public static final short DEFAULT_RES_CODE = 200;
-
-    public static final int HEADER_LENGTH = DATA_LENGTH + URI_LENGTH + RES_CODE_LENGTH;
-
-    private long size;
-
-    private long uri;
-
-    private int code;
-
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    public long getUri() {
+    public String getUri() {
         return uri;
     }
 
-    public void setUri(long uri) {
+    public void setUri(String uri) {
         this.uri = uri;
     }
 
-    public int getCode() {
-        return code;
+    public Long getId() {
+        return id;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String toString() {
-        return "Header [size=" + size + ", uri=" + uri + ", code=" + code + "]";
+    public void setId(Long id) {
+        this.id = id;
     }
 }
