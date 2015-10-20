@@ -1,0 +1,15 @@
+##yy-rpc
+###yy-srv模块
+>基于netty实现的业务框架
+###yy-transport
+>编解码框架
+###yy-router
+>服务代理模块，提供路由分发功能
+###yy-monitor
+>性能监控
+>报警
+###yy-analysis
+>接口统计分析
+>智能推荐
+###yy-client
+>基于netty实现和yy-srv的通讯组件
