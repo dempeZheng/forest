@@ -9,12 +9,12 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>yysrv-ioc</module>
-        <module>yysrv-router</module>
-        <module>yysrv-app</module>
-        <module>yysrv-client</module>
-        <module>yysrv-analysis</module>
-        <module>yysrv-transport</module>
+        <module>yy-ioc</module>
+        <module>yy-router</module>
+        <module>yy-srv</module>
+        <module>yy-client</module>
+        <module>yy-analysis</module>
+        <module>yy-transport</module>
     </modules>
 
     <properties>
