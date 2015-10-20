@@ -24,7 +24,9 @@ public class YYClientTest {
         for (int i = 0; i < 100; i++) {
             Request req = new Request();
             req.setId(10);
-            req.setParams(new HashMap<String, String>());
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("name", "demo");
+            req.setParams(params);
             req.setUri("/simpleAction/test");
             client.send(req.toJsonString());
             TimeUnit.SECONDS.sleep(1);

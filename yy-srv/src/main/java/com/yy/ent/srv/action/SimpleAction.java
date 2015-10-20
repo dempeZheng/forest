@@ -1,6 +1,7 @@
 package com.yy.ent.srv.action;
 
 import com.yy.ent.ioc.Action;
+import com.yy.ent.ioc.Param;
 import com.yy.ent.ioc.Path;
 
 /**
@@ -14,8 +15,8 @@ import com.yy.ent.ioc.Path;
 public class SimpleAction {
 
     @Path(value = "test")
-    public void test() {
-        System.out.println("----------------");
+    public void test(@Param String name) {
+        System.out.println("----------------" + name);
 
     }
 }
