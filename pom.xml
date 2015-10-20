@@ -6,7 +6,16 @@
 
     <groupId>com.yy.ent</groupId>
     <artifactId>yysrv</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>yysrv-ioc</module>
+        <module>yysrv-route</module>
+        <module>yysrv-app</module>
+        <module>yysrv-client</module>
+        <module>yysrv-analysis</module>
+        <module>yysrv-transport</module>
+    </modules>
 
     <properties>
         <java_source_version>1.6</java_source_version>
