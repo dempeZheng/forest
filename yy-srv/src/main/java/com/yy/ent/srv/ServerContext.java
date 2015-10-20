@@ -1,6 +1,6 @@
 package com.yy.ent.srv;
 
-import com.yy.ent.srv.protocol.YYRequest;
+import com.yy.ent.srv.core.YYRequest;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

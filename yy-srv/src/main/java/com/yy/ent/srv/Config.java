@@ -8,6 +8,7 @@ package com.yy.ent.srv;
  * To change this template use File | Settings | File Templates.
  */
 public class Config {
+
     private String serverIp;
 
     private int serverPort;

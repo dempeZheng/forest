@@ -1,6 +1,6 @@
 package com.yy.ent.srv.method;
 
-import com.yy.ent.srv.protocol.YYProto;
+import com.yy.ent.protocol.YYProto;
 import com.yy.ent.srv.util.Validate;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;

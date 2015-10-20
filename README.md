@@ -1,6 +1,7 @@
 ##yy-rpc
 ###yy-srv模块
 >基于netty实现的业务框架
+>2015-10-20:基于json协议实现mvc的服务框架
 ###yy-transport
 >编解码框架
 ###yy-router

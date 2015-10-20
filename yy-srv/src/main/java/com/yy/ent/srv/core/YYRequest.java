@@ -1,6 +1,7 @@
 package com.yy.ent.srv.core;
 
-import com.yy.ent.srv.codec.Packet;
+
+import com.yy.ent.codec.Packet;
 
 /**
  * Created with IntelliJ IDEA.
