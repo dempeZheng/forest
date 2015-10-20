@@ -1,10 +1,9 @@
 package com.yy.ent.srv;
 
+import com.yy.ent.srv.core.DispatcherHandler;
+import com.yy.ent.srv.core.ServerContext;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -36,6 +35,8 @@ public class YYServer {
     private ServerBootstrap b;
 
     private DefaultEventExecutorGroup executorGroup;
+
+    private ServerContext context = new ServerContext();
 
 
     public YYServer() {
@@ -69,8 +70,10 @@ public class YYServer {
                     @Override
                     protected void initChannel(SocketChannel ch)
                             throws Exception {
-                        ch.pipeline().addLast(new StringEncoder(CharsetUtil.UTF_8),
-                                new StringDecoder(CharsetUtil.UTF_8));
+                        ChannelPipeline channel = ch.pipeline();
+                        channel.addLast(new StringEncoder(CharsetUtil.UTF_8))
+                                .addLast(new StringDecoder(CharsetUtil.UTF_8))
+                                .addLast(new DispatcherHandler(context));
 
                     }
                 });

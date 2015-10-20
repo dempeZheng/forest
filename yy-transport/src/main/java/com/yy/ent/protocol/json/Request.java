@@ -1,5 +1,8 @@
 package com.yy.ent.protocol.json;
 
+
+import com.alibaba.fastjson.JSONObject;
+
 import java.util.Map;
 
 /**
@@ -37,4 +40,21 @@ public class Request {
     public void setParams(Map<String, String> params) {
         this.params = params;
     }
+
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "id=" + id +
+                ", uri='" + uri + '\'' +
+                ", params=" + params +
+                '}';
+    }
+
+    public String toJsonString() {
+        return JSONObject.toJSON(this).toString();
+    }
+
+
+
 }

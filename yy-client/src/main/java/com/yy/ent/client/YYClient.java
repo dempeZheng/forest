@@ -5,6 +5,9 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +42,8 @@ public class YYClient {
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
     public YYClient(String host, int port) {
+        this.host = host;
+        this.port = port;
         b = new Bootstrap();
         group = new NioEventLoopGroup();
         b.group(group)
@@ -48,7 +53,8 @@ public class YYClient {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline p = ch.pipeline();
-                        p.addLast();
+                        p.addLast(new StringEncoder(CharsetUtil.UTF_8))
+                                .addLast(new StringDecoder(CharsetUtil.UTF_8));
                     }
                 });
 

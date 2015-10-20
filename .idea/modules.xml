@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/yy-analysis/yy-analysis.iml" filepath="$PROJECT_DIR$/yy-analysis/yy-analysis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yy-client/yy-client.iml" filepath="$PROJECT_DIR$/yy-client/yy-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yy-ioc/yy-ioc.iml" filepath="$PROJECT_DIR$/yy-ioc/yy-ioc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yy-router/yy-router.iml" filepath="$PROJECT_DIR$/yy-router/yy-router.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yy-rpc.iml" filepath="$PROJECT_DIR$/yy-rpc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yy-srv/yy-srv.iml" filepath="$PROJECT_DIR$/yy-srv/yy-srv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yy-transport/yy-transport.iml" filepath="$PROJECT_DIR$/yy-transport/yy-transport.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,8 +1,18 @@
 package com.yy.ent.srv.core;
 
+import com.yy.ent.ioc.Action;
+import com.yy.ent.ioc.PackageUtils;
+import com.yy.ent.ioc.Path;
 import com.yy.ent.srv.method.ActionMethod;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,13 +24,62 @@ import java.util.Map;
  */
 public class RequestMapping {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestMapping.class);
+
     public Map<String, ActionMethod> mapping = new HashMap<String, ActionMethod>();
+
+    public RequestMapping() {
+        initMapping();
+    }
 
     /**
      * 扫描packet下面所有的映射，初始化mapping
      */
     public void initMapping() {
+        LOGGER.info("handles begin initiating");
+        List<String> packages = new ArrayList<String>();
+        packages.add("com.yy.ent");
+        LOGGER.info("scanned packages : " + packages);
+        for (String scanPackage : packages) {
+            LOGGER.info("begin get classes from package : " + scanPackage);
+            String[] classNames = PackageUtils.findClassesInPackage(scanPackage + ".*"); // 目录下通配
+            for (String className : classNames) {
+                try {
+                    Class<?> actionClass = Class.forName(className);
+                    Action action = actionClass.getAnnotation(Action.class);
+                    if (action == null) {
+                        continue;
+                    }
+                    String actionVal = action.value();
+                    if (StringUtils.isBlank(actionVal)) {
+                        actionVal = StringUtils.uncapitalize(actionClass.getSimpleName());
+                    }
+                    LOGGER.info("registering action  : " + actionVal);
+                    for (Method method : actionClass.getDeclaredMethods()) {
+                        if (method.getModifiers() == Modifier.PUBLIC) {
+                            Path refs = method.getAnnotation(Path.class);
+                            if (refs != null) {
+                                String pathVal = String.valueOf(refs.value());
+                                if (StringUtils.isBlank(pathVal)) {
+                                    pathVal = method.getName();
+                                }
+                                String uri = "/" + actionVal + "/" + pathVal;
+                                // 没执行一次创建一个对象 有待优化
+                                ActionMethod actionMethod = new ActionMethod(actionClass.newInstance(), method);
+                                LOGGER.info("[REQUEST MAPPING] = {}, uri = {}", actionVal, uri);
+                                mapping.put(uri, actionMethod);
+                            }
+                        }
+                    }
 
+                } catch (ClassNotFoundException e) {
+                    LOGGER.error("FAIL to initiate handle instance", e);
+                } catch (Exception e) {
+                    LOGGER.error("FAIL to initiate handle instance", e);
+                }
+            }
+        }
+        LOGGER.info("Handles  Initialization successfully");
     }
 
     public ActionMethod tack(String uri) {

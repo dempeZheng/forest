@@ -1,5 +1,8 @@
 package com.yy.ent.srv.core;
 
+import com.alibaba.fastjson.JSONObject;
+import com.yy.ent.srv.method.ActionMethod;
+
 /**
  * Created with IntelliJ IDEA.
  * User: zhengdaxia
@@ -11,8 +14,27 @@ public class ServerContext {
 
     private RequestMapping mapping = new RequestMapping();
 
+
+    private ThreadLocal<JSONObject> reqContext = new ThreadLocal<JSONObject>();
+
+    private JSONObject params;
+
+
+    public void setRequestContext(JSONObject params) {
+        reqContext.set(params);
+    }
+
+    public JSONObject getRequestParams() {
+        return reqContext.get();
+    }
+
+
     public ServerContext() {
 
+    }
+
+    public ActionMethod get(String uri) {
+        return mapping.tack(uri);
     }
 
 
