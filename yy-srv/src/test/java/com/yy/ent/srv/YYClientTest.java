@@ -1,8 +1,10 @@
 package com.yy.ent.srv;
 
 
+import com.yy.ent.client.ClientSender;
 import com.yy.ent.client.YYClient;
 import com.yy.ent.protocol.json.Request;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class YYClientTest {
 
     public static void main(String[] args) throws InterruptedException {
-        YYClient client = new YYClient("localhost", 8888);
+        YYClient client = new YYClient();
         client.connect("localhost", 8888);
 
 
@@ -33,5 +35,18 @@ public class YYClientTest {
         }
 
 
+    }
+
+    @Test
+    public void testClientSender(){
+        ClientSender sender = new ClientSender();
+        sender.connect("localhost", 8888);
+        Request req = new Request();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("name", "demo");
+        req.setParams(params);
+        req.setUri("/simpleAction/test");
+        String s = sender.sendAndWait(req);
+        System.out.println(s);
     }
 }

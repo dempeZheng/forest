@@ -28,22 +28,20 @@ public class YYClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(YYClient.class);
 
-    private Bootstrap b;
+    protected Bootstrap b;
 
-    private ChannelFuture f;
+    protected ChannelFuture f;
 
-    private Channel channel;
+    protected Channel channel;
 
-    private EventLoopGroup group;
+    protected EventLoopGroup group;
 
-    private String host;
-    private int port;
+
 
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
-    public YYClient(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public YYClient() {
+
         b = new Bootstrap();
         group = new NioEventLoopGroup();
         b.group(group)
@@ -74,8 +72,7 @@ public class YYClient {
     }
 
     public void connect(final String host, final int port) {
-        this.host = host;
-        this.port = port;
+
 
         try {
             f = b.connect(host, port).sync();
