@@ -12,7 +12,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="yy-client" />
-    <orderEntry type="library" name="Maven: com.yy.ent:yysrv-transport:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="yy-transport" />
     <orderEntry type="library" name="Maven: com.yy.ent.commons:commons-protopack:1.1.4" level="project" />
     <orderEntry type="library" name="Maven: net.sf.json-lib:json-lib:jdk15:2.4" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.8.0" level="project" />
@@ -43,5 +43,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-api-mockito:1.4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-api-support:1.4.11" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-asm:3.1.1.RELEASE" level="project" />
   </component>
 </module>
