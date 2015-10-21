@@ -1,5 +1,7 @@
 package com.yy.ent.protocol.json;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -11,6 +13,11 @@ public class Response {
 
     private long id;
     private String data;
+
+    public Response(long id, String data) {
+        this.id = id;
+        this.data = data;
+    }
 
     public long getId() {
         return id;
@@ -26,5 +33,10 @@ public class Response {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+
+    public String toJsonStr() {
+        return JSONObject.toJSONString(this);
     }
 }

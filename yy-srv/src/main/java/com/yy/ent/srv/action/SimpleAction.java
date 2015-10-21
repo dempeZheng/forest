@@ -15,8 +15,9 @@ import com.yy.ent.ioc.Path;
 public class SimpleAction {
 
     @Path(value = "test")
-    public void test(@Param String name) {
+    public String test(@Param String name) {
         System.out.println("----------------" + name);
+        return "hello";
 
     }
 }

@@ -54,7 +54,8 @@ public class YYClient {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline p = ch.pipeline();
                         p.addLast(new StringEncoder(CharsetUtil.UTF_8))
-                                .addLast(new StringDecoder(CharsetUtil.UTF_8));
+                                .addLast(new StringDecoder(CharsetUtil.UTF_8))
+                                .addLast(new ClientHandler());
                     }
                 });
 

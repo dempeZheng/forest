@@ -1,6 +1,7 @@
 package com.yy.ent.srv.core;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yy.ent.protocol.json.Response;
 import com.yy.ent.srv.exception.JServerException;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
@@ -30,11 +31,14 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
         Long id = json.getLong("id");
         JSONObject params = json.getJSONObject("params");
         //context.setRequestContext(params);
-        dispatcher(json.getString("uri"), params);
-        super.channelRead(ctx, msg);
+        Response response = dispatcher(json.getString("uri"), id, params);
+        if (response != null) {
+            ctx.writeAndFlush(response.toJsonStr());
+        }
+        //super.channelRead(ctx, msg);
     }
 
-    private void dispatcher(String uri, JSONObject requestParams) throws JServerException {
+    private Response dispatcher(String uri, Long id, JSONObject requestParams) throws JServerException {
         ActionMethod actionMethod = context.get(uri);
         if (actionMethod == null) {
             LOGGER.warn("[dispatcher]:not find uri {}", uri);
@@ -43,10 +47,14 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
         if (result == null) {
             // 当action method 返回是void的时候，不返回任何消息
             LOGGER.debug("actionMethod:{} return void.", actionMethod);
-            return;
+            return null;
         }
         // TODO
         LOGGER.info("result:{}", result.toString());
+        if (id == null) {
+            LOGGER.warn("request msg id is null,uri:{},params:{}", uri, requestParams);
+        }
+        return new Response(id, result.toString());
     }
 
 
