@@ -1,4 +1,4 @@
-package com.yy.ent.srv.method;
+package com.yy.ent.srv.core;
 
 import com.yy.ent.srv.exception.JServerException;
 

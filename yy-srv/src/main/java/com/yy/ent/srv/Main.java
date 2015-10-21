@@ -10,6 +10,5 @@ package com.yy.ent.srv;
 public class Main {
     public static void main(String[] args) {
         new YYServer().start(8888);
-        new YYServer().start(9999);
     }
 }

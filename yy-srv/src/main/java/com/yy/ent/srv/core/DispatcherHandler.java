@@ -3,7 +3,6 @@ package com.yy.ent.srv.core;
 import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.ioc.Param;
 import com.yy.ent.srv.exception.JServerException;
-import com.yy.ent.srv.method.ActionMethod;
 import com.yy.ent.srv.utils.LocalVariableTableParameterNameDiscoverer;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
@@ -47,8 +46,9 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
         if (actionMethod == null) {
             LOGGER.warn("[dispatcher]:not find uri {}", uri);
         }
-        JSONObject requestParams = context.getRequestParams();
+        JSONObject requestParams = context.getAndDelRequestParams();
         invoke(actionMethod, requestParams);
+
     }
 
     public void invoke(ActionMethod actionMethod, JSONObject params) throws JServerException {

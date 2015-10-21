@@ -1,7 +1,6 @@
 package com.yy.ent.srv.core;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yy.ent.srv.method.ActionMethod;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,15 +16,14 @@ public class ServerContext {
 
     private ThreadLocal<JSONObject> reqContext = new ThreadLocal<JSONObject>();
 
-    private JSONObject params;
-
-
     public void setRequestContext(JSONObject params) {
         reqContext.set(params);
     }
 
-    public JSONObject getRequestParams() {
-        return reqContext.get();
+    public JSONObject getAndDelRequestParams() {
+        JSONObject jsonObject = reqContext.get();
+        reqContext.remove();
+        return jsonObject;
     }
 
 

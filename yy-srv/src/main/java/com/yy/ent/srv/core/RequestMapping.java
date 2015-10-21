@@ -3,7 +3,6 @@ package com.yy.ent.srv.core;
 import com.yy.ent.ioc.Action;
 import com.yy.ent.ioc.PackageUtils;
 import com.yy.ent.ioc.Path;
-import com.yy.ent.srv.method.ActionMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +63,11 @@ public class RequestMapping {
                                     pathVal = method.getName();
                                 }
                                 String uri = "/" + actionVal + "/" + pathVal;
+                                if (mapping.containsKey(uri)) {
+                                    LOGGER.warn("Method:{} declares duplicated uri:{}, previous one will be overwritten", method, uri);
+                                }
+
+                                makeAccessible(method);
                                 // 没执行一次创建一个对象 有待优化
                                 ActionMethod actionMethod = new ActionMethod(actionClass.newInstance(), method);
                                 LOGGER.info("[REQUEST MAPPING] = {}, uri = {}", actionVal, uri);
@@ -84,6 +88,14 @@ public class RequestMapping {
 
     public ActionMethod tack(String uri) {
         return mapping.get(uri);
+    }
+
+
+    protected void makeAccessible(Method method) {
+        if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers()))
+                && !method.isAccessible()) {
+            method.setAccessible(true);
+        }
     }
 
 }
