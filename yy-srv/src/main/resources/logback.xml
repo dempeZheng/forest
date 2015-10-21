@@ -15,11 +15,11 @@
 			<pattern>${layout_pattern}</pattern>
 		</encoder>
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>WARN</level>
+			<level>debug</level>
 		</filter>
 	</appender>
 
-	<root level="INFO">
+	<root level="debug">
 		<appender-ref ref="stdout" />
 	</root>
 </configuration>
