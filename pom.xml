@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>yy-ioc</module>
+        <module>yy-mvc</module>
         <module>yy-router</module>
         <module>yy-srv</module>
         <module>yy-client</module>

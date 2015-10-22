@@ -1,8 +1,8 @@
 package com.yy.ent.srv.core;
 
-import com.yy.ent.ioc.Action;
-import com.yy.ent.ioc.PackageUtils;
-import com.yy.ent.ioc.Path;
+import com.yy.ent.mvc.anno.Action;
+import com.yy.ent.common.utils.PackageUtils;
+import com.yy.ent.mvc.anno.Path;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

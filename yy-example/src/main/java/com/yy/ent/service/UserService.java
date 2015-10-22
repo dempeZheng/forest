@@ -1,7 +1,7 @@
 package com.yy.ent.service;
 
 import com.yy.ent.dao.UserDao;
-import com.yy.ent.ioc.Inject;
+import com.yy.ent.mvc.anno.Inject;
 import com.yy.ent.model.User;
 
 /**
@@ -14,7 +14,7 @@ import com.yy.ent.model.User;
 public class UserService {
 
     @Inject
-    private UserDao userDao = new UserDao();
+    private UserDao userDao;
 
     public User getUserByUid(String uid) {
         return userDao.getUserByUid(uid);

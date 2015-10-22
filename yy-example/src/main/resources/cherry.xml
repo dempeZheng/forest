@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<cherry>
+    <paths>
+
+    </paths>
+    <ioc>
+        <!-- 扫描BeanFactory来管理的包 -->
+        <packages>
+            <package>com.yy.ent.service.*</package>
+        </packages>
+        <beans>
+
+            <bean id="simpleAction" class="com.yy.ent.action.SimpleAction">
+            </bean>
+
+        </beans>
+    </ioc>
+</cherry>

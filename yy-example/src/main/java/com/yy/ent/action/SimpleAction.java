@@ -1,10 +1,10 @@
 package com.yy.ent.action;
 
 
-import com.yy.ent.ioc.Action;
-import com.yy.ent.ioc.Inject;
-import com.yy.ent.ioc.Param;
-import com.yy.ent.ioc.Path;
+import com.yy.ent.mvc.anno.Action;
+import com.yy.ent.mvc.anno.Inject;
+import com.yy.ent.mvc.anno.Param;
+import com.yy.ent.mvc.anno.Path;
 import com.yy.ent.model.User;
 import com.yy.ent.service.UserService;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class SimpleAction {
     public static final Logger LOGGER = LoggerFactory.getLogger(SimpleAction.class);
 
     @Inject
-    private UserService userService = new UserService();
+    private UserService userService;
 
     @Path
     public String hello() {

@@ -1,7 +1,7 @@
 package com.yy.ent.srv.core;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yy.ent.ioc.Param;
+import com.yy.ent.mvc.anno.Param;
 import com.yy.ent.srv.exception.JServerException;
 import com.yy.ent.srv.utils.LocalVariableTableParameterNameDiscoverer;
 import org.apache.commons.lang.StringUtils;

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: xom:xom:1.0b3">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/xom/xom/1.0b3/xom-1.0b3.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/xom/xom/1.0b3/xom-1.0b3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/xom/xom/1.0b3/xom-1.0b3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

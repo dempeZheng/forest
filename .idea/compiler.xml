@@ -28,6 +28,7 @@
         <module name="yy-example" />
         <module name="yy-ioc" />
         <module name="yy-monitor" />
+        <module name="yy-mvc" />
         <module name="yy-router" />
         <module name="yy-srv" />
         <module name="yy-transport" />
@@ -40,6 +41,7 @@
       <module name="yy-example" target="1.6" />
       <module name="yy-ioc" target="1.6" />
       <module name="yy-monitor" target="1.6" />
+      <module name="yy-mvc" target="1.6" />
       <module name="yy-router" target="1.6" />
       <module name="yy-srv" target="1.6" />
       <module name="yy-transport" target="1.6" />

@@ -1,8 +1,8 @@
 package com.yy.ent.srv.action;
 
-import com.yy.ent.ioc.Action;
-import com.yy.ent.ioc.Param;
-import com.yy.ent.ioc.Path;
+import com.yy.ent.mvc.anno.Action;
+import com.yy.ent.mvc.anno.Param;
+import com.yy.ent.mvc.anno.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

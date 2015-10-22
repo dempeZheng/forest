@@ -1,6 +1,8 @@
 package com.yy.ent.action;
 
 import com.yy.ent.ClientMonitorTest;
+import com.yy.ent.mvc.ioc.BeanFactory;
+import com.yy.ent.mvc.ioc.Cherry;
 import com.yy.ent.protocol.json.Request;
 import org.junit.Test;
 
@@ -18,7 +20,20 @@ public class SimpleActionTest extends ClientMonitorTest {
 
     @Override
     public void init() {
+        Cherry cherry = null;
+        try {
+            cherry = new Cherry("E:\\IDEAProject\\yy-rpc\\yy-ioc\\src\\main\\resources\\cherry.xml");
+            cherry.init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+    }
+
+    @Test
+    public void cherryTest(){
+        Object bean = BeanFactory.getBean(SimpleAction.class.getName());
+        System.out.println(bean);
     }
 
     @Test
