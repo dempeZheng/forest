@@ -3,6 +3,7 @@ package com.yy.ent.srv;
 
 import com.yy.ent.client.ClientSender;
 import com.yy.ent.client.YYClient;
+import com.yy.ent.common.MetricThread;
 import com.yy.ent.protocol.json.Request;
 import org.junit.Test;
 
@@ -30,7 +31,7 @@ public class YYClientTest {
             params.put("name", "demo");
             req.setParams(params);
             req.setUri("/simpleAction/test");
-            client.send(req.toJsonString());
+            client.send(req);
             TimeUnit.SECONDS.sleep(1);
         }
 
@@ -38,15 +39,19 @@ public class YYClientTest {
     }
 
     @Test
-    public void testClientSender(){
+    public void testClientSender() {
         ClientSender sender = new ClientSender();
+        MetricThread metric = new MetricThread("test");
         sender.connect("localhost", 8888);
-        Request req = new Request();
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("name", "demo");
-        req.setParams(params);
-        req.setUri("/simpleAction/test");
-        String s = sender.sendAndWait(req);
-        System.out.println(s);
+        for (int i = 0; i < 100000000; i++) {
+            metric.increment();
+            Request req = new Request();
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("name", "demo");
+            req.setParams(params);
+            req.setUri("/simpleAction/test");
+            sender.sendAndWait(req);
+        }
+
     }
 }

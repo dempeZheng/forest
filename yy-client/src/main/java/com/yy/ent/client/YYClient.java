@@ -1,5 +1,6 @@
 package com.yy.ent.client;
 
+import com.yy.ent.protocol.json.Request;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -35,7 +36,6 @@ public class YYClient {
     protected Channel channel;
 
     protected EventLoopGroup group;
-
 
 
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
@@ -108,12 +108,6 @@ public class YYClient {
 
     }
 
-
-    public void send(String msg) {
-        channel.writeAndFlush(msg);
-    }
-
-
     public void close() throws IOException {
 
         try {
@@ -123,6 +117,11 @@ public class YYClient {
         } catch (InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
         }
+
+    }
+
+    public void send(Request request) {
+        channel.writeAndFlush(request.toJsonString());
 
     }
 }

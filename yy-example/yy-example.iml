@@ -11,6 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="yy-srv" />
     <orderEntry type="module" module-name="yy-ioc" />
     <orderEntry type="module" module-name="yy-transport" />
     <orderEntry type="module" module-name="yy-client" />

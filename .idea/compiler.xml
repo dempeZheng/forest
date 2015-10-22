@@ -24,7 +24,10 @@
         <processorPath useClasspath="true" />
         <module name="yy-analysis" />
         <module name="yy-client" />
+        <module name="yy-common" />
+        <module name="yy-example" />
         <module name="yy-ioc" />
+        <module name="yy-monitor" />
         <module name="yy-router" />
         <module name="yy-srv" />
         <module name="yy-transport" />
@@ -33,7 +36,10 @@
     <bytecodeTargetLevel>
       <module name="yy-analysis" target="1.6" />
       <module name="yy-client" target="1.6" />
+      <module name="yy-common" target="1.6" />
+      <module name="yy-example" target="1.6" />
       <module name="yy-ioc" target="1.6" />
+      <module name="yy-monitor" target="1.6" />
       <module name="yy-router" target="1.6" />
       <module name="yy-srv" target="1.6" />
       <module name="yy-transport" target="1.6" />

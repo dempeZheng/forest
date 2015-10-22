@@ -3,6 +3,8 @@ package com.yy.ent.srv.action;
 import com.yy.ent.ioc.Action;
 import com.yy.ent.ioc.Param;
 import com.yy.ent.ioc.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
@@ -16,9 +18,10 @@ import java.util.UUID;
 @Action
 public class SimpleAction {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleAction.class);
+
     @Path(value = "test")
     public String test(@Param String name) {
-        System.out.println("----------------" + name);
         return "hello" + UUID.randomUUID().toString();
 
     }

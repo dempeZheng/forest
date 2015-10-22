@@ -1,6 +1,7 @@
 package com.yy.ent.srv.core;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yy.ent.common.MetricThread;
 import com.yy.ent.protocol.json.Response;
 import com.yy.ent.srv.exception.JServerException;
 import io.netty.channel.ChannelHandlerAdapter;
@@ -21,6 +22,8 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
 
     private ServerContext context;
 
+    MetricThread metric = new MetricThread("server");
+
     public DispatcherHandler(ServerContext context) {
         this.context = context;
     }
@@ -28,14 +31,14 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         JSONObject json = JSONObject.parseObject((String) msg);
+
+        metric.increment();
         Long id = json.getLong("id");
         JSONObject params = json.getJSONObject("params");
-        //context.setRequestContext(params);
         Response response = dispatcher(json.getString("uri"), id, params);
         if (response != null) {
             ctx.writeAndFlush(response.toJsonStr());
         }
-        //super.channelRead(ctx, msg);
     }
 
     private Response dispatcher(String uri, Long id, JSONObject requestParams) throws JServerException {
@@ -50,7 +53,7 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
             return null;
         }
         // TODO
-        LOGGER.info("result:{}", result.toString());
+        LOGGER.debug("result:{}", result.toString());
         if (id == null) {
             LOGGER.warn("request msg id is null,uri:{},params:{}", uri, requestParams);
         }

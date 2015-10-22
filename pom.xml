@@ -15,6 +15,9 @@
         <module>yy-client</module>
         <module>yy-analysis</module>
         <module>yy-transport</module>
+        <module>yy-common</module>
+        <module>yy-example</module>
+        <module>yy-monitor</module>
     </modules>
 
     <properties>

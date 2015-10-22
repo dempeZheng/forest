@@ -4,7 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/yy-analysis/yy-analysis.iml" filepath="$PROJECT_DIR$/yy-analysis/yy-analysis.iml" />
       <module fileurl="file://$PROJECT_DIR$/yy-client/yy-client.iml" filepath="$PROJECT_DIR$/yy-client/yy-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yy-common/yy-common.iml" filepath="$PROJECT_DIR$/yy-common/yy-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yy-example/yy-example.iml" filepath="$PROJECT_DIR$/yy-example/yy-example.iml" />
       <module fileurl="file://$PROJECT_DIR$/yy-ioc/yy-ioc.iml" filepath="$PROJECT_DIR$/yy-ioc/yy-ioc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yy-monitor/yy-monitor.iml" filepath="$PROJECT_DIR$/yy-monitor/yy-monitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/yy-router/yy-router.iml" filepath="$PROJECT_DIR$/yy-router/yy-router.iml" />
       <module fileurl="file://$PROJECT_DIR$/yy-rpc.iml" filepath="$PROJECT_DIR$/yy-rpc.iml" />
       <module fileurl="file://$PROJECT_DIR$/yy-srv/yy-srv.iml" filepath="$PROJECT_DIR$/yy-srv/yy-srv.iml" />

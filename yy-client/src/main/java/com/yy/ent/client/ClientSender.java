@@ -19,8 +19,10 @@ public class ClientSender extends YYClient {
     private ReplyWaitQueue replyQueue = new ReplyWaitQueue();
 
 
-    public void sendOnly(String msg) {
-        channel.writeAndFlush(msg);
+    public void sendOnly(Request request) {
+        long id = idMaker.incrementAndGet();
+        request.setId(id);
+        send(request);
 
     }
 
@@ -30,24 +32,23 @@ public class ClientSender extends YYClient {
         try {
             ReplyFuture future = new ReplyFuture(id);
             replyQueue.add(future);
-            channel.writeAndFlush(request.toJsonString());
-            String result = future.getReply();
-            return result;
+            send(request);
+            return future.getReply();
         } finally {
             replyQueue.remove(id);
         }
 
     }
 
-    public String sendAndWait(String msg, long timeout) {
+    public String sendAndWait(Request request, long timeout) {
         long id = idMaker.incrementAndGet();
+        request.setId(id);
         try {
             ReplyFuture future = new ReplyFuture(id);
             replyQueue.add(future);
             future.setReadTimeoutMillis(timeout);
-            channel.writeAndFlush(msg);
-            String result = future.getReply();
-            return result;
+            send(request);
+            return future.getReply();
         } finally {
             replyQueue.remove(id);
         }

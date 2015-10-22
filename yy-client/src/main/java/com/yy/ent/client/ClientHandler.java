@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 public class ClientHandler extends ChannelHandlerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class);
+
     private ReplyWaitQueue replyQueue = new ReplyWaitQueue();
 
 
@@ -27,7 +28,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
         Response response = new Response(id, json.getString("data"));
         ReplyFuture future = replyQueue.take(id);
         future.onReceivedReply(response);
-        LOGGER.info("result = {}", json);
+        LOGGER.debug("result = {}", json);
     }
 
 
