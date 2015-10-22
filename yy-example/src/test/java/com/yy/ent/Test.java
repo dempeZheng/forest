@@ -13,7 +13,7 @@ import com.yy.ent.mvc.ioc.Cherry;
  */
 public class Test {
     public static void main(String[] args) throws Exception {
-        Cherry cherry = new Cherry("E:\\IDEAProject\\yy-rpc\\yy-example\\src\\main\\resources\\cherry.xml");
+        Cherry cherry = new Cherry();
         cherry.init();
         SimpleAction simpleAction = BeanFactory.getBean(SimpleAction.class.getName());
         System.out.println(simpleAction.getUserByUid("12345677"));

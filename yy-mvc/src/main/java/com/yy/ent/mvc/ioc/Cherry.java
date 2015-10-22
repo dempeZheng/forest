@@ -17,6 +17,7 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 public class Cherry {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Cherry.class);
 
     private CherryBean cherryBean;
@@ -25,6 +26,8 @@ public class Cherry {
 
     private List<EventListener> listeners;
 
+    private String configFile = "cherry.xml";
+
     /**
      * <id,value> 或者 <id,bean instance>*
      */
@@ -32,16 +35,17 @@ public class Cherry {
 
     private Map<String, Object> configBeans = new HashMap<String, Object>();
 
-    public Cherry(String configFile) throws Exception {
+    public Cherry() throws Exception {
         loadContext = new CherryLoadContext(configFile);
         this.cherryBean = loadContext.getCherryBean();
     }
 
-    public Cherry(File file) throws Exception {
-        loadContext = new CherryLoadContext(file);
+    public Cherry(String configFile) throws Exception {
+        this.configFile = configFile;
+        loadContext = new CherryLoadContext(configFile);
         this.cherryBean = loadContext.getCherryBean();
-    }
 
+    }
 
     /**
      * 初使所有配置信息

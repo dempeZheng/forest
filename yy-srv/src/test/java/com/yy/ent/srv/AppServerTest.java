@@ -7,7 +7,7 @@ package com.yy.ent.srv;
  * Time: 13:11
  * To change this template use File | Settings | File Templates.
  */
-public class AppServer {
+public class AppServerTest {
 
     public static void main(String[] args) {
 

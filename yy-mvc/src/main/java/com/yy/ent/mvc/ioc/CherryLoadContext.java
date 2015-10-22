@@ -7,6 +7,7 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +24,6 @@ public class CherryLoadContext {
 
     private Element root = null;
 
-    // TODO 支持相对路径
     private File rootPath = null;
 
     private CherryBean cherryBean = new CherryBean();
@@ -31,8 +31,10 @@ public class CherryLoadContext {
     private Set<String> ids = new HashSet<String>();
 
     public CherryLoadContext(String configFile) throws Exception {
-        rootPath = new File(configFile);
-        XmlParseByDom4j xmlParser = new XmlParseByDom4j(configFile);
+        URL resource = Thread.currentThread().getContextClassLoader().getResource(configFile);
+        rootPath = new File(resource.toURI());
+        String filePath = rootPath.getPath();
+        XmlParseByDom4j xmlParser = new XmlParseByDom4j(filePath);
         root = xmlParser.getRoot();
         loadAll();
     }
@@ -237,5 +239,10 @@ public class CherryLoadContext {
 
     public CherryBean getCherryBean() {
         return cherryBean;
+    }
+
+    public static void main(String[] args) throws Exception {
+        CherryLoadContext context = new CherryLoadContext("cherry.xml");
+        System.out.println(context);
     }
 }
