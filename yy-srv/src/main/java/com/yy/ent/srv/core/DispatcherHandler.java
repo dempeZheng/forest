@@ -23,7 +23,7 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
 
     private ServerContext context;
 
-    MetricThread metric = new MetricThread("server");
+    private static MetricThread metric = new MetricThread("server");
 
     public DispatcherHandler(ServerContext context) {
         this.context = context;

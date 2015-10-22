@@ -61,7 +61,7 @@ public class YYServer {
 
     private void init() {
         bossGroup = new NioEventLoopGroup();
-        workerGroup = new NioEventLoopGroup();
+        workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
         b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)

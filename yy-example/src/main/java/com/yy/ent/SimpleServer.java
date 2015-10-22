@@ -13,8 +13,10 @@ import com.yy.ent.srv.YYServer;
 public class SimpleServer {
 
 
-    public static void main(String[] args) {
-        AppServer appServer = new AppServer();
-        appServer.start(8888);
+    public static void main(String[] args) throws Exception {
+        new AppServer()
+                .stopWithJVMShutdown()
+                .initMVC()
+                .start(8888);
     }
 }
