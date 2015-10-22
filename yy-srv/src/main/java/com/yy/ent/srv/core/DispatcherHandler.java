@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.common.MetricThread;
 import com.yy.ent.protocol.json.Response;
 import com.yy.ent.srv.exception.JServerException;
+import com.yy.ent.srv.exception.ModelConvertJsonException;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
         }
     }
 
-    private Response dispatcher(String uri, Long id, JSONObject requestParams) throws JServerException {
+    private Response dispatcher(String uri, Long id, JSONObject requestParams) throws ModelConvertJsonException, JServerException {
         ActionMethod actionMethod = context.get(uri);
         if (actionMethod == null) {
             LOGGER.warn("[dispatcher]:not find uri {}", uri);
@@ -52,12 +53,32 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
             LOGGER.debug("actionMethod:{} return void.", actionMethod);
             return null;
         }
-        // TODO
-        LOGGER.debug("result:{}", result.toString());
+
         if (id == null) {
             LOGGER.warn("request msg id is null,uri:{},params:{}", uri, requestParams);
         }
-        return new Response(id, result.toString());
+        return new Response(id, toJSONString(result));
+    }
+
+    /**
+     * 将对象转换成JSONString
+     *
+     * @param result
+     * @return
+     * @throws ModelConvertJsonException
+     */
+    private String toJSONString(Object result) throws ModelConvertJsonException {
+        if (result instanceof String) {
+            return result.toString();
+        }
+        String data = null;
+        try {
+            data = JSONObject.toJSONString(result);
+        } catch (Exception e) {
+            LOGGER.error("model convert 2 json err:{} parse json error", result);
+            throw new ModelConvertJsonException("model convert 2 json err");
+        }
+        return data;
     }
 
 

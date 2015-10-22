@@ -4,10 +4,11 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,8 +25,6 @@ public class Cherry {
 
     private CherryLoadContext loadContext;
 
-    private List<EventListener> listeners;
-
     private String configFile = "cherry.xml";
 
     /**
@@ -36,31 +35,22 @@ public class Cherry {
     private Map<String, Object> configBeans = new HashMap<String, Object>();
 
     public Cherry() throws Exception {
-        loadContext = new CherryLoadContext(configFile);
-        this.cherryBean = loadContext.getCherryBean();
+        init();
     }
 
     public Cherry(String configFile) throws Exception {
         this.configFile = configFile;
-        loadContext = new CherryLoadContext(configFile);
-        this.cherryBean = loadContext.getCherryBean();
-
+        init();
     }
 
     /**
-     * 初使所有配置信息
-     *
-     * @throws Exception
+     * 1:初使化所有自己配置的Bean
+     * 2:初使化Cherrice上下文信息
+     * *
      */
     public void initConfig() throws Exception {
-        //顺序不能变(因为package下面的类可以Inject配置文件中配置的bean)
-        /**
-         * 1:初使化所有自己配置的Bean
-         * 2:初使化Cherrice上下文信息
-         * **/
-        prepareBeans();
-        injectConfigBeans();
-        fireEvent(EventListener.EventType.BEFORE_CHERRICE);
+        loadContext = new CherryLoadContext(configFile);
+        this.cherryBean = loadContext.getCherryBean();
     }
 
     /**
@@ -70,27 +60,10 @@ public class Cherry {
      */
     public void init() throws Exception {
         initConfig();
+        prepareBeans();
+        injectConfigBeans();
     }
 
-
-    public void addEventListener(EventListener listener) {
-        if (listeners == null) {
-            listeners = new ArrayList<EventListener>();
-        }
-        listeners.add(listener);
-    }
-
-    protected void fireEvent(EventListener.EventType type) throws Exception {
-        if (listeners == null) {
-            // do nothing
-        } else if (type == EventListener.EventType.BEFORE_CHERRICE) {
-            for (EventListener listener : listeners) {
-                listener.beforeCherrice();
-            }
-        } else {
-            // do nothing
-        }
-    }
 
     private void injectConfigBeans() {
         for (Map.Entry<String, Object> entry : configBeans.entrySet()) {
@@ -115,7 +88,7 @@ public class Cherry {
     /**
      * 把CherryBean里面的listBeans的信息,把有Bean的类全部生成实例加载到BeanFactory里面
      */
-    protected void prepareBeans() throws Exception {
+    protected void prepareBeans() {
         Map<String, Bean> beans = cherryBean.getBeanMap();
         for (String beanId : beans.keySet()) {
             Bean bean = beans.get(beanId);
@@ -195,25 +168,6 @@ public class Cherry {
         configBeans.put(key, object);
     }
 
-    /**
-     * 方法的无参数反射调用
-     *
-     * @param method_name
-     * @param clazz
-     * @param clazzInstance
-     * @throws Exception
-     */
-    private Object noParamReflect(String method_name, Class<?> clazz, Object clazzInstance) throws Exception {
-        Method m = clazz.getMethod(method_name);
-        if (clazzInstance != null) {
-            m.invoke(clazzInstance);
-        } else {
-            clazzInstance = clazz.newInstance();
-            //injectBean(clazzInstance);
-            m.invoke(clazzInstance);
-        }
-        return clazzInstance;
-    }
 
     /**
      * 如是反射中有参数，那么将对其设置相应的属性和值

@@ -39,14 +39,6 @@ public class CherryLoadContext {
         loadAll();
     }
 
-    public CherryLoadContext(File file) throws Exception {
-        rootPath = file.getAbsoluteFile();
-        XmlParseByDom4j xmlParser = new XmlParseByDom4j(file.getPath());
-        root = xmlParser.getRoot();
-        loadAll();
-    }
-
-
     /**
      * 加载所有信息
      *
@@ -241,8 +233,4 @@ public class CherryLoadContext {
         return cherryBean;
     }
 
-    public static void main(String[] args) throws Exception {
-        CherryLoadContext context = new CherryLoadContext("cherry.xml");
-        System.out.println(context);
-    }
 }

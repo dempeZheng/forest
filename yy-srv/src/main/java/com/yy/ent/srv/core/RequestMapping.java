@@ -1,8 +1,9 @@
 package com.yy.ent.srv.core;
 
-import com.yy.ent.mvc.anno.Action;
 import com.yy.ent.common.utils.PackageUtils;
+import com.yy.ent.mvc.anno.Action;
 import com.yy.ent.mvc.anno.Path;
+import com.yy.ent.mvc.ioc.Injector;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,8 +69,13 @@ public class RequestMapping {
                                 }
 
                                 makeAccessible(method);
-                                // 没执行一次创建一个对象 有待优化
-                                ActionMethod actionMethod = new ActionMethod(actionClass.newInstance(), method);
+                                /**
+                                 * 这里注入action里面的依赖
+                                 */
+                                Object target = actionClass.newInstance();
+                                Injector.doInject(target);
+
+                                ActionMethod actionMethod = new ActionMethod(target, method);
                                 LOGGER.info("[REQUEST MAPPING] = {}, uri = {}", actionVal, uri);
                                 mapping.put(uri, actionMethod);
                             }

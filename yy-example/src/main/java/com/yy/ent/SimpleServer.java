@@ -1,5 +1,6 @@
 package com.yy.ent;
 
+import com.yy.ent.srv.AppServer;
 import com.yy.ent.srv.YYServer;
 
 /**
@@ -9,10 +10,11 @@ import com.yy.ent.srv.YYServer;
  * Time: 10:45
  * To change this template use File | Settings | File Templates.
  */
-public class SimpleServer extends YYServer {
+public class SimpleServer {
 
 
     public static void main(String[] args) {
-        new SimpleServer().start(8888);
+        AppServer appServer = new AppServer();
+        appServer.start(8888);
     }
 }

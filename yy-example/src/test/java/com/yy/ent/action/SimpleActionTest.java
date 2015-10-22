@@ -20,13 +20,7 @@ public class SimpleActionTest extends ClientMonitorTest {
 
     @Override
     public void init() {
-        Cherry cherry = null;
-        try {
-            cherry = new Cherry("E:\\IDEAProject\\yy-rpc\\yy-ioc\\src\\main\\resources\\cherry.xml");
-            cherry.init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
     }
 

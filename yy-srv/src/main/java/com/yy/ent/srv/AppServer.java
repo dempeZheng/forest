@@ -20,13 +20,13 @@ public class AppServer extends YYServer {
     public AppServer() {
         try {
             cherry = new Cherry("cherry.xml");
-            cherry.init();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.info(e.getMessage(), e);
         }
     }
 
     public static void main(String[] args) {
+        LOGGER.info("______________start____________");
         new AppServer().start(8888);
     }
 }
