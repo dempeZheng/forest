@@ -12,7 +12,7 @@ package com.yy.ent.exception;
  * @author hefeng
  * @author hongyuan
  */
-public class JCodecException extends JServerException {
+public class JCodecException extends Exception {
 
     private static final long serialVersionUID = -835016280310725427L;
 

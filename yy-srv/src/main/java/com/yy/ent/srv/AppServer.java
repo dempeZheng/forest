@@ -1,6 +1,5 @@
 package com.yy.ent.srv;
 
-import com.yy.ent.mvc.ioc.Cherry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,18 +14,11 @@ public class AppServer extends YYServer {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(AppServer.class);
 
-    private Cherry cherry;
-
-    public AppServer() {
-        try {
-            cherry = new Cherry("cherry.xml");
-        } catch (Exception e) {
-            LOGGER.info(e.getMessage(), e);
-        }
-    }
-
-    public static void main(String[] args) {
-        LOGGER.info("______________start____________");
-        new AppServer().start(8888);
+    public static void main(String[] args) throws Exception {
+        LOGGER.info("______________start AppServer____________");
+        new AppServer()
+                .stopWithJVMShutdown()
+                .initMVC()
+                .start(8888);
     }
 }

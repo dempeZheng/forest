@@ -1,4 +1,4 @@
-package com.yy.ent.srv.utils;
+package com.yy.ent.common.utils;
 
 /**
  * Created with IntelliJ IDEA.

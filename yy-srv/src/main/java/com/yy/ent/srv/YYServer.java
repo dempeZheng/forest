@@ -1,5 +1,6 @@
 package com.yy.ent.srv;
 
+import com.yy.ent.mvc.ioc.Cherry;
 import com.yy.ent.srv.core.DispatcherHandler;
 import com.yy.ent.srv.core.ServerContext;
 import io.netty.bootstrap.ServerBootstrap;
@@ -35,6 +36,8 @@ public class YYServer {
     private ServerBootstrap b;
 
     private DefaultEventExecutorGroup executorGroup;
+
+    private Cherry cherry;
 
     private ServerContext context = new ServerContext();
 
@@ -85,5 +88,20 @@ public class YYServer {
             bossGroup.shutdownGracefully();
         if (workerGroup != null)
             workerGroup.shutdownGracefully();
+    }
+
+    public YYServer stopWithJVMShutdown() {
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                stop();
+            }
+        }));
+        return this;
+    }
+
+    public YYServer initMVC() throws Exception {
+        cherry = new Cherry();
+        return this;
     }
 }

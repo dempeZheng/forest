@@ -27,9 +27,6 @@ public class Cherry {
 
     private String configFile = "cherry.xml";
 
-    /**
-     * <id,value> 或者 <id,bean instance>*
-     */
     private HashMap<String, Object> val_map = new HashMap<String, Object>();
 
     private Map<String, Object> configBeans = new HashMap<String, Object>();
@@ -74,12 +71,6 @@ public class Cherry {
     private void injectBean(Object bean) {
         try {
             Injector.doInject(bean);
-        } catch (InstantiationException e) {
-            LOGGER.error("FAIL TO DO INJECT FOR :" + bean, e);
-        } catch (IllegalAccessException e) {
-            LOGGER.error("FAIL TO DO INJECT FOR :" + bean, e);
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("FAIL TO DO INJECT FOR :" + bean, e);
         } catch (Exception e) {
             LOGGER.error("FAIL TO DO INJECT FOR :" + bean, e);
         }
@@ -164,7 +155,6 @@ public class Cherry {
             String beanKey = BeanFactory.getBeanKey(key, beanId);
             BeanFactory.prepare(beanKey, object);
         }
-
         configBeans.put(key, object);
     }
 

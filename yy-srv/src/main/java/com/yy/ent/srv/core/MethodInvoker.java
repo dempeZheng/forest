@@ -1,9 +1,9 @@
 package com.yy.ent.srv.core;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yy.ent.common.utils.LocalVariableTableParameterNameDiscoverer;
 import com.yy.ent.mvc.anno.Param;
 import com.yy.ent.srv.exception.JServerException;
-import com.yy.ent.srv.utils.LocalVariableTableParameterNameDiscoverer;
 import org.apache.commons.lang.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -19,6 +19,14 @@ import java.lang.reflect.Type;
  */
 public class MethodInvoker {
 
+    /**
+     * 反射调用方法，根据方法参数自动注入value
+     *
+     * @param actionMethod
+     * @param params
+     * @return
+     * @throws JServerException
+     */
     public Object invoke(ActionMethod actionMethod, JSONObject params) throws JServerException {
         Method method = actionMethod.getMethod();
         String[] parameterNames = new LocalVariableTableParameterNameDiscoverer().getParameterNames(method);
@@ -33,7 +41,6 @@ public class MethodInvoker {
                 }
             }
         }
-
         Object[] paramTarget = null;
         if (parameterNames != null) {
             paramTarget = new Object[parameterNames.length];
@@ -58,8 +65,6 @@ public class MethodInvoker {
             }
         }
         return actionMethod.call(paramTarget);
-
-
     }
 
 }

@@ -8,15 +8,15 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 
 /**
- * Created with IntelliJ IDEA.
+ * 类说明：注入器，提供注入服务，注入的来源是BeanFactory
  * User: Dempe
  * Date: 2015/10/19
  * Time: 19:51
  * To change this template use File | Settings | File Templates.
  */
 public class Injector {
-    private static final Logger log = LoggerFactory.getLogger(Injector.class);
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Injector.class);
 
     /**
      * 传入要注入的对象，方法将扫描该对象的域成员，假如有做注入注解的将做注入。
@@ -53,7 +53,7 @@ public class Injector {
                 String dependClassName = type.getName();
                 if (null == instance || StringUtils.equals("java.lang.Object",instance)) {
                     if (type.isInterface()) {
-                        throw new RuntimeException("通过接口的依赖未指定其实现! field name : " + type + " of class : " + clazz.getName());
+                        throw new RuntimeException("cannot find interface impl ! field name : " + type + " of class : " + clazz.getName());
                     }
                 } else {
                     dependClassName = instance;
@@ -63,7 +63,7 @@ public class Injector {
                     inst = getBean(dependClassName, id);
 
                     if (inst == null) {
-                        log.info("register dependClassName:" + dependClassName);
+                        LOGGER.info("register dependClassName:" + dependClassName);
                         regist(dependClassName, id);
                         inst = getBean(dependClassName, id);
                     }
@@ -81,7 +81,7 @@ public class Injector {
                 doInjectInternal(bean, superClass);
             }
         } catch (Exception e) {
-            log.error("FAIL to DO INJECT FOR CLASS	 : " + bean.getClass(), e);
+            LOGGER.error("FAIL to DO INJECT FOR CLASS : " + bean.getClass(), e);
             throw e;
         }
     }

@@ -92,7 +92,7 @@ public class YYClient {
                     executorService.execute(new Runnable() {
                         @Override
                         public void run() {
-                            LOGGER.info("======connent now ===");
+                            LOGGER.info("======connect now ===");
                             try {
                                 TimeUnit.SECONDS.sleep(1);
                             } catch (InterruptedException e) {

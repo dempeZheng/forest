@@ -17,7 +17,7 @@ public class ReplyFuture {
 
     private long messageId;
 
-    private long readTimeoutMillis = 120000;
+    private long  readTimeoutMillis = 120000;
 
     private Response message;
 
@@ -65,7 +65,6 @@ public class ReplyFuture {
         if (this.message == null) {
             await();
         }
-
         if (this.message == null) {
             LOGGER.error("message is null");
         }
