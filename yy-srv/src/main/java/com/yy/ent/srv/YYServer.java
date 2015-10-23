@@ -61,11 +61,11 @@ public class YYServer {
 
     private void init() {
         bossGroup = new NioEventLoopGroup();
-        workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
+        workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors()*2);
         b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .option(ChannelOption.SO_BACKLOG, 100)
+                .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .handler(new LoggingHandler(LogLevel.INFO))
 

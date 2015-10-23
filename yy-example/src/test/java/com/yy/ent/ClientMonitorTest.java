@@ -14,10 +14,12 @@ public abstract class ClientMonitorTest {
 
 
     public ClientSender clientSender = new ClientSender();
+    public ClientSender clientSender2 = new ClientSender();
 
     @Before
     public void setUp() {
         clientSender.connect("localhost", 8888);
+        clientSender2.connect("localhost", 8888);
         init();
     }
 

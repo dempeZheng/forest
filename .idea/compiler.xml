@@ -26,6 +26,7 @@
         <module name="yy-client" />
         <module name="yy-common" />
         <module name="yy-example" />
+        <module name="yy-halb" />
         <module name="yy-monitor" />
         <module name="yy-mvc" />
         <module name="yy-router" />
@@ -38,6 +39,7 @@
       <module name="yy-client" target="1.6" />
       <module name="yy-common" target="1.6" />
       <module name="yy-example" target="1.6" />
+      <module name="yy-halb" target="1.6" />
       <module name="yy-monitor" target="1.6" />
       <module name="yy-mvc" target="1.6" />
       <module name="yy-router" target="1.6" />

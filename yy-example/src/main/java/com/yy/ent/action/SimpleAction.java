@@ -1,7 +1,6 @@
 package com.yy.ent.action;
 
 
-import com.yy.ent.model.User;
 import com.yy.ent.mvc.anno.Action;
 import com.yy.ent.mvc.anno.Inject;
 import com.yy.ent.mvc.anno.Param;
@@ -31,7 +30,7 @@ public class SimpleAction {
     }
 
     @Path
-    public User getUserByUid(@Param String uid) {
-        return userService.getUserByUid(uid);
+    public String getUserByUid(@Param String uid) {
+        return userService.getUserByUid(uid).toString();
     }
 }

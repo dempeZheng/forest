@@ -16,6 +16,6 @@ public class Test {
         Cherry cherry = new Cherry();
         cherry.init();
         SimpleAction simpleAction = BeanFactory.getBean(SimpleAction.class.getName());
-        System.out.println(simpleAction.getUserByUid("12345677"));
+        System.out.println(simpleAction.getUserByUid("1235467"));
     }
 }

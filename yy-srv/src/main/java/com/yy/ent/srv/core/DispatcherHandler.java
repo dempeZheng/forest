@@ -31,9 +31,8 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        JSONObject json = JSONObject.parseObject((String) msg);
-
         metric.increment();
+        JSONObject json = JSONObject.parseObject((String) msg);
         Long id = json.getLong("id");
         JSONObject params = json.getJSONObject("params");
         Response response = dispatcher(json.getString("uri"), id, params);

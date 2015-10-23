@@ -18,6 +18,7 @@
         <module>yy-common</module>
         <module>yy-example</module>
         <module>yy-monitor</module>
+        <module>yy-halb</module>
     </modules>
 
     <properties>

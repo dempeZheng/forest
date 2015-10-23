@@ -46,6 +46,7 @@ public class YYClient {
         group = new NioEventLoopGroup();
         b.group(group)
                 .option(ChannelOption.TCP_NODELAY, true)
+                .option(ChannelOption.SO_KEEPALIVE, true)
                 .channel(NioSocketChannel.class)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override

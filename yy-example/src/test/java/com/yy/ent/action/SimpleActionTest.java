@@ -39,6 +39,7 @@ public class SimpleActionTest extends ClientMonitorTest {
         while (true) {
             i++;
             String s = clientSender.sendAndWait(request);
+           // String s2 = clientSender2.sendAndWait(request);
             if (i % 10000 == 0) {
                 TimeUnit.MICROSECONDS.sleep(10);
                 System.out.println(s);
