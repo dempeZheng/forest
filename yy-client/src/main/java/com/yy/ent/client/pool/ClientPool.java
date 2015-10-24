@@ -1,5 +1,6 @@
 package com.yy.ent.client.pool;
 
+import com.yy.ent.client.ClientSender;
 import com.yy.ent.client.YYClient;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
@@ -10,7 +11,16 @@ import org.apache.commons.pool.impl.GenericObjectPool;
  * Time: 18:28
  * To change this template use File | Settings | File Templates.
  */
-public class ClientPool {
+public class ClientPool extends GenericObjectPool<ClientSender> {
 
-    private GenericObjectPool<YYClient> pool;
+
+    public ClientPool(String host, int port) {
+        super(new PoolableClientFactory(host, port));
+    }
+
+    public static void main(String[] args) throws Exception {
+
+
+    }
+
 }

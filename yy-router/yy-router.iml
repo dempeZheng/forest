@@ -15,12 +15,6 @@
     <orderEntry type="module" module-name="yy-transport" />
     <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.6" level="project" />
     <orderEntry type="library" name="Maven: com.yy.ent.commons:commons-protopack:1.1.4" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.json-lib:json-lib:jdk15:2.4" level="project" />
-    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.8.0" level="project" />
-    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
-    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.5" level="project" />
-    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.ezmorph:ezmorph:1.0.6" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-buffer:5.0.0.Alpha1" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:5.0.0.Alpha1" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec:5.0.0.Alpha1" level="project" />

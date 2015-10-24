@@ -14,9 +14,13 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ClientSender extends YYClient {
 
-    private AtomicLong idMaker = new AtomicLong(0);
+    private static AtomicLong idMaker = new AtomicLong(0);
 
-    private ReplyWaitQueue replyQueue = new ReplyWaitQueue();
+    private  ReplyWaitQueue replyQueue = new ReplyWaitQueue();
+
+    public ClientSender(String host, int port) {
+        super(host, port);
+    }
 
 
     public void sendOnly(Request request) {

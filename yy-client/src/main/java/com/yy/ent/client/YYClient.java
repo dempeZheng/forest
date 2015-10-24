@@ -13,9 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,9 +35,15 @@ public class YYClient {
     protected EventLoopGroup group;
 
 
-    private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+    //private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
-    public YYClient() {
+    private String host;
+
+    private int port;
+
+    public YYClient(String host,int port){
+        this.host = host;
+        this.port = port;
 
         b = new Bootstrap();
         group = new NioEventLoopGroup();
@@ -70,7 +73,11 @@ public class YYClient {
         }));
         // Make the connection attempt.
 
+        connect(host,port);
     }
+
+
+
 
     public void connect(final String host, final int port) {
 
@@ -82,32 +89,34 @@ public class YYClient {
             e.printStackTrace();
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    channel.closeFuture().sync();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    executorService.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            LOGGER.info("======connect now ===");
-                            try {
-                                TimeUnit.SECONDS.sleep(1);
-                            } catch (InterruptedException e) {
-                                LOGGER.error(e.getMessage(), e);
-                            }
-                            connect(host, port);
-                        }
-                    });
-                }
-            }
-        }).start();
-
 
     }
+
+//    private void startConnectThread(){
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    channel.closeFuture().sync();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    executorService.execute(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            LOGGER.info("======connect now ===");
+//                            try {
+//                                TimeUnit.SECONDS.sleep(1);
+//                            } catch (InterruptedException e) {
+//                                LOGGER.error(e.getMessage(), e);
+//                            }
+//                            connect(host, port);
+//                        }
+//                    });
+//                }
+//            }
+//        }).start();
+//    }
 
     public void close() throws IOException {
 

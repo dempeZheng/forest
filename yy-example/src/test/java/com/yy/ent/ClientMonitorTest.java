@@ -1,6 +1,7 @@
 package com.yy.ent;
 
 import com.yy.ent.client.ClientSender;
+import com.yy.ent.client.pool.ClientPool;
 import org.junit.Before;
 
 /**
@@ -13,13 +14,13 @@ import org.junit.Before;
 public abstract class ClientMonitorTest {
 
 
-    public ClientSender clientSender = new ClientSender();
-    public ClientSender clientSender2 = new ClientSender();
+    public ClientSender clientSender = new ClientSender("localhost", 8888);
+
+    public ClientPool pool = new ClientPool("localhost",8888);
 
     @Before
     public void setUp() {
-        clientSender.connect("localhost", 8888);
-        clientSender2.connect("localhost", 8888);
+
         init();
     }
 
