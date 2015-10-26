@@ -2,8 +2,6 @@ package com.yy.ent.protocol;
 
 import com.alibaba.fastjson.JSONObject;
 
-import java.util.Map;
-
 /**
  * Created with IntelliJ IDEA.
  * User: zhengdaxia
@@ -16,7 +14,6 @@ public class Header {
     /**
      * 消息唯一id，用于异步消息返回信息的标识
      */
-    private Long id;
 
     private String uri;
 
@@ -28,14 +25,6 @@ public class Header {
 
     public void setUri(String uri) {
         this.uri = uri;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public JSONObject getParam() {

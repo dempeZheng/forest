@@ -7,47 +7,38 @@ import com.yy.ent.pack.Pack;
  * Created with IntelliJ IDEA.
  * User: Dempe
  * Date: 2015/10/26
- * Time: 18:31
+ * Time: 19:53
  * To change this template use File | Settings | File Templates.
  */
-public class GardenReq implements Request {
-
-
+public class GardenResp implements Response {
     private long id;
+    private String data;
 
-    private Header header;
-
-    private String uri;
-
+    public GardenResp(long id, String data) {
+        this.id = id;
+        this.data = data;
+    }
 
     public long getId() {
         return id;
     }
 
-    public String getUri() {
-        return uri;
-    }
-
-    @Override
     public void setId(long id) {
-
+        this.id = id;
     }
 
-    @Override
-    public void setUri(String uri) {
-
+    public String getData() {
+        return data;
     }
 
-    public JSONObject getParameter() {
-        return header.getParam();
+    public void setData(String data) {
+        this.data = data;
     }
-
 
     public byte[] encoder() {
         Pack pack = new Pack();
         pack.putLong(id);
-        pack.putVarstr(header.getUri());
-        pack.putVarstr(header.getParam().toJSONString());
+        pack.putVarstr(data);
         return pack.getBuffer().array();
     }
 }
