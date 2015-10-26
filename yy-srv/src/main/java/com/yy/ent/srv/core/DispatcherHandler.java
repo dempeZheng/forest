@@ -37,8 +37,11 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
         JSONObject params = json.getJSONObject("params");
         Response response = dispatcher(json.getString("uri"), id, params);
         if (response != null) {
+            // 写入的时候已经release msg 无需显示的释放
             ctx.writeAndFlush(response.toJsonStr());
         }
+
+
     }
 
     private Response dispatcher(String uri, Long id, JSONObject requestParams) throws ModelConvertJsonException, JServerException {
