@@ -1,5 +1,9 @@
 package com.yy.ent.protocol;
 
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * User: zhengdaxia
@@ -16,6 +20,8 @@ public class Header {
 
     private String uri;
 
+    private JSONObject param;
+
     public String getUri() {
         return uri;
     }
@@ -30,5 +36,13 @@ public class Header {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public JSONObject getParam() {
+        return param;
+    }
+
+    public void setParam(JSONObject param) {
+        this.param = param;
     }
 }

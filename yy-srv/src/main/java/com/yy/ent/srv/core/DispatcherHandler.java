@@ -2,6 +2,7 @@ package com.yy.ent.srv.core;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.common.MetricThread;
+import com.yy.ent.protocol.GardenReq;
 import com.yy.ent.protocol.json.Response;
 import com.yy.ent.srv.exception.JServerException;
 import com.yy.ent.srv.exception.ModelConvertJsonException;
@@ -32,15 +33,16 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         metric.increment();
-        JSONObject json = JSONObject.parseObject((String) msg);
-        Long id = json.getLong("id");
-        JSONObject params = json.getJSONObject("params");
-        Response response = dispatcher(json.getString("uri"), id, params);
+        GardenReq req = (GardenReq) msg;
+        long id = req.getId();
+        JSONObject params = req.getParameter();
+        String uri = req.getUri();
+        Response response = dispatcher(uri, id, params);
+
         if (response != null) {
-            // 写入的时候已经release msg 无需显示的释放
+//            // 写入的时候已经release msg 无需显示的释放
             ctx.writeAndFlush(response.toJsonStr());
         }
-
 
     }
 

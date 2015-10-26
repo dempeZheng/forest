@@ -8,4 +8,8 @@ package com.yy.ent.protocol;
  * To change this template use File | Settings | File Templates.
  */
 public interface Request {
+
+    void setId(long id);
+
+    void setUri(String uri);
 }

@@ -1,8 +1,6 @@
 package com.yy.ent.protocol;
 
 
-import com.yy.ent.codec.Packet;
-
 /**
  * Created with IntelliJ IDEA.
  * User: zhengdaxia
@@ -10,7 +8,7 @@ import com.yy.ent.codec.Packet;
  * Time: 上午10:24
  * To change this template use File | Settings | File Templates.
  */
-public class YYRequest implements Packet {
+public class YYRequest {
 
     private Header header;
 
@@ -25,16 +23,6 @@ public class YYRequest implements Packet {
 
     public String uri() {
         return header.getUri();
-    }
-
-    @Override
-    public void marshall() {
-
-    }
-
-    @Override
-    public void unMarshall() {
-
     }
 
     public Long getRequestId() {
