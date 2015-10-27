@@ -14,10 +14,13 @@ import java.util.List;
  * Time: 20:08
  * To change this template use File | Settings | File Templates.
  */
-public class GardenDecoder extends ByteToMessageDecoder{
+public class GardenDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
+
+        // TODO decoder
+        list.add(new GardenReq());
 
     }
 }
