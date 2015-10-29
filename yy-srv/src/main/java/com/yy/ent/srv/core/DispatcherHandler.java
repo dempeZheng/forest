@@ -1,15 +1,15 @@
 package com.yy.ent.srv.core;
 
-import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.common.MetricThread;
 import com.yy.ent.protocol.GardenReq;
-import com.yy.ent.protocol.json.Response;
-import com.yy.ent.srv.exception.JServerException;
-import com.yy.ent.srv.exception.ModelConvertJsonException;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,63 +26,21 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
 
     private static MetricThread metric = new MetricThread("server");
 
+    private ExecutorService executorService = null;
+
+    private final static int DEF_THREAD_SIZE = Runtime.getRuntime().availableProcessors() * 2;
+
     public DispatcherHandler(ServerContext context) {
         this.context = context;
+        this.executorService = Executors.newFixedThreadPool(DEF_THREAD_SIZE, new DefaultThreadFactory("METHOD_TASK"));
+
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         metric.increment();
         GardenReq req = (GardenReq) msg;
-        long id = req.getId();
-        JSONObject params = req.getParameter();
-        String uri = req.getUri();
-        Response response = dispatcher(uri, id, params);
-
-        if (response != null) {
-//            // 写入的时候已经release msg 无需显示的释放
-            ctx.writeAndFlush(response.toJsonStr());
-        }
-
-    }
-
-    private Response dispatcher(String uri, Long id, JSONObject requestParams) throws ModelConvertJsonException, JServerException {
-        ActionMethod actionMethod = context.get(uri);
-        if (actionMethod == null) {
-            LOGGER.warn("[dispatcher]:not find uri {}", uri);
-        }
-        Object result = new MethodInvoker().invoke(actionMethod, requestParams);
-        if (result == null) {
-            // 当action method 返回是void的时候，不返回任何消息
-            LOGGER.debug("actionMethod:{} return void.", actionMethod);
-            return null;
-        }
-
-        if (id == null) {
-            LOGGER.warn("request msg id is null,uri:{},params:{}", uri, requestParams);
-        }
-        return new Response(id, toJSONString(result));
-    }
-
-    /**
-     * 将对象转换成JSONString
-     *
-     * @param result
-     * @return
-     * @throws ModelConvertJsonException
-     */
-    private String toJSONString(Object result) throws ModelConvertJsonException {
-        if (result instanceof String) {
-            return result.toString();
-        }
-        String data = null;
-        try {
-            data = JSONObject.toJSONString(result);
-        } catch (Exception e) {
-            LOGGER.error("model convert 2 json err:{} parse json error", result);
-            throw new ModelConvertJsonException("model convert 2 json err");
-        }
-        return data;
+        executorService.submit(new MethodInvokerTask(ctx, context, req));
     }
 
 

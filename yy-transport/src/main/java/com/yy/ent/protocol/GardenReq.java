@@ -2,6 +2,7 @@ package com.yy.ent.protocol;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.pack.Pack;
+import io.netty.buffer.ByteBuf;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,6 +42,8 @@ public class GardenReq implements Request {
     public JSONObject getParameter() {
         return header.getParam();
     }
+
+
 
 
     public byte[] encoder() {

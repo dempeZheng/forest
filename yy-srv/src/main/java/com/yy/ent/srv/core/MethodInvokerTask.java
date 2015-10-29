@@ -3,8 +3,14 @@ package com.yy.ent.srv.core;
 import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.common.utils.LocalVariableTableParameterNameDiscoverer;
 import com.yy.ent.mvc.anno.Param;
+import com.yy.ent.protocol.GardenReq;
+import com.yy.ent.protocol.json.Response;
 import com.yy.ent.srv.exception.JServerException;
+import com.yy.ent.srv.exception.ModelConvertJsonException;
+import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -17,7 +23,19 @@ import java.lang.reflect.Type;
  * Time: 10:59
  * To change this template use File | Settings | File Templates.
  */
-public class MethodInvoker {
+public class MethodInvokerTask implements Runnable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodInvokerTask.class);
+
+    private ChannelHandlerContext ctx;
+    private ServerContext serverContext;
+    private GardenReq req;
+
+    public MethodInvokerTask(ChannelHandlerContext ctx, ServerContext serverContext, GardenReq req) {
+        this.ctx = ctx;
+        this.serverContext = serverContext;
+        this.req = req;
+    }
 
     /**
      * 反射调用方法，根据方法参数自动注入value
@@ -67,4 +85,64 @@ public class MethodInvoker {
         return actionMethod.call(paramTarget);
     }
 
+    @Override
+    public void run() {
+        Response response = null;
+        try {
+            long id = req.getId();
+            JSONObject params = req.getParameter();
+            String uri = req.getUri();
+            response = dispatcher(uri, id, params);
+            if (response != null) {
+//            // 写入的时候已经release msg 无需显示的释放
+                ctx.writeAndFlush(response.toJsonStr());
+            }
+        } catch (ModelConvertJsonException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (JServerException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+
+    }
+
+
+    private Response dispatcher(String uri, Long id, JSONObject requestParams) throws ModelConvertJsonException, JServerException {
+        ActionMethod actionMethod = serverContext.get(uri);
+        if (actionMethod == null) {
+            LOGGER.warn("[dispatcher]:not find uri {}", uri);
+        }
+        Object result = invoke(actionMethod, requestParams);
+        if (result == null) {
+            // 当action method 返回是void的时候，不返回任何消息
+            LOGGER.debug("actionMethod:{} return void.", actionMethod);
+            return null;
+        }
+
+        if (id == null) {
+            LOGGER.warn("request msg id is null,uri:{},params:{}", uri, requestParams);
+        }
+        return new Response(id, toJSONString(result));
+    }
+
+    /**
+     * 将对象转换成JSONString
+     *
+     * @param result
+     * @return
+     * @throws ModelConvertJsonException
+     */
+    private String toJSONString(Object result) throws ModelConvertJsonException {
+        if (result instanceof String) {
+            return result.toString();
+        }
+        String data = null;
+        try {
+            data = JSONObject.toJSONString(result);
+        } catch (Exception e) {
+            LOGGER.error("model convert 2 json err:{} parse json error", result);
+            throw new ModelConvertJsonException("model convert 2 json err");
+        }
+        return data;
+    }
 }

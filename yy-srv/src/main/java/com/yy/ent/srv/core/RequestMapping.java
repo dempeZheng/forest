@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,7 +27,7 @@ public class RequestMapping {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestMapping.class);
 
-    public Map<String, ActionMethod> mapping = new HashMap<String, ActionMethod>();
+    public Map<String, ActionMethod> mapping = new ConcurrentHashMap<String, ActionMethod>();
 
     public RequestMapping() {
         initMapping();
