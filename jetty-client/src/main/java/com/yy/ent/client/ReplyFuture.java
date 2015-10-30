@@ -1,6 +1,6 @@
 package com.yy.ent.client;
 
-import com.yy.ent.protocol.json.Response;
+import com.yy.ent.protocol.JettyResp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +17,9 @@ public class ReplyFuture {
 
     private long messageId;
 
-    private long  readTimeoutMillis = 120000;
+    private long readTimeoutMillis = 120000;
 
-    private Response message;
+    private JettyResp message;
 
 
     public ReplyFuture(long messageId) {
@@ -56,7 +56,7 @@ public class ReplyFuture {
         }
     }
 
-    synchronized void onReceivedReply(Response message) {
+    synchronized void onReceivedReply(JettyResp message) {
         this.message = message;
         this.notifyAll();
     }

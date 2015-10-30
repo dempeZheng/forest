@@ -22,29 +22,29 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="yy-analysis" />
-        <module name="yy-client" />
-        <module name="yy-common" />
-        <module name="yy-example" />
-        <module name="yy-halb" />
-        <module name="yy-monitor" />
-        <module name="yy-mvc" />
-        <module name="yy-router" />
-        <module name="yy-srv" />
-        <module name="yy-transport" />
+        <module name="jetty-analysis" />
+        <module name="jetty-client" />
+        <module name="jetty-common" />
+        <module name="jetty-example" />
+        <module name="jetty-halb" />
+        <module name="jetty-monitor" />
+        <module name="jetty-mvc" />
+        <module name="jetty-router" />
+        <module name="jetty-srv" />
+        <module name="jetty-transport" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="yy-analysis" target="1.6" />
-      <module name="yy-client" target="1.6" />
-      <module name="yy-common" target="1.6" />
-      <module name="yy-example" target="1.6" />
-      <module name="yy-halb" target="1.6" />
-      <module name="yy-monitor" target="1.6" />
-      <module name="yy-mvc" target="1.6" />
-      <module name="yy-router" target="1.6" />
-      <module name="yy-srv" target="1.6" />
-      <module name="yy-transport" target="1.6" />
+      <module name="jetty-analysis" target="1.6" />
+      <module name="jetty-client" target="1.6" />
+      <module name="jetty-common" target="1.6" />
+      <module name="jetty-example" target="1.6" />
+      <module name="jetty-halb" target="1.6" />
+      <module name="jetty-monitor" target="1.6" />
+      <module name="jetty-mvc" target="1.6" />
+      <module name="jetty-router" target="1.6" />
+      <module name="jetty-srv" target="1.6" />
+      <module name="jetty-transport" target="1.6" />
     </bytecodeTargetLevel>
   </component>
 </project>

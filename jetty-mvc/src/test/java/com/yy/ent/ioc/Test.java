@@ -1,6 +1,6 @@
 package com.yy.ent.ioc;
 
-import com.yy.ent.mvc.ioc.Cherry;
+import com.yy.ent.mvc.ioc.JettyIOC;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +11,7 @@ import com.yy.ent.mvc.ioc.Cherry;
  */
 public class Test {
     public static void main(String[] args) throws Exception {
-        Cherry cherry = new Cherry("E:\\IDEAProject\\yy-rpc\\yy-ioc\\src\\main\\resources\\cherry.xml");
+        JettyIOC cherry = new JettyIOC("E:\\IDEAProject\\yy-rpc\\yy-ioc\\src\\main\\resources\\cherry.xml");
         cherry.init();
 
     }

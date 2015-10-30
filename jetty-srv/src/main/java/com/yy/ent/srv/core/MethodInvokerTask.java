@@ -3,7 +3,8 @@ package com.yy.ent.srv.core;
 import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.common.utils.LocalVariableTableParameterNameDiscoverer;
 import com.yy.ent.mvc.anno.Param;
-import com.yy.ent.protocol.GardenReq;
+import com.yy.ent.protocol.JettyReq;
+import com.yy.ent.protocol.JettyResp;
 import com.yy.ent.protocol.json.Response;
 import com.yy.ent.srv.exception.JServerException;
 import com.yy.ent.srv.exception.ModelConvertJsonException;
@@ -23,15 +24,15 @@ import java.lang.reflect.Type;
  * Time: 10:59
  * To change this template use File | Settings | File Templates.
  */
-public class MethodInvokerTask implements Runnable {
+public class MethodInvokerTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodInvokerTask.class);
 
     private ChannelHandlerContext ctx;
     private ServerContext serverContext;
-    private GardenReq req;
+    private JettyReq req;
 
-    public MethodInvokerTask(ChannelHandlerContext ctx, ServerContext serverContext, GardenReq req) {
+    public MethodInvokerTask(ChannelHandlerContext ctx, ServerContext serverContext, JettyReq req) {
         this.ctx = ctx;
         this.serverContext = serverContext;
         this.req = req;
@@ -85,9 +86,30 @@ public class MethodInvokerTask implements Runnable {
         return actionMethod.call(paramTarget);
     }
 
-    @Override
-    public void run() {
-        Response response = null;
+//    @Override
+//    public void run() {
+//        JettyResp response = null;
+//        try {
+//            long id = req.getId();
+//            JSONObject params = req.getParameter();
+//            String uri = req.getUri();
+//            LOGGER.info("dispatcher id:{}, uri:{}", id, uri);
+//            response = dispatcher(uri, id, params);
+//            if (response != null) {
+////            // 写入的时候已经release msg 无需显示的释放
+//                ctx.writeAndFlush(response);
+//            }
+//        } catch (ModelConvertJsonException e) {
+//            LOGGER.error(e.getMessage(), e);
+//        } catch (JServerException e) {
+//            LOGGER.error(e.getMessage(), e);
+//        }
+//
+//
+//    }
+
+    public void doInvoke(){
+        JettyResp response = null;
         try {
             long id = req.getId();
             JSONObject params = req.getParameter();
@@ -96,19 +118,17 @@ public class MethodInvokerTask implements Runnable {
             response = dispatcher(uri, id, params);
             if (response != null) {
 //            // 写入的时候已经release msg 无需显示的释放
-                ctx.writeAndFlush(response.toJsonStr());
+                ctx.writeAndFlush(response);
             }
         } catch (ModelConvertJsonException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (JServerException e) {
             LOGGER.error(e.getMessage(), e);
         }
-
-
     }
 
 
-    private Response dispatcher(String uri, Long id, JSONObject requestParams) throws ModelConvertJsonException, JServerException {
+    private JettyResp dispatcher(String uri, Long id, JSONObject requestParams) throws ModelConvertJsonException, JServerException {
         ActionMethod actionMethod = serverContext.get(uri);
         if (actionMethod == null) {
             LOGGER.warn("[dispatcher]:not find uri {}", uri);
@@ -123,7 +143,7 @@ public class MethodInvokerTask implements Runnable {
         if (id == null) {
             LOGGER.warn("request msg id is null,uri:{},params:{}", uri, requestParams);
         }
-        return new Response(id, toJSONString(result));
+        return new JettyResp(id, toJSONString(result));
     }
 
     /**

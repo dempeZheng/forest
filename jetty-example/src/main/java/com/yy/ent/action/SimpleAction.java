@@ -30,7 +30,7 @@ public class SimpleAction {
     }
 
     @Path
-    public String getUserByUid(@Param String uid) {
-        return userService.getUserByUid(uid).toString();
+    public String getUserByUid() {
+        return userService.getUserByUid("123").toString();
     }
 }

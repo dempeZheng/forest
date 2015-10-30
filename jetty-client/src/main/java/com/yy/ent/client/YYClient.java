@@ -1,9 +1,8 @@
 package com.yy.ent.client;
 
-import com.yy.ent.codec.GardenDecoder;
-import com.yy.ent.codec.GardenEncoder;
-import com.yy.ent.protocol.GardenReq;
-import com.yy.ent.protocol.json.Request;
+import com.yy.ent.codec.JettyReqEncoder;
+import com.yy.ent.codec.JettyRespDecoder;
+import com.yy.ent.protocol.JettyReq;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -55,8 +54,8 @@ public class YYClient {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline p = ch.pipeline();
-                        p.addLast(new GardenEncoder())
-                                .addLast(new GardenDecoder())
+                        p.addLast(new JettyReqEncoder())
+                                .addLast(new JettyRespDecoder())
                                 .addLast(new ClientHandler());
                     }
                 });
@@ -128,7 +127,7 @@ public class YYClient {
 
     }
 
-    public void send(GardenReq request) {
+    public void send(JettyReq request) {
         channel.writeAndFlush(request);
 
     }

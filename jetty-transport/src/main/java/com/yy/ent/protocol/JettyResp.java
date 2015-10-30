@@ -1,7 +1,8 @@
 package com.yy.ent.protocol;
 
-import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.pack.Pack;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,11 +11,11 @@ import com.yy.ent.pack.Pack;
  * Time: 19:53
  * To change this template use File | Settings | File Templates.
  */
-public class GardenResp implements Response {
+public class JettyResp implements Response {
     private long id;
     private String data;
 
-    public GardenResp(long id, String data) {
+    public JettyResp(long id, String data) {
         this.id = id;
         this.data = data;
     }
@@ -35,9 +36,21 @@ public class GardenResp implements Response {
         this.data = data;
     }
 
-    public byte[] encoder() {
+    public byte[] encoder() throws UnsupportedEncodingException {
         Pack pack = new Pack();
         pack.putLong(id);
-        return pack.getBuffer().array();
+        pack.putVarstr(data);
+        short length = (short) pack.size();
+        byte[] bytes = new byte[length];
+        pack.getBuffer().get(bytes);
+        return bytes;
+    }
+
+    @Override
+    public String toString() {
+        return "JettyResp{" +
+                "id=" + id +
+                ", data='" + data + '\'' +
+                '}';
     }
 }

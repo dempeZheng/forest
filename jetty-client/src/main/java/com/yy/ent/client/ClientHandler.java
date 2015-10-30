@@ -1,7 +1,6 @@
 package com.yy.ent.client;
 
-import com.alibaba.fastjson.JSONObject;
-import com.yy.ent.protocol.json.Response;
+import com.yy.ent.protocol.JettyResp;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.ReferenceCountUtil;
@@ -25,12 +24,11 @@ public class ClientHandler extends ChannelHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
-            JSONObject json = JSONObject.parseObject((String) msg);
-            Long id = json.getLong("id");
-            Response response = new Response(id, json.getString("data"));
+            JettyResp resp = (JettyResp) msg;
+            Long id = resp.getId();
             ReplyFuture future = replyQueue.take(id);
-            future.onReceivedReply(response);
-            LOGGER.debug("result = {}", json);
+            future.onReceivedReply(resp);
+            LOGGER.info("result = {}", resp.toString());
         } finally {
             ReferenceCountUtil.release(msg);
         }

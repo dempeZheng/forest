@@ -1,7 +1,7 @@
 package com.yy.ent.codec;
 
 import com.yy.ent.pack.Unpack;
-import com.yy.ent.protocol.GardenReq;
+import com.yy.ent.protocol.JettyResp;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -17,14 +17,12 @@ import java.util.List;
  * Time: 20:08
  * To change this template use File | Settings | File Templates.
  */
-public class GardenDecoder extends ByteToMessageDecoder {
+public class JettyRespDecoder extends ByteToMessageDecoder {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(GardenDecoder.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(JettyRespDecoder.class);
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
-
-        // TODO decoder
         int length = byteBuf.readableBytes();
         if (length < 2) {
             return;
@@ -38,11 +36,11 @@ public class GardenDecoder extends ByteToMessageDecoder {
         byte[] bytes = new byte[size];
         byteBuf.readBytes(bytes);
         Unpack unpack = new Unpack(bytes);
-        GardenReq req = new GardenReq();
-        req.setId(unpack.popLong());
-        req.setUri(unpack.popVarstr());
-        LOGGER.info("req:{}", req.toString());
-        list.add(req);
+        Long id = unpack.popLong();
+        String data = unpack.popVarstr();
+        JettyResp resp = new JettyResp(id, data);
+        LOGGER.info("resp:{}", resp.toString());
+        list.add(resp);
 
     }
 

@@ -11,9 +11,6 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class Header {
 
-    /**
-     * 消息唯一id，用于异步消息返回信息的标识
-     */
 
     private String uri;
 

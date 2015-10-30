@@ -12,13 +12,12 @@ import java.io.UnsupportedEncodingException;
  * Time: 18:31
  * To change this template use File | Settings | File Templates.
  */
-public class GardenReq implements Request {
+public class JettyReq implements Request {
 
 
     private long id;
 
     private Header header;
-
 
     public long getId() {
         return id;
@@ -28,7 +27,7 @@ public class GardenReq implements Request {
         return header.getUri();
     }
 
-    public GardenReq() {
+    public JettyReq() {
         header = new Header();
     }
 
@@ -52,14 +51,12 @@ public class GardenReq implements Request {
 
 
     public byte[] encoder() throws UnsupportedEncodingException {
-        System.out.println(this.toString());
         Pack pack = new Pack();
         pack.putLong(id);
         pack.putVarstr(getUri());
         pack.putVarstr(getParameter().toJSONString());
         short length = (short) pack.size();
         byte[] bytes = new byte[length];
-        System.out.println("length+++++++++++++" + length);
         pack.getBuffer().get(bytes);
         return bytes;
     }

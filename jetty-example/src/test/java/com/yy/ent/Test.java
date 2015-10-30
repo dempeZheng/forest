@@ -2,7 +2,7 @@ package com.yy.ent;
 
 import com.yy.ent.action.SimpleAction;
 import com.yy.ent.mvc.ioc.BeanFactory;
-import com.yy.ent.mvc.ioc.Cherry;
+import com.yy.ent.mvc.ioc.JettyIOC;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,9 +13,8 @@ import com.yy.ent.mvc.ioc.Cherry;
  */
 public class Test {
     public static void main(String[] args) throws Exception {
-        Cherry cherry = new Cherry();
+        JettyIOC cherry = new JettyIOC();
         cherry.init();
         SimpleAction simpleAction = BeanFactory.getBean(SimpleAction.class.getName());
-        System.out.println(simpleAction.getUserByUid("1235467"));
     }
 }

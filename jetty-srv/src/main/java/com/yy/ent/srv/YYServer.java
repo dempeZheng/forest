@@ -1,8 +1,8 @@
 package com.yy.ent.srv;
 
-import com.yy.ent.codec.GardenDecoder;
-import com.yy.ent.codec.GardenEncoder;
-import com.yy.ent.mvc.ioc.Cherry;
+import com.yy.ent.codec.JettyReqDecoder;
+import com.yy.ent.codec.JettyRespEncoder;
+import com.yy.ent.mvc.ioc.JettyIOC;
 import com.yy.ent.srv.core.DispatcherHandler;
 import com.yy.ent.srv.core.ServerContext;
 import io.netty.bootstrap.ServerBootstrap;
@@ -36,7 +36,7 @@ public class YYServer {
 
     private DefaultEventExecutorGroup executorGroup;
 
-    private Cherry cherry;
+    private JettyIOC cherry;
 
     private ServerContext context = new ServerContext();
 
@@ -74,8 +74,8 @@ public class YYServer {
                             throws Exception {
                         ChannelPipeline channel = ch.pipeline();
                         channel
-                                .addLast(new GardenEncoder())
-                                .addLast(new GardenDecoder())
+                                .addLast(new JettyRespEncoder())
+                                .addLast(new JettyReqDecoder())
                                 .addLast(new DispatcherHandler(context))
                         ;
 
@@ -102,7 +102,7 @@ public class YYServer {
     }
 
     public YYServer initMVC() throws Exception {
-        cherry = new Cherry();
+        cherry = new JettyIOC();
         return this;
     }
 }

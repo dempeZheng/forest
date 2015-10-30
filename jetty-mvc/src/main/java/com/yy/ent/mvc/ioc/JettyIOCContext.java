@@ -20,17 +20,17 @@ import java.util.Set;
  * Time: 11:16
  * To change this template use File | Settings | File Templates.
  */
-public class CherryLoadContext {
+public class JettyIOCContext {
 
     private Element root = null;
 
     private File rootPath = null;
 
-    private CherryBean cherryBean = new CherryBean();
+    private JettyBean cherryBean = new JettyBean();
     //存放xml文件中所有的id信息
     private Set<String> ids = new HashSet<String>();
 
-    public CherryLoadContext(String configFile) throws Exception {
+    public JettyIOCContext(String configFile) throws Exception {
         URL resource = Thread.currentThread().getContextClassLoader().getResource(configFile);
         rootPath = new File(resource.toURI());
         String filePath = rootPath.getPath();
@@ -229,7 +229,7 @@ public class CherryLoadContext {
         return params;
     }
 
-    public CherryBean getCherryBean() {
+    public JettyBean getCherryBean() {
         return cherryBean;
     }
 

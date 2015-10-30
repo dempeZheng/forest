@@ -1,8 +1,7 @@
 package com.yy.ent.client;
 
 
-import com.yy.ent.protocol.GardenReq;
-import com.yy.ent.protocol.json.Request;
+import com.yy.ent.protocol.JettyReq;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -24,14 +23,14 @@ public class ClientSender extends YYClient {
     }
 
 
-    public void sendOnly(GardenReq request) {
+    public void sendOnly(JettyReq request) {
         long id = idMaker.incrementAndGet();
         request.setId(id);
         send(request);
 
     }
 
-    public String sendAndWait(GardenReq request) {
+    public String sendAndWait(JettyReq request) {
         long id = idMaker.incrementAndGet();
         request.setId(id);
         try {
@@ -45,7 +44,7 @@ public class ClientSender extends YYClient {
 
     }
 
-    public String sendAndWait(GardenReq request, long timeout) {
+    public String sendAndWait(JettyReq request, long timeout) {
         long id = idMaker.incrementAndGet();
         request.setId(id);
         try {

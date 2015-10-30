@@ -19,13 +19,13 @@ import java.util.Set;
  * Time: 11:10
  * To change this template use File | Settings | File Templates.
  */
-public class Cherry {
+public class JettyIOC {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Cherry.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JettyIOC.class);
 
-    private CherryBean cherryBean;
+    private JettyBean cherryBean;
 
-    private CherryLoadContext loadContext;
+    private JettyIOCContext loadContext;
 
     private String configFile = "cherry.xml";
 
@@ -33,11 +33,11 @@ public class Cherry {
 
     private Map<String, Object> configBeans = new HashMap<String, Object>();
 
-    public Cherry() throws Exception {
+    public JettyIOC() throws Exception {
         init();
     }
 
-    public Cherry(String configFile) throws Exception {
+    public JettyIOC(String configFile) throws Exception {
         this.configFile = configFile;
         init();
     }
@@ -48,7 +48,7 @@ public class Cherry {
      * *
      */
     public void initConfig() throws Exception {
-        loadContext = new CherryLoadContext(configFile);
+        loadContext = new JettyIOCContext(configFile);
         this.cherryBean = loadContext.getCherryBean();
     }
 

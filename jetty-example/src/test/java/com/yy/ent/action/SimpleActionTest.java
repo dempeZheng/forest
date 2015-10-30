@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.ClientMonitorTest;
 import com.yy.ent.client.ClientSender;
 import com.yy.ent.mvc.ioc.BeanFactory;
-import com.yy.ent.protocol.GardenReq;
+import com.yy.ent.protocol.JettyReq;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -35,13 +35,14 @@ public class SimpleActionTest extends ClientMonitorTest {
 
     @Test
     public void getUserByUidTest() throws InterruptedException {
-        GardenReq request = new GardenReq();
+        JettyReq request = new JettyReq();
         request.setUri("/simpleAction/getUserByUid");
 //        Map<String, String> params = new HashMap<String, String>();
         JSONObject params = new JSONObject();
         params.put("uid", "12345677");
         request.setParameter(params);
-        clientSender.sendAndWait(request);
+        String s = clientSender.sendAndWait(request);
+        System.out.println("=========>"+s);
         // String s2 = clientSender2.sendAndWait(request);
     }
 
@@ -58,7 +59,7 @@ public class SimpleActionTest extends ClientMonitorTest {
                     i.incrementAndGet();
                     ClientSender sender = null;
                     try {
-                        GardenReq request = new GardenReq();
+                        JettyReq request = new JettyReq();
                         request.setUri("/simpleAction/getUserByUid");
                         Map<String, String> params = new HashMap<String, String>();
                         params.put("uid", "12345677");
