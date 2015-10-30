@@ -2,17 +2,17 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/yy-analysis/yy-analysis.iml" filepath="$PROJECT_DIR$/yy-analysis/yy-analysis.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yy-client/yy-client.iml" filepath="$PROJECT_DIR$/yy-client/yy-client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yy-common/yy-common.iml" filepath="$PROJECT_DIR$/yy-common/yy-common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yy-example/yy-example.iml" filepath="$PROJECT_DIR$/yy-example/yy-example.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yy-halb/yy-halb.iml" filepath="$PROJECT_DIR$/yy-halb/yy-halb.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yy-monitor/yy-monitor.iml" filepath="$PROJECT_DIR$/yy-monitor/yy-monitor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yy-mvc/yy-mvc.iml" filepath="$PROJECT_DIR$/yy-mvc/yy-mvc.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yy-router/yy-router.iml" filepath="$PROJECT_DIR$/yy-router/yy-router.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yy-rpc.iml" filepath="$PROJECT_DIR$/yy-rpc.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yy-srv/yy-srv.iml" filepath="$PROJECT_DIR$/yy-srv/yy-srv.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yy-transport/yy-transport.iml" filepath="$PROJECT_DIR$/yy-transport/yy-transport.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jetty.iml" filepath="$PROJECT_DIR$/jetty.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jetty-analysis/jetty-analysis.iml" filepath="$PROJECT_DIR$/jetty-analysis/jetty-analysis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jetty-client/jetty-client.iml" filepath="$PROJECT_DIR$/jetty-client/jetty-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jetty-common/jetty-common.iml" filepath="$PROJECT_DIR$/jetty-common/jetty-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jetty-example/jetty-example.iml" filepath="$PROJECT_DIR$/jetty-example/jetty-example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jetty-halb/jetty-halb.iml" filepath="$PROJECT_DIR$/jetty-halb/jetty-halb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jetty-monitor/jetty-monitor.iml" filepath="$PROJECT_DIR$/jetty-monitor/jetty-monitor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jetty-mvc/jetty-mvc.iml" filepath="$PROJECT_DIR$/jetty-mvc/jetty-mvc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jetty-router/jetty-router.iml" filepath="$PROJECT_DIR$/jetty-router/jetty-router.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jetty-srv/jetty-srv.iml" filepath="$PROJECT_DIR$/jetty-srv/jetty-srv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jetty-transport/jetty-transport.iml" filepath="$PROJECT_DIR$/jetty-transport/jetty-transport.iml" />
     </modules>
   </component>
 </project>
