@@ -2,7 +2,8 @@ package com.yy.ent.protocol;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.pack.Pack;
-import io.netty.buffer.ByteBuf;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,25 +19,31 @@ public class GardenReq implements Request {
 
     private Header header;
 
-    private String uri;
-
 
     public long getId() {
         return id;
     }
 
     public String getUri() {
-        return uri;
+        return header.getUri();
+    }
+
+    public GardenReq() {
+        header = new Header();
     }
 
     @Override
     public void setId(long id) {
-
+        this.id = id;
     }
 
     @Override
     public void setUri(String uri) {
+        header.setUri(uri);
+    }
 
+    public void setParameter(JSONObject param) {
+        header.setParam(param);
     }
 
     public JSONObject getParameter() {
@@ -44,13 +51,24 @@ public class GardenReq implements Request {
     }
 
 
-
-
-    public byte[] encoder() {
+    public byte[] encoder() throws UnsupportedEncodingException {
+        System.out.println(this.toString());
         Pack pack = new Pack();
         pack.putLong(id);
-        pack.putVarstr(header.getUri());
-        pack.putVarstr(header.getParam().toJSONString());
-        return pack.getBuffer().array();
+        pack.putVarstr(getUri());
+        pack.putVarstr(getParameter().toJSONString());
+        short length = (short) pack.size();
+        byte[] bytes = new byte[length];
+        System.out.println("length+++++++++++++" + length);
+        pack.getBuffer().get(bytes);
+        return bytes;
+    }
+
+    @Override
+    public String toString() {
+        return "GardenReq{" +
+                "id=" + id +
+                ", header=" + header +
+                '}';
     }
 }

@@ -92,6 +92,7 @@ public class MethodInvokerTask implements Runnable {
             long id = req.getId();
             JSONObject params = req.getParameter();
             String uri = req.getUri();
+            LOGGER.info("dispatcher id:{}, uri:{}", id, uri);
             response = dispatcher(uri, id, params);
             if (response != null) {
 //            // 写入的时候已经release msg 无需显示的释放

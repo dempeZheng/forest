@@ -1,14 +1,14 @@
 package com.yy.ent.client;
 
+import com.yy.ent.codec.GardenDecoder;
+import com.yy.ent.codec.GardenEncoder;
+import com.yy.ent.protocol.GardenReq;
 import com.yy.ent.protocol.json.Request;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
-import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ public class YYClient {
 
     private int port;
 
-    public YYClient(String host,int port){
+    public YYClient(String host, int port) {
         this.host = host;
         this.port = port;
 
@@ -55,8 +55,8 @@ public class YYClient {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline p = ch.pipeline();
-                        p.addLast(new StringEncoder(CharsetUtil.UTF_8))
-                                .addLast(new StringDecoder(CharsetUtil.UTF_8))
+                        p.addLast(new GardenEncoder())
+                                .addLast(new GardenDecoder())
                                 .addLast(new ClientHandler());
                     }
                 });
@@ -73,10 +73,8 @@ public class YYClient {
         }));
         // Make the connection attempt.
 
-        connect(host,port);
+        connect(host, port);
     }
-
-
 
 
     public void connect(final String host, final int port) {
@@ -130,8 +128,8 @@ public class YYClient {
 
     }
 
-    public void send(Request request) {
-        channel.writeAndFlush(request.toJsonString());
+    public void send(GardenReq request) {
+        channel.writeAndFlush(request);
 
     }
 }

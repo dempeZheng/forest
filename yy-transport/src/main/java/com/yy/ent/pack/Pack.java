@@ -1,8 +1,5 @@
 package com.yy.ent.pack;
 
-import com.yy.ent.commons.protopack.exception.PackException;
-import com.yy.ent.commons.protopack.util.StringUtils;
-
 import java.io.UnsupportedEncodingException;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
@@ -70,23 +67,16 @@ public class Pack {
     }
 
     public Pack putFetch(byte[] bytes) {
-        try {
-            ensureCapacity(bytes.length);
-            buffer.put(bytes);
-            return this;
-        } catch (BufferOverflowException bex) {
-            throw new PackException("pack too many bytes", bex);
-        }
+        ensureCapacity(bytes.length);
+        buffer.put(bytes);
+        return this;
     }
 
     public Pack putByte(byte bt) {
-        try {
-            ensureCapacity(1);
-            buffer.put(bt);
-            return this;
-        } catch (BufferOverflowException bex) {
-            throw new PackException("pack too many bytes", bex);
-        }
+        ensureCapacity(1);
+        buffer.put(bt);
+        return this;
+
     }
 
 
@@ -98,67 +88,49 @@ public class Pack {
 
 
     public Pack putBoolean(boolean val) {
-        try {
-            ensureCapacity(1);
-            buffer.put((byte) (val ? 1 : 0));
-            return this;
-        } catch (BufferOverflowException bex) {
-            throw new PackException("pack too many bytes", bex);
-        }
+        ensureCapacity(1);
+        buffer.put((byte) (val ? 1 : 0));
+        return this;
+
     }
 
     public Pack putLong(long val) {
-        try {
-            ensureCapacity(8);
-            buffer.putLong(val);
-            return this;
-        } catch (BufferOverflowException bex) {
-            throw new PackException("pack too many bytes", bex);
-        }
+        ensureCapacity(8);
+        buffer.putLong(val);
+        return this;
+
     }
 
     public Pack putShort(short val) {
-        try {
-            ensureCapacity(2);
-            buffer.putShort(val);
-            return this;
-        } catch (BufferOverflowException bex) {
-            throw new PackException("pack too many bytes", bex);
-        }
+        ensureCapacity(2);
+        buffer.putShort(val);
+        return this;
+
     }
 
     // 16位的
     public Pack putVarbin(byte[] bytes) {
-        try {
-            ensureCapacity(2 + bytes.length);
-            buffer.putShort((short) bytes.length);
-            buffer.put(bytes);
-            return this;
-        } catch (BufferOverflowException bex) {
-            throw new PackException("required too many bytes :" + bytes.length, bex);
-        }
+        ensureCapacity(2 + bytes.length);
+        buffer.putShort((short) bytes.length);
+        buffer.put(bytes);
+        return this;
+
     }
 
     // 32位的
     public Pack putVarbin32(byte[] bytes) {
-        try {
-            ensureCapacity(4 + bytes.length);
-            buffer.putInt(bytes.length);
-            buffer.put(bytes);
-            return this;
-        } catch (BufferOverflowException bex) {
-            throw new PackException("pack too many bytes", bex);
-        }
+        ensureCapacity(4 + bytes.length);
+        buffer.putInt(bytes.length);
+        buffer.put(bytes);
+        return this;
+
     }
 
-    public Pack putVarstr(String str) {
-        try {
-            if (str == null)
-                str = "";
-            return putVarbin(str.getBytes("utf-8"));
-        } catch (UnsupportedEncodingException codeEx) {
-            throw new PackException(codeEx);
-        }
+    public Pack putVarstr(String str) throws UnsupportedEncodingException {
+        if (str == null)
+            str = "";
+        return putVarbin(str.getBytes("utf-8"));
+
     }
 
     /**
@@ -167,49 +139,33 @@ public class Pack {
      * @param str
      * @return
      */
-    public Pack putVarstr32(String str) {
-        try {
-            if (str == null) {
-                str = "";
-            }
-            return putVarbin32(str.getBytes("utf-8"));
-        } catch (UnsupportedEncodingException codeEx) {
-            throw new PackException(codeEx);
+    public Pack putVarstr32(String str) throws UnsupportedEncodingException {
+        if (str == null) {
+            str = "";
         }
+        return putVarbin32(str.getBytes("utf-8"));
+
     }
 
     public Pack putBuffer(ByteBuffer buf) {
-        try {
-            ensureCapacity(buf.remaining());
-            buffer.put(buf);
-            return this;
-        } catch (BufferOverflowException bex) {
-            throw new PackException(bex);
-        }
+        ensureCapacity(buf.remaining());
+        buffer.put(buf);
+        return this;
+
     }
 
     public void replaceShort(int off, short val) {
-        try {
-            int pos = buffer.position();
-            buffer.position(off);
-            buffer.putShort(val).position(pos);
-        } catch (BufferOverflowException bex) {
-            throw new PackException("pack too many bytes", bex);
-        } catch (IllegalArgumentException iex) {
-            throw new PackException(iex);
-        }
+        int pos = buffer.position();
+        buffer.position(off);
+        buffer.putShort(val).position(pos);
+
     }
 
     public void replaceInt(int off, int val) {
-        try {
-            int pos = buffer.position();
-            buffer.position(off);
-            buffer.putInt(val).position(pos);
-        } catch (BufferOverflowException bex) {
-            throw new PackException("pack too many bytes", bex);
-        } catch (IllegalArgumentException iex) {
-            throw new PackException(iex);
-        }
+        int pos = buffer.position();
+        buffer.position(off);
+        buffer.putInt(val).position(pos);
+
     }
 
     /**
@@ -240,14 +196,5 @@ public class Pack {
         buffer = newBuffer;
     }
 
-    @Override
-    public String toString() {
-        byte[] byteArray = buffer.array();
-        StringBuilder sb = new StringBuilder(size() * 8);
-        for (int i = 0; i < size(); i++) {
-            sb.append(StringUtils.byteToBitString(byteArray[i]));
-        }
-        return buffer.toString() + " Size " + size() + " and binary bits : " + sb.toString();
-    }
 
 }

@@ -40,6 +40,7 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         metric.increment();
         GardenReq req = (GardenReq) msg;
+        LOGGER.info("req:", req.toString());
         executorService.submit(new MethodInvokerTask(ctx, context, req));
     }
 

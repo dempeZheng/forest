@@ -34,4 +34,13 @@ public class Header {
     public void setParam(JSONObject param) {
         this.param = param;
     }
+
+
+    @Override
+    public String toString() {
+        return "Header{" +
+                "uri='" + uri + '\'' +
+                ", param=" + param +
+                '}';
+    }
 }

@@ -1,5 +1,7 @@
 package com.yy.ent.srv;
 
+import com.yy.ent.codec.GardenDecoder;
+import com.yy.ent.codec.GardenEncoder;
 import com.yy.ent.mvc.ioc.Cherry;
 import com.yy.ent.srv.core.DispatcherHandler;
 import com.yy.ent.srv.core.ServerContext;
@@ -8,11 +10,8 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.slf4j.Logger;
@@ -61,7 +60,7 @@ public class YYServer {
 
     private void init() {
         bossGroup = new NioEventLoopGroup();
-        workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors()*2);
+        workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors() * 2);
         b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
@@ -74,9 +73,11 @@ public class YYServer {
                     protected void initChannel(SocketChannel ch)
                             throws Exception {
                         ChannelPipeline channel = ch.pipeline();
-                        channel.addLast(new StringEncoder(CharsetUtil.UTF_8))
-                                .addLast(new StringDecoder(CharsetUtil.UTF_8))
-                                .addLast(new DispatcherHandler(context));
+                        channel
+                                .addLast(new GardenEncoder())
+                                .addLast(new GardenDecoder())
+                                .addLast(new DispatcherHandler(context))
+                        ;
 
                     }
                 });

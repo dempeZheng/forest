@@ -25,11 +25,5 @@ public class YYRequest {
         return header.getUri();
     }
 
-    public Long getRequestId() {
-        return header.getId();
-    }
 
-    public void setRequestId(Long id) {
-        header.setId(id);
-    }
 }

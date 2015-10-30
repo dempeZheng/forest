@@ -1,10 +1,7 @@
 package com.yy.ent.pack;
 
-import com.yy.ent.commons.protopack.base.Marshallable;
-import com.yy.ent.commons.protopack.exception.UnpackException;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -66,40 +63,16 @@ public class Unpack {
     }
 
     public byte[] popFetch(int sz) {
-        try {
-            byte[] fetch = new byte[sz];
-            buffer.get(fetch);
-            return fetch;
-        } catch (BufferUnderflowException bEx) {
-            throw new UnpackException(bEx);
-        }
+        byte[] fetch = new byte[sz];
+        buffer.get(fetch);
+        return fetch;
+
     }
 
-    public Object popObject(Object obj)
-            throws Exception {
-        if (obj instanceof Marshallable) {
-            //return popMarshallable((Marshallable) obj);
-            return null;
-        } else if (obj instanceof String) {
-            return popVarstr();
-        } else if (obj instanceof Unpack) {
-            ((Unpack) obj).buffer = ByteBuffer.allocate(buffer
-                    .remaining());
-            ((Unpack) obj).buffer.order(ByteOrder.LITTLE_ENDIAN);
-            ((Unpack) obj).buffer.put(buffer);
-            ((Unpack) obj).buffer.rewind();
-            return obj;
-        } else {
-            throw new UnpackException("unknow object type");
-        }
-    }
 
     public Byte popByte() {
-        try {
-            return buffer.get();
-        } catch (BufferUnderflowException bEx) {
-            throw new UnpackException(bEx);
-        }
+        return buffer.get();
+
     }
 
     // 16位的大小
@@ -112,58 +85,43 @@ public class Unpack {
         return popFetch(buffer.getInt());
     }
 
-    public String popVarbin(String encode) {
-        try {
-            byte[] bytes = popVarbin();
-            return new String(bytes, encode);
-        } catch (UnsupportedEncodingException codeEx) {
-            throw new UnpackException("unsupported encoding", codeEx);
-        }
+    public String popVarbin(String encode) throws UnsupportedEncodingException {
+        byte[] bytes = popVarbin();
+        return new String(bytes, encode);
+
     }
 
-    public String popVarbin32(String encode) {
-        try {
-            byte[] bytes = popVarbin32();
-            return new String(bytes, encode);
-        } catch (UnsupportedEncodingException codeEx) {
-            throw new UnpackException(codeEx);
-        }
+    public String popVarbin32(String encode) throws UnsupportedEncodingException {
+        byte[] bytes = popVarbin32();
+        return new String(bytes, encode);
+
     }
 
-    public String popVarstr() {
+    public String popVarstr() throws UnsupportedEncodingException {
         return popVarbin("utf-8");
     }
 
-    public String popVarstr32() {
+    public String popVarstr32() throws UnsupportedEncodingException {
         return popVarbin32("utf-8");
     }
 
-    public String popVarstr(String encode) {
+    public String popVarstr(String encode) throws UnsupportedEncodingException {
         return popVarbin(encode);
     }
 
     public Integer popInt() {
-        try {
-            return buffer.getInt();
-        } catch (BufferUnderflowException bEx) {
-            throw new UnpackException(bEx);
-        }
+        return buffer.getInt();
+
     }
 
     public Long popLong() {
-        try {
-            return buffer.getLong();
-        } catch (BufferUnderflowException bEx) {
-            throw new UnpackException(bEx);
-        }
+        return buffer.getLong();
+
     }
 
     public Short popShort() {
-        try {
-            return buffer.getShort();
-        } catch (BufferUnderflowException bEx) {
-            throw new UnpackException(bEx);
-        }
+        return buffer.getShort();
+
     }
 
 

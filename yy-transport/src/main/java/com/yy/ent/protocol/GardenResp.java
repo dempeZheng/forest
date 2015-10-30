@@ -38,7 +38,6 @@ public class GardenResp implements Response {
     public byte[] encoder() {
         Pack pack = new Pack();
         pack.putLong(id);
-        pack.putVarstr(data);
         return pack.getBuffer().array();
     }
 }

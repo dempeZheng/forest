@@ -1,13 +1,9 @@
-package com.yy.ent.srv.core;
+package com.yy.ent.codec;
 
-import com.yy.ent.commons.protopack.base.Packet;
 import com.yy.ent.protocol.GardenReq;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,6 +16,9 @@ public class GardenEncoder extends MessageToByteEncoder<GardenReq> {
 
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, GardenReq req, ByteBuf byteBuf) throws Exception {
-        byteBuf.writeBytes(req.encoder());
+        System.out.println("_________________encoder-----------------------");
+        byte[] bytes = req.encoder();
+        byteBuf.writeShort(bytes.length);
+        byteBuf.writeBytes(bytes);
     }
 }

@@ -14,7 +14,6 @@
     <orderEntry type="module" module-name="yy-client" />
     <orderEntry type="module" module-name="yy-transport" />
     <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.6" level="project" />
-    <orderEntry type="library" name="Maven: com.yy.ent.commons:commons-protopack:1.1.4" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-buffer:5.0.0.Alpha1" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:5.0.0.Alpha1" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec:5.0.0.Alpha1" level="project" />
