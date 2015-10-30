@@ -14,7 +14,6 @@ import java.io.UnsupportedEncodingException;
  */
 public class JettyReq implements Request {
 
-
     private long id;
 
     private Header header;

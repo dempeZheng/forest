@@ -35,15 +35,16 @@ public class SimpleActionTest extends ClientMonitorTest {
 
     @Test
     public void getUserByUidTest() throws InterruptedException {
-        JettyReq request = new JettyReq();
-        request.setUri("/simpleAction/getUserByUid");
-//        Map<String, String> params = new HashMap<String, String>();
-        JSONObject params = new JSONObject();
-        params.put("uid", "12345677");
-        request.setParameter(params);
-        String s = clientSender.sendAndWait(request);
-        System.out.println("=========>"+s);
-        // String s2 = clientSender2.sendAndWait(request);
+        for (int i = 0; i < 100000; i++) {
+            JettyReq request = new JettyReq();
+            request.setUri("/simpleAction/getUserByUid");
+            JSONObject params = new JSONObject();
+            params.put("uid", "12345677");
+            request.setParameter(params);
+            String s = clientSender.sendAndWait(request);
+
+        }
+
     }
 
     @Test

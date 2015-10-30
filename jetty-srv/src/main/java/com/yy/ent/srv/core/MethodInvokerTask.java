@@ -24,7 +24,7 @@ import java.lang.reflect.Type;
  * Time: 10:59
  * To change this template use File | Settings | File Templates.
  */
-public class MethodInvokerTask {
+public class MethodInvokerTask implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodInvokerTask.class);
 
@@ -86,27 +86,27 @@ public class MethodInvokerTask {
         return actionMethod.call(paramTarget);
     }
 
-//    @Override
-//    public void run() {
-//        JettyResp response = null;
-//        try {
-//            long id = req.getId();
-//            JSONObject params = req.getParameter();
-//            String uri = req.getUri();
-//            LOGGER.info("dispatcher id:{}, uri:{}", id, uri);
-//            response = dispatcher(uri, id, params);
-//            if (response != null) {
-////            // 写入的时候已经release msg 无需显示的释放
-//                ctx.writeAndFlush(response);
-//            }
-//        } catch (ModelConvertJsonException e) {
-//            LOGGER.error(e.getMessage(), e);
-//        } catch (JServerException e) {
-//            LOGGER.error(e.getMessage(), e);
-//        }
-//
-//
-//    }
+    @Override
+    public void run() {
+        JettyResp response = null;
+        try {
+            long id = req.getId();
+            JSONObject params = req.getParameter();
+            String uri = req.getUri();
+            LOGGER.debug("dispatcher id:{}, uri:{}", id, uri);
+            response = dispatcher(uri, id, params);
+            if (response != null) {
+//            // 写入的时候已经release msg 无需显示的释放
+                ctx.writeAndFlush(response);
+            }
+        } catch (ModelConvertJsonException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (JServerException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+
+    }
 
     public void doInvoke(){
         JettyResp response = null;

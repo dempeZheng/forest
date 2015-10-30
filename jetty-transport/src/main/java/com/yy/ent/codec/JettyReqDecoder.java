@@ -41,7 +41,7 @@ public class JettyReqDecoder extends ByteToMessageDecoder {
         JettyReq req = new JettyReq();
         req.setId(unpack.popLong());
         req.setUri(unpack.popVarstr());
-        LOGGER.info("req:{}", req.toString());
+        LOGGER.debug("req:{}", req.toString());
         list.add(req);
 
     }

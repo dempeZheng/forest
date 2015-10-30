@@ -39,7 +39,7 @@ public class JettyRespDecoder extends ByteToMessageDecoder {
         Long id = unpack.popLong();
         String data = unpack.popVarstr();
         JettyResp resp = new JettyResp(id, data);
-        LOGGER.info("resp:{}", resp.toString());
+        LOGGER.debug("resp:{}", resp.toString());
         list.add(resp);
 
     }

@@ -16,7 +16,6 @@ public class JettyReqEncoder extends MessageToByteEncoder<JettyReq> {
 
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, JettyReq req, ByteBuf byteBuf) throws Exception {
-        System.out.println("_________________encoder-----------------------");
         byte[] bytes = req.encoder();
         byteBuf.writeShort(bytes.length);
         byteBuf.writeBytes(bytes);

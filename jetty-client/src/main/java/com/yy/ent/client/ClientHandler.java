@@ -28,7 +28,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
             Long id = resp.getId();
             ReplyFuture future = replyQueue.take(id);
             future.onReceivedReply(resp);
-            LOGGER.info("result = {}", resp.toString());
+            LOGGER.debug("result = {}", resp.toString());
         } finally {
             ReferenceCountUtil.release(msg);
         }

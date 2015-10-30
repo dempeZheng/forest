@@ -26,13 +26,12 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
 
     private static MetricThread metric = new MetricThread("server");
 
-    private ExecutorService executorService = null;
-
     private final static int DEF_THREAD_SIZE = Runtime.getRuntime().availableProcessors() * 2;
+
+    private static ExecutorService executorService = Executors.newFixedThreadPool(DEF_THREAD_SIZE, new DefaultThreadFactory("METHOD_TASK"));
 
     public DispatcherHandler(ServerContext context) {
         this.context = context;
-        this.executorService = Executors.newFixedThreadPool(DEF_THREAD_SIZE, new DefaultThreadFactory("METHOD_TASK"));
 
     }
 
@@ -40,11 +39,11 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         metric.increment();
         JettyReq req = (JettyReq) msg;
-        LOGGER.info("req:", req.toString());
-        MethodInvokerTask task = new MethodInvokerTask(ctx, context, req);
-        task.doInvoke();
+        LOGGER.debug("req:", req.toString());
+        //MethodInvokerTask task = new MethodInvokerTask(ctx, context, req);
+        //task.doInvoke();
 
-        //executorService.submit(new MethodInvokerTask(ctx, context, req));
+        executorService.submit(new MethodInvokerTask(ctx, context, req));
     }
 
 
