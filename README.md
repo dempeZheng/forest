@@ -41,8 +41,8 @@ public class SimpleAction {
 - HttpJettyServer协议的实现
 - WebSocketJettyServer的实现
 
-###jetty-client
->JettServer高可用NIO客户端
+###jetty-client模块
+>JettyServer高可用NIO客户端
 
 ####High availability
 支持多个节点，节点不可用自动移除
@@ -54,7 +54,7 @@ public class SimpleAction {
 
 #### 自动维护心跳
 
-###jetty-transport
+###jetty-codec模块
 >编解码框架
 
 ####JettyRequest
@@ -103,14 +103,14 @@ public class SimpleAction {
 </tr>
 </table>
 
-###jetty-router
+###jetty-router模块
 >服务代理模块，提供路由分发功能
 
-###jetty-monitor
+###jetty-monitor模块
 >性能监控
 >报警
 
-###jetty-analysis
+###jetty-analysis模块
 >接口统计分析
 >智能推荐
 
