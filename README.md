@@ -3,12 +3,15 @@
 
 ###jetty-srv模块
 >基于netty实现的Nio mvc业务框架
+
 ####协议
 >- http
 >- websckoket
 >- JettyReq
 >- JettyResp
+
 ####JettyRequest
+
 <table>
 <tr bgcolor="#DCDCDC">
 	<th colspan="5" width="50%">header</th>
@@ -31,7 +34,9 @@
 	<td>JSONString</td>
 </tr>
 </table>
+
 ####JettyResponse
+
 <table>
 <tr bgcolor="#DCDCDC">
 	<th colspan="3" width="50%">header</th>
@@ -50,10 +55,13 @@
 	<td>JSONString</td>
 </tr>
 </table>
+
 ####基于注解的 mvc
+
 >- @Inject注入
 >- @Path 路径支持
 >- @Param参数自动注入value
+
 ``` java
 @Action
 public class SimpleAction {
@@ -68,8 +76,9 @@ public class SimpleAction {
         return userService.getUserByUid("123").toString();
     }
 }
-
 ```
+
+
 ####TODO 
 >- 支持自己实现协议扩展
 >- 性能优化
