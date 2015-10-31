@@ -88,6 +88,7 @@ public class SimpleAction {
 
 ###jetty-client
 >JettServer高可用NIO客户端
+
 ####High availability
 支持多个节点，节点不可用自动移除
 
@@ -95,6 +96,7 @@ public class SimpleAction {
 > 支持连接池
 
 #### 断链自动重连
+
 #### 自动维护心跳
 
 ###jetty-transport
