@@ -5,10 +5,10 @@
 >基于netty实现的Nio mvc业务框架
 
 ####协议
->- http
->- websckoket
->- JettyReq
->- JettyResp
+- http
+- websckoket
+- JettyReq
+- JettyResp
 
 ####JettyRequest
 
@@ -58,9 +58,9 @@
 
 ####基于注解的 mvc
 
->- @Inject注入
->- @Path 路径支持
->- @Param参数自动注入value
+- @Inject注入
+- @Path 路径支持
+- @Param参数自动注入value
 
 ``` java
 @Action
@@ -80,10 +80,10 @@ public class SimpleAction {
 
 ####TODO 
 
->- 支持自己实现协议扩展
->- 性能优化
->- HttpJettyServer协议的实现
->- WebSocketJettyServer的实现
+- 支持自己实现协议扩展
+- 性能优化
+- HttpJettyServer协议的实现
+- WebSocketJettyServer的实现
 
 ###jetty-transport
 >编解码框架
