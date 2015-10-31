@@ -93,7 +93,7 @@ public class SimpleAction {
 支持多个节点，节点不可用自动移除
 
 #### Client pool
-> 支持连接池
+支持连接池
 
 #### 断链自动重连
 
