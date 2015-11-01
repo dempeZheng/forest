@@ -1,6 +1,6 @@
 package com.yy.ent.client;
 
-import com.yy.ent.protocol.JettyResp;
+import com.yy.ent.protocol.JettyResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,7 @@ public class ReplyFuture {
 
     private long readTimeoutMillis = 120000;
 
-    private JettyResp message;
+    private JettyResponse message;
 
 
     public ReplyFuture(long messageId) {
@@ -56,7 +56,7 @@ public class ReplyFuture {
         }
     }
 
-    synchronized void onReceivedReply(JettyResp message) {
+    synchronized void onReceivedReply(JettyResponse message) {
         this.message = message;
         this.notifyAll();
     }
@@ -68,6 +68,6 @@ public class ReplyFuture {
         if (this.message == null) {
             LOGGER.error("message is null");
         }
-        return this.message.getData();
+        return this.message.getJsonString();
     }
 }

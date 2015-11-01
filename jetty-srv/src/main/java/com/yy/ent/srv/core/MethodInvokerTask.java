@@ -1,11 +1,11 @@
 package com.yy.ent.srv.core;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.common.utils.LocalVariableTableParameterNameDiscoverer;
 import com.yy.ent.mvc.anno.Param;
-import com.yy.ent.protocol.JettyReq;
-import com.yy.ent.protocol.JettyResp;
-import com.yy.ent.protocol.json.Response;
+import com.yy.ent.protocol.JettyRequest;
+import com.yy.ent.protocol.JettyResponse;
 import com.yy.ent.srv.exception.JServerException;
 import com.yy.ent.srv.exception.ModelConvertJsonException;
 import io.netty.channel.ChannelHandlerContext;
@@ -30,9 +30,9 @@ public class MethodInvokerTask implements Runnable {
 
     private ChannelHandlerContext ctx;
     private ServerContext serverContext;
-    private JettyReq req;
+    private JettyRequest req;
 
-    public MethodInvokerTask(ChannelHandlerContext ctx, ServerContext serverContext, JettyReq req) {
+    public MethodInvokerTask(ChannelHandlerContext ctx, ServerContext serverContext, JettyRequest req) {
         this.ctx = ctx;
         this.serverContext = serverContext;
         this.req = req;
@@ -88,9 +88,9 @@ public class MethodInvokerTask implements Runnable {
 
     @Override
     public void run() {
-        JettyResp response = null;
+        JettyResponse response = null;
         try {
-            long id = req.getId();
+            int id = req.getMsgId();
             JSONObject params = req.getParameter();
             String uri = req.getUri();
             LOGGER.debug("dispatcher id:{}, uri:{}", id, uri);
@@ -109,9 +109,9 @@ public class MethodInvokerTask implements Runnable {
     }
 
     public void doInvoke(){
-        JettyResp response = null;
+        JettyResponse response = null;
         try {
-            long id = req.getId();
+            int id = req.getMsgId();
             JSONObject params = req.getParameter();
             String uri = req.getUri();
             LOGGER.info("dispatcher id:{}, uri:{}", id, uri);
@@ -128,7 +128,7 @@ public class MethodInvokerTask implements Runnable {
     }
 
 
-    private JettyResp dispatcher(String uri, Long id, JSONObject requestParams) throws ModelConvertJsonException, JServerException {
+    private JettyResponse dispatcher(String uri, Integer id, JSONObject requestParams) throws ModelConvertJsonException, JServerException {
         ActionMethod actionMethod = serverContext.get(uri);
         if (actionMethod == null) {
             LOGGER.warn("[dispatcher]:not find uri {}", uri);
@@ -143,7 +143,7 @@ public class MethodInvokerTask implements Runnable {
         if (id == null) {
             LOGGER.warn("request msg id is null,uri:{},params:{}", uri, requestParams);
         }
-        return new JettyResp(id, toJSONString(result));
+        return new JettyResponse(id, toJSONString(result));
     }
 
     /**
@@ -159,7 +159,7 @@ public class MethodInvokerTask implements Runnable {
         }
         String data = null;
         try {
-            data = JSONObject.toJSONString(result);
+            data = JSON.toJSONString(result);
         } catch (Exception e) {
             LOGGER.error("model convert 2 json err:{} parse json error", result);
             throw new ModelConvertJsonException("model convert 2 json err");

@@ -1,9 +1,5 @@
 package com.yy.ent;
 
-import com.yy.ent.action.SimpleAction;
-import com.yy.ent.mvc.ioc.BeanFactory;
-import com.yy.ent.mvc.ioc.JettyIOC;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -13,8 +9,21 @@ import com.yy.ent.mvc.ioc.JettyIOC;
  */
 public class Test {
     public static void main(String[] args) throws Exception {
-        JettyIOC cherry = new JettyIOC();
-        cherry.init();
-        SimpleAction simpleAction = BeanFactory.getBean(SimpleAction.class.getName());
+        int arr2[] = {1, -2, 3, 10, -4, 7, 2, -5};
+        int arr[] = {-2, -1,-3};
+        int max = arr[0];
+        int preMax = arr[0];
+        for (int i = 0; i < arr.length; i++) {
+            if (max < 0) {
+              max =0;
+            }
+            max = max + arr[i];
+            if (max > preMax) {
+                preMax = max;
+            }
+        }
+        System.out.println(preMax);
     }
+
+
 }

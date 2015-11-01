@@ -1,7 +1,6 @@
 package com.yy.ent;
 
 import com.yy.ent.srv.AppServer;
-import com.yy.ent.srv.YYServer;
 
 /**
  * Created with IntelliJ IDEA.

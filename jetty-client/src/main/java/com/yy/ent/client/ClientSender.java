@@ -1,8 +1,9 @@
 package com.yy.ent.client;
 
 
-import com.yy.ent.protocol.JettyReq;
+import com.yy.ent.protocol.JettyRequest;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -14,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ClientSender extends YYClient {
 
-    private static AtomicLong idMaker = new AtomicLong(0);
+    private static AtomicInteger idMaker = new AtomicInteger(0);
 
     private  ReplyWaitQueue replyQueue = new ReplyWaitQueue();
 
@@ -23,16 +24,16 @@ public class ClientSender extends YYClient {
     }
 
 
-    public void sendOnly(JettyReq request) {
-        long id = idMaker.incrementAndGet();
-        request.setId(id);
+    public void sendOnly(JettyRequest request) {
+        int id = idMaker.incrementAndGet();
+        request.setMsgId(id);
         send(request);
 
     }
 
-    public String sendAndWait(JettyReq request) {
-        long id = idMaker.incrementAndGet();
-        request.setId(id);
+    public String sendAndWait(JettyRequest request) {
+        int id = idMaker.incrementAndGet();
+        request.setMsgId(id);
         try {
             ReplyFuture future = new ReplyFuture(id);
             replyQueue.add(future);
@@ -44,9 +45,9 @@ public class ClientSender extends YYClient {
 
     }
 
-    public String sendAndWait(JettyReq request, long timeout) {
-        long id = idMaker.incrementAndGet();
-        request.setId(id);
+    public String sendAndWait(JettyRequest request, long timeout) {
+        int id = idMaker.incrementAndGet();
+        request.setMsgId(id);
         try {
             ReplyFuture future = new ReplyFuture(id);
             replyQueue.add(future);

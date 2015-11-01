@@ -1,6 +1,6 @@
 package com.yy.ent.srv;
 
-import com.yy.ent.codec.JettyReqDecoder;
+import com.yy.ent.codec.JettyRequestDecoder;
 import com.yy.ent.codec.JettyRespEncoder;
 import com.yy.ent.mvc.ioc.JettyIOC;
 import com.yy.ent.srv.core.DispatcherHandler;
@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
  * Time: 16:41
  * To change this template use File | Settings | File Templates.
  */
-public class YYServer {
+public class JettyServer {
 
-    private static final Logger log = LoggerFactory.getLogger(YYServer.class);
+    private static final Logger log = LoggerFactory.getLogger(JettyServer.class);
 
     private EventLoopGroup bossGroup;
 
@@ -41,7 +41,7 @@ public class YYServer {
     private ServerContext context = new ServerContext();
 
 
-    public YYServer() {
+    public JettyServer() {
         executorGroup = new DefaultEventExecutorGroup(4, new DefaultThreadFactory("decode-worker-thread-pool"));
         init();
     }
@@ -75,7 +75,7 @@ public class YYServer {
                         ChannelPipeline channel = ch.pipeline();
                         channel
                                 .addLast(new JettyRespEncoder())
-                                .addLast(new JettyReqDecoder())
+                                .addLast(new JettyRequestDecoder())
                                 .addLast(new DispatcherHandler(context))
                         ;
 
@@ -91,7 +91,7 @@ public class YYServer {
             workerGroup.shutdownGracefully();
     }
 
-    public YYServer stopWithJVMShutdown() {
+    public JettyServer stopWithJVMShutdown() {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
             public void run() {
@@ -101,7 +101,7 @@ public class YYServer {
         return this;
     }
 
-    public YYServer initMVC() throws Exception {
+    public JettyServer initMVC() throws Exception {
         cherry = new JettyIOC();
         return this;
     }

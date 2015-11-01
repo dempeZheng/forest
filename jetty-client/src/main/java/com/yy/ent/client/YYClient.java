@@ -1,8 +1,8 @@
 package com.yy.ent.client;
 
-import com.yy.ent.codec.JettyReqEncoder;
+import com.yy.ent.codec.JettyRequestEncoder;
 import com.yy.ent.codec.JettyRespDecoder;
-import com.yy.ent.protocol.JettyReq;
+import com.yy.ent.protocol.JettyRequest;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -54,7 +54,7 @@ public class YYClient {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline p = ch.pipeline();
-                        p.addLast(new JettyReqEncoder())
+                        p.addLast(new JettyRequestEncoder())
                                 .addLast(new JettyRespDecoder())
                                 .addLast(new ClientHandler());
                     }
@@ -127,7 +127,7 @@ public class YYClient {
 
     }
 
-    public void send(JettyReq request) {
+    public void send(JettyRequest request) {
         channel.writeAndFlush(request);
 
     }

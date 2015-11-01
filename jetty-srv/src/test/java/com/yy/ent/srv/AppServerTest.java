@@ -11,7 +11,7 @@ public class AppServerTest {
 
     public static void main(String[] args) {
 
-        YYServer server = new YYServer();
+        JettyServer server = new JettyServer();
         server.start(8888);
 
     }

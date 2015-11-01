@@ -1,7 +1,6 @@
 package com.yy.ent.codec;
 
-import com.yy.ent.pack.Unpack;
-import com.yy.ent.protocol.JettyReq;
+import com.yy.ent.protocol.JettyRequest;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -17,30 +16,26 @@ import java.util.List;
  * Time: 20:08
  * To change this template use File | Settings | File Templates.
  */
-public class JettyReqDecoder extends ByteToMessageDecoder {
+public class JettyRequestDecoder extends ByteToMessageDecoder {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(JettyReqDecoder.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(JettyRequestDecoder.class);
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
 
-        // TODO decoder
         int length = byteBuf.readableBytes();
         if (length < 2) {
             return;
         }
         byteBuf.markReaderIndex();
+        // 消息size
         short size = byteBuf.readShort();
         if (length - 2 < size) {
             byteBuf.resetReaderIndex();
-            LOGGER.warn("");
+            return;
         }
-        byte[] bytes = new byte[size];
-        byteBuf.readBytes(bytes);
-        Unpack unpack = new Unpack(bytes);
-        JettyReq req = new JettyReq();
-        req.setId(unpack.popLong());
-        req.setUri(unpack.popVarstr());
+
+        JettyRequest req = JettyRequest.decoder(byteBuf, size);
         LOGGER.debug("req:{}", req.toString());
         list.add(req);
 

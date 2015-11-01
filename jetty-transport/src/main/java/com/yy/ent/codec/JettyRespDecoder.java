@@ -1,7 +1,6 @@
 package com.yy.ent.codec;
 
-import com.yy.ent.pack.Unpack;
-import com.yy.ent.protocol.JettyResp;
+import com.yy.ent.protocol.JettyResponse;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -32,13 +31,9 @@ public class JettyRespDecoder extends ByteToMessageDecoder {
         if (length - 2 < size) {
             byteBuf.resetReaderIndex();
             LOGGER.warn("");
+            return;
         }
-        byte[] bytes = new byte[size];
-        byteBuf.readBytes(bytes);
-        Unpack unpack = new Unpack(bytes);
-        Long id = unpack.popLong();
-        String data = unpack.popVarstr();
-        JettyResp resp = new JettyResp(id, data);
+        JettyResponse resp = JettyResponse.decode(byteBuf, size);
         LOGGER.debug("resp:{}", resp.toString());
         list.add(resp);
 
