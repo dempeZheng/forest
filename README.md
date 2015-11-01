@@ -86,19 +86,21 @@ public class SimpleAction {
 
 <table>
 <tr bgcolor="#DCDCDC">
-	<th colspan="3" width="50%">header</th>
+	<th colspan="4" width="50%">header</th>
 	<th>body</th>
 </tr>
 <tr>	
 	<td>size</td>
 	<td>len</td>
-	<td>msgId</td>
+	<td>msgId(消息id)</td>
+	<td>resCode(消息返回码)</td>
 	<td>body</td>
 </tr>
 <tr>	
 	<td>short(2byte)</td>
 	<td>short(2byte)</td>
 	<td>int(4byte)</td>
+	<td>short(2byte)</td>
 	<td>JSONString</td>
 </tr>
 </table>
