@@ -41,9 +41,6 @@ public class SimpleServer {
     }
 }
 
-```
-
-``` java
 public class Test {
 
 	public static ClientSender clientSender = new ClientSender("localhost", 8888);
