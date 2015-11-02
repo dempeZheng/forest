@@ -12,7 +12,7 @@ import java.io.UnsupportedEncodingException;
  * Time: 上午10:25
  * To change this template use File | Settings | File Templates.
  */
-public class JettyHeader {
+public class KettyHeader {
 
 
     private String uri;

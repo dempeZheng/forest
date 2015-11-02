@@ -15,10 +15,10 @@ import java.io.UnsupportedEncodingException;
  * Time: 18:31
  * To change this template use File | Settings | File Templates.
  */
-public class JettyRequest implements Request {
+public class KettyRequest implements Request {
 
 
-    private JettyHeader header;
+    private KettyHeader header;
 
     private JSONObject body;
 
@@ -42,8 +42,8 @@ public class JettyRequest implements Request {
         return header.getUri();
     }
 
-    public JettyRequest() {
-        header = new JettyHeader();
+    public KettyRequest() {
+        header = new KettyHeader();
         body = new JSONObject();
     }
 
@@ -57,11 +57,11 @@ public class JettyRequest implements Request {
     }
 
 
-    public JettyHeader getHeader() {
+    public KettyHeader getHeader() {
         return header;
     }
 
-    public void setHeader(JettyHeader header) {
+    public void setHeader(KettyHeader header) {
         this.header = header;
     }
 
@@ -94,7 +94,7 @@ public class JettyRequest implements Request {
         byteBuf.writeBytes(bytes);
     }
 
-    public  static JettyRequest decoder(ByteBuf byteBuf, int size) throws UnsupportedEncodingException {
+    public  static KettyRequest decoder(ByteBuf byteBuf, int size) throws UnsupportedEncodingException {
         short headerSize = byteBuf.readShort();
         byte[] bytes = new byte[headerSize];
         byteBuf.readBytes(bytes);
@@ -109,8 +109,8 @@ public class JettyRequest implements Request {
 
         Unpack bodyPack = new Unpack(bodyBytes);
         String jsonBody = bodyPack.popVarstr();
-        JettyRequest req = new JettyRequest();
-        JettyHeader header = new JettyHeader();
+        KettyRequest req = new KettyRequest();
+        KettyHeader header = new KettyHeader();
         header.setUri(uri);
         header.setMsgId(msgId);
         header.setParam(JSON.parseObject(params));

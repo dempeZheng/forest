@@ -1,8 +1,8 @@
 package com.yy.ent.client;
 
-import com.yy.ent.codec.JettyRequestEncoder;
-import com.yy.ent.codec.JettyRespDecoder;
-import com.yy.ent.protocol.JettyRequest;
+import com.yy.ent.codec.KettyRequestEncoder;
+import com.yy.ent.codec.KettyRespDecoder;
+import com.yy.ent.protocol.KettyRequest;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -20,10 +20,10 @@ import java.io.IOException;
  * Time: 13:17
  * To change this template use File | Settings | File Templates.
  */
-public class YYClient {
+public class KettyClient {
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(YYClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KettyClient.class);
 
     protected Bootstrap b;
 
@@ -40,7 +40,7 @@ public class YYClient {
 
     private int port;
 
-    public YYClient(String host, int port) {
+    public KettyClient(String host, int port) {
         this.host = host;
         this.port = port;
 
@@ -54,8 +54,8 @@ public class YYClient {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline p = ch.pipeline();
-                        p.addLast(new JettyRequestEncoder())
-                                .addLast(new JettyRespDecoder())
+                        p.addLast(new KettyRequestEncoder())
+                                .addLast(new KettyRespDecoder())
                                 .addLast(new ClientHandler());
                     }
                 });
@@ -127,7 +127,7 @@ public class YYClient {
 
     }
 
-    public void send(JettyRequest request) {
+    public void send(KettyRequest request) {
         channel.writeAndFlush(request);
 
     }

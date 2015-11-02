@@ -1,6 +1,6 @@
 package com.yy.ent.client;
 
-import com.yy.ent.protocol.JettyResponse;
+import com.yy.ent.protocol.KettyResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,7 @@ public class ReplyFuture {
 
     private long readTimeoutMillis = 120000;
 
-    private JettyResponse message;
+    private KettyResponse message;
 
 
     public ReplyFuture(long messageId) {
@@ -56,7 +56,7 @@ public class ReplyFuture {
         }
     }
 
-    synchronized void onReceivedReply(JettyResponse message) {
+    synchronized void onReceivedReply(KettyResponse message) {
         this.message = message;
         this.notifyAll();
     }

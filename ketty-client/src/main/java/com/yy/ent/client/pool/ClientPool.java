@@ -1,7 +1,6 @@
 package com.yy.ent.client.pool;
 
 import com.yy.ent.client.ClientSender;
-import com.yy.ent.client.YYClient;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
 /**

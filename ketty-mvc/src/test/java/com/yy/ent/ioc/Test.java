@@ -1,6 +1,6 @@
 package com.yy.ent.ioc;
 
-import com.yy.ent.mvc.ioc.JettyIOC;
+import com.yy.ent.mvc.ioc.KettyIOC;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +11,7 @@ import com.yy.ent.mvc.ioc.JettyIOC;
  */
 public class Test {
     public static void main(String[] args) throws Exception {
-        JettyIOC cherry = new JettyIOC("E:\\IDEAProject\\yy-rpc\\yy-ioc\\src\\main\\resources\\cherry.xml");
+        KettyIOC cherry = new KettyIOC("E:\\IDEAProject\\yy-rpc\\yy-ioc\\src\\main\\resources\\ketty.xml");
         cherry.init();
 
     }

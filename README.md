@@ -1,7 +1,7 @@
 ##Ketty
 >基于netty实现的rpc框架，提供性能监控，日志分析，动态扩展的功能。
 
-###jetty-srv模块
+###ketty-srv模块
 >基于netty实现支持自定义协议扩展的Nio MVC高性能业务框架
 
 ####协议
@@ -30,6 +30,35 @@ public class SimpleAction {
         return userService.getUserByUid(uid);
     }
 }
+
+public class SimpleServer {
+
+    public static void main(String[] args) throws Exception {
+        new AppServer()
+                .stopWithJVMShutdown()
+                .initMVC()
+                .start(8888);
+    }
+}
+
+```
+
+``` java
+public class Test {
+
+	public static ClientSender clientSender = new ClientSender("localhost", 8888);
+
+	public static void main(String[] args) throws Exception {
+		KettyRequest request = new KettyRequest();
+		request.setUri("/simpleAction/getUserByUid");
+		JSONObject params = new JSONObject();
+		params.put("uid", "12345677");
+		request.setParameter(params);
+		String result = clientSender.sendAndWait(request);
+		System.out.println("result : " + result);
+	}
+}
+
 ```
 
 ####TODO 
@@ -57,7 +86,7 @@ public class SimpleAction {
 ###ketty-codec模块
 >编解码框架
 
-####JettyRequest
+####KettyRequest
 
 <table>
 <tr bgcolor="#DCDCDC">
@@ -82,7 +111,7 @@ public class SimpleAction {
 </tr>
 </table>
 
-####JettyResponse
+####KettyResponse
 
 <table>
 <tr bgcolor="#DCDCDC">

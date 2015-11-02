@@ -1,10 +1,9 @@
 package com.yy.ent.client;
 
 
-import com.yy.ent.protocol.JettyRequest;
+import com.yy.ent.protocol.KettyRequest;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Time: 17:13
  * To change this template use File | Settings | File Templates.
  */
-public class ClientSender extends YYClient {
+public class ClientSender extends KettyClient {
 
     private static AtomicInteger idMaker = new AtomicInteger(0);
 
@@ -24,14 +23,14 @@ public class ClientSender extends YYClient {
     }
 
 
-    public void sendOnly(JettyRequest request) {
+    public void sendOnly(KettyRequest request) {
         int id = idMaker.incrementAndGet();
         request.setMsgId(id);
         send(request);
 
     }
 
-    public String sendAndWait(JettyRequest request) {
+    public String sendAndWait(KettyRequest request) {
         int id = idMaker.incrementAndGet();
         request.setMsgId(id);
         try {
@@ -45,7 +44,7 @@ public class ClientSender extends YYClient {
 
     }
 
-    public String sendAndWait(JettyRequest request, long timeout) {
+    public String sendAndWait(KettyRequest request, long timeout) {
         int id = idMaker.incrementAndGet();
         request.setMsgId(id);
         try {

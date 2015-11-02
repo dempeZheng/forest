@@ -9,7 +9,7 @@ import java.util.*;
  * Time: 11:13
  * To change this template use File | Settings | File Templates.
  */
-public class JettyBean {
+public class KettyBean {
 
     private Map<String,PathBean> pathBean = new HashMap<String,PathBean>();
 

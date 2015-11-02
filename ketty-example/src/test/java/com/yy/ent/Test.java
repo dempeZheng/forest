@@ -1,5 +1,9 @@
 package com.yy.ent;
 
+import com.alibaba.fastjson.JSONObject;
+import com.yy.ent.client.ClientSender;
+import com.yy.ent.protocol.KettyRequest;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -8,22 +12,16 @@ package com.yy.ent;
  * To change this template use File | Settings | File Templates.
  */
 public class Test {
+
+    public static ClientSender clientSender = new ClientSender("localhost", 8888);
+
     public static void main(String[] args) throws Exception {
-        int arr2[] = {1, -2, 3, 10, -4, 7, 2, -5};
-        int arr[] = {-2, -1,-3};
-        int max = arr[0];
-        int preMax = arr[0];
-        for (int i = 0; i < arr.length; i++) {
-            if (max < 0) {
-              max =0;
-            }
-            max = max + arr[i];
-            if (max > preMax) {
-                preMax = max;
-            }
-        }
-        System.out.println(preMax);
+        KettyRequest request = new KettyRequest();
+        request.setUri("/simpleAction/getUserByUid");
+        JSONObject params = new JSONObject();
+        params.put("uid", "12345677");
+        request.setParameter(params);
+        String result = clientSender.sendAndWait(request);
+        System.out.println("result : " + result);
     }
-
-
 }

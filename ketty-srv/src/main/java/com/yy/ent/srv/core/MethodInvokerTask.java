@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.common.utils.LocalVariableTableParameterNameDiscoverer;
 import com.yy.ent.mvc.anno.Param;
-import com.yy.ent.protocol.JettyRequest;
-import com.yy.ent.protocol.JettyResponse;
+import com.yy.ent.protocol.KettyRequest;
+import com.yy.ent.protocol.KettyResponse;
 import com.yy.ent.srv.exception.JServerException;
 import com.yy.ent.srv.exception.ModelConvertJsonException;
 import io.netty.channel.ChannelHandlerContext;
@@ -30,9 +30,9 @@ public class MethodInvokerTask implements Runnable {
 
     private ChannelHandlerContext ctx;
     private ServerContext serverContext;
-    private JettyRequest req;
+    private KettyRequest req;
 
-    public MethodInvokerTask(ChannelHandlerContext ctx, ServerContext serverContext, JettyRequest req) {
+    public MethodInvokerTask(ChannelHandlerContext ctx, ServerContext serverContext, KettyRequest req) {
         this.ctx = ctx;
         this.serverContext = serverContext;
         this.req = req;
@@ -88,7 +88,7 @@ public class MethodInvokerTask implements Runnable {
 
     @Override
     public void run() {
-        JettyResponse response = null;
+        KettyResponse response = null;
         try {
             int id = req.getMsgId();
             JSONObject params = req.getParameter();
@@ -109,7 +109,7 @@ public class MethodInvokerTask implements Runnable {
     }
 
     public void doInvoke(){
-        JettyResponse response = null;
+        KettyResponse response = null;
         try {
             int id = req.getMsgId();
             JSONObject params = req.getParameter();
@@ -128,7 +128,7 @@ public class MethodInvokerTask implements Runnable {
     }
 
 
-    private JettyResponse dispatcher(String uri, Integer id, JSONObject requestParams) throws ModelConvertJsonException, JServerException {
+    private KettyResponse dispatcher(String uri, Integer id, JSONObject requestParams) throws ModelConvertJsonException, JServerException {
         ActionMethod actionMethod = serverContext.get(uri);
         if (actionMethod == null) {
             LOGGER.warn("[dispatcher]:not find uri {}", uri);
@@ -143,7 +143,7 @@ public class MethodInvokerTask implements Runnable {
         if (id == null) {
             LOGGER.warn("request msg id is null,uri:{},params:{}", uri, requestParams);
         }
-        return new JettyResponse(id, toJSONString(result));
+        return new KettyResponse(id, toJSONString(result));
     }
 
     /**

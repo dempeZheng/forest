@@ -11,7 +11,7 @@ public class AppServerTest {
 
     public static void main(String[] args) {
 
-        JettyServer server = new JettyServer();
+        KettyServer server = new KettyServer();
         server.start(8888);
 
     }

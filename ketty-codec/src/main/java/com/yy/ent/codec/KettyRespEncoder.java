@@ -1,6 +1,6 @@
 package com.yy.ent.codec;
 
-import com.yy.ent.protocol.JettyResponse;
+import com.yy.ent.protocol.KettyResponse;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
@@ -12,10 +12,10 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * Time: 20:03
  * To change this template use File | Settings | File Templates.
  */
-public class JettyRespEncoder extends MessageToByteEncoder<JettyResponse> {
+public class KettyRespEncoder extends MessageToByteEncoder<KettyResponse> {
 
     @Override
-    protected void encode(ChannelHandlerContext channelHandlerContext, JettyResponse resp, ByteBuf byteBuf) throws Exception {
+    protected void encode(ChannelHandlerContext channelHandlerContext, KettyResponse resp, ByteBuf byteBuf) throws Exception {
 
         resp.encode(byteBuf);
     }

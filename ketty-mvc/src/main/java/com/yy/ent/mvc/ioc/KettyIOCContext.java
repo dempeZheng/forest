@@ -20,17 +20,17 @@ import java.util.Set;
  * Time: 11:16
  * To change this template use File | Settings | File Templates.
  */
-public class JettyIOCContext {
+public class KettyIOCContext {
 
     private Element root = null;
 
     private File rootPath = null;
 
-    private JettyBean cherryBean = new JettyBean();
+    private KettyBean cherryBean = new KettyBean();
     //存放xml文件中所有的id信息
     private Set<String> ids = new HashSet<String>();
 
-    public JettyIOCContext(String configFile) throws Exception {
+    public KettyIOCContext(String configFile) throws Exception {
         URL resource = Thread.currentThread().getContextClassLoader().getResource(configFile);
         rootPath = new File(resource.toURI());
         String filePath = rootPath.getPath();
@@ -229,7 +229,7 @@ public class JettyIOCContext {
         return params;
     }
 
-    public JettyBean getCherryBean() {
+    public KettyBean getCherryBean() {
         return cherryBean;
     }
 

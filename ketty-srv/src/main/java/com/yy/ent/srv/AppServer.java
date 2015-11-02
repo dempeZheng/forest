@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  * Time: 13:04
  * To change this template use File | Settings | File Templates.
  */
-public class AppServer extends JettyServer {
+public class AppServer extends KettyServer {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(AppServer.class);
 

@@ -1,8 +1,8 @@
 package com.yy.ent.srv;
 
-import com.yy.ent.codec.JettyRequestDecoder;
-import com.yy.ent.codec.JettyRespEncoder;
-import com.yy.ent.mvc.ioc.JettyIOC;
+import com.yy.ent.codec.KettyRequestDecoder;
+import com.yy.ent.codec.KettyRespEncoder;
+import com.yy.ent.mvc.ioc.KettyIOC;
 import com.yy.ent.srv.core.DispatcherHandler;
 import com.yy.ent.srv.core.ServerContext;
 import io.netty.bootstrap.ServerBootstrap;
@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
  * Time: 16:41
  * To change this template use File | Settings | File Templates.
  */
-public class JettyServer {
+public class KettyServer {
 
-    private static final Logger log = LoggerFactory.getLogger(JettyServer.class);
+    private static final Logger log = LoggerFactory.getLogger(KettyServer.class);
 
     private EventLoopGroup bossGroup;
 
@@ -36,12 +36,12 @@ public class JettyServer {
 
     private DefaultEventExecutorGroup executorGroup;
 
-    private JettyIOC cherry;
+    private KettyIOC cherry;
 
     private ServerContext context = new ServerContext();
 
 
-    public JettyServer() {
+    public KettyServer() {
         executorGroup = new DefaultEventExecutorGroup(4, new DefaultThreadFactory("decode-worker-thread-pool"));
         init();
     }
@@ -74,8 +74,8 @@ public class JettyServer {
                             throws Exception {
                         ChannelPipeline channel = ch.pipeline();
                         channel
-                                .addLast(new JettyRespEncoder())
-                                .addLast(new JettyRequestDecoder())
+                                .addLast(new KettyRespEncoder())
+                                .addLast(new KettyRequestDecoder())
                                 .addLast(new DispatcherHandler(context))
                         ;
 
@@ -91,7 +91,7 @@ public class JettyServer {
             workerGroup.shutdownGracefully();
     }
 
-    public JettyServer stopWithJVMShutdown() {
+    public KettyServer stopWithJVMShutdown() {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
             public void run() {
@@ -101,8 +101,8 @@ public class JettyServer {
         return this;
     }
 
-    public JettyServer initMVC() throws Exception {
-        cherry = new JettyIOC();
+    public KettyServer initMVC() throws Exception {
+        cherry = new KettyIOC();
         return this;
     }
 }

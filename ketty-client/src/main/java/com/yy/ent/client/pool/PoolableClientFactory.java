@@ -1,7 +1,7 @@
 package com.yy.ent.client.pool;
 
 import com.yy.ent.client.ClientSender;
-import com.yy.ent.client.YYClient;
+import com.yy.ent.client.KettyClient;
 import org.apache.commons.pool.PoolableObjectFactory;
 
 /**
@@ -34,7 +34,7 @@ public class PoolableClientFactory implements PoolableObjectFactory<ClientSender
 
     @Override
     public boolean validateObject(ClientSender obj) {
-        if(obj instanceof YYClient){
+        if(obj instanceof KettyClient){
             return true;
         }
         return false;

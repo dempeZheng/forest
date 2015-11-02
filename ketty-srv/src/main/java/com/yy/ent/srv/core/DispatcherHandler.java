@@ -1,7 +1,7 @@
 package com.yy.ent.srv.core;
 
 import com.yy.ent.common.MetricThread;
-import com.yy.ent.protocol.JettyRequest;
+import com.yy.ent.protocol.KettyRequest;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.concurrent.DefaultThreadFactory;
@@ -38,7 +38,7 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         metric.increment();
-        JettyRequest req = (JettyRequest) msg;
+        KettyRequest req = (KettyRequest) msg;
         LOGGER.debug("req:", req.toString());
         executorService.submit(new MethodInvokerTask(ctx, context, req));
     }

@@ -13,19 +13,19 @@ import java.io.UnsupportedEncodingException;
  * Time: 19:53
  * To change this template use File | Settings | File Templates.
  */
-public class JettyResponse implements Response {
+public class KettyResponse implements Response {
 
     private Integer msgId;
     private short resCode;
     private String jsonString;
 
-    public JettyResponse(int msgId, short resCode, String jsonString) {
+    public KettyResponse(int msgId, short resCode, String jsonString) {
         this.msgId = msgId;
         this.jsonString = jsonString;
         this.resCode = resCode;
     }
 
-    public JettyResponse(int msgId, String jsonString) {
+    public KettyResponse(int msgId, String jsonString) {
         this.msgId = msgId;
         this.jsonString = jsonString;
     }
@@ -69,7 +69,7 @@ public class JettyResponse implements Response {
 
     }
 
-    public static JettyResponse decode(ByteBuf byteBuf, int size) throws UnsupportedEncodingException {
+    public static KettyResponse decode(ByteBuf byteBuf, int size) throws UnsupportedEncodingException {
         short headerSize = byteBuf.readShort();
         byte[] headerByte = new byte[headerSize];
         byteBuf.readBytes(headerByte);
@@ -82,6 +82,6 @@ public class JettyResponse implements Response {
         byteBuf.readBytes(bodyByte);
         Unpack bodyPack = new Unpack(bodyByte);
         String data = bodyPack.popVarstr();
-        return new JettyResponse(id, resCode, data);
+        return new KettyResponse(id, resCode, data);
     }
 }

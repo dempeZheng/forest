@@ -1,6 +1,6 @@
 package com.yy.ent.client;
 
-import com.yy.ent.protocol.JettyResponse;
+import com.yy.ent.protocol.KettyResponse;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.ReferenceCountUtil;
@@ -24,7 +24,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
-            JettyResponse resp = (JettyResponse) msg;
+            KettyResponse resp = (KettyResponse) msg;
             Integer id = resp.getMsgId();
             ReplyFuture future = replyQueue.take(id);
             future.onReceivedReply(resp);

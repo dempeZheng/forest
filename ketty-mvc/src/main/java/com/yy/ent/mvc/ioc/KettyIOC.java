@@ -19,25 +19,25 @@ import java.util.Set;
  * Time: 11:10
  * To change this template use File | Settings | File Templates.
  */
-public class JettyIOC {
+public class KettyIOC {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JettyIOC.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KettyIOC.class);
 
-    private JettyBean cherryBean;
+    private KettyBean cherryBean;
 
-    private JettyIOCContext loadContext;
+    private KettyIOCContext loadContext;
 
-    private String configFile = "cherry.xml";
+    private String configFile = "ketty.xml";
 
     private HashMap<String, Object> val_map = new HashMap<String, Object>();
 
     private Map<String, Object> configBeans = new HashMap<String, Object>();
 
-    public JettyIOC() throws Exception {
+    public KettyIOC() throws Exception {
         init();
     }
 
-    public JettyIOC(String configFile) throws Exception {
+    public KettyIOC(String configFile) throws Exception {
         this.configFile = configFile;
         init();
     }
@@ -48,7 +48,7 @@ public class JettyIOC {
      * *
      */
     public void initConfig() throws Exception {
-        loadContext = new JettyIOCContext(configFile);
+        loadContext = new KettyIOCContext(configFile);
         this.cherryBean = loadContext.getCherryBean();
     }
 
