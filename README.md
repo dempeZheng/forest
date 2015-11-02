@@ -31,8 +31,12 @@ public class SimpleAction {
     }
 }
 
-public class SimpleServer {
 
+```
+#### example
+``` java
+// nio mvc 业务server启动类example
+public class SimpleServer {
     public static void main(String[] args) throws Exception {
         new AppServer()
                 .stopWithJVMShutdown()
@@ -41,10 +45,9 @@ public class SimpleServer {
     }
 }
 
-public class Test {
-
+// 测试jetty客户端
+public class JettClientTest {
 	public static ClientSender clientSender = new ClientSender("localhost", 8888);
-
 	public static void main(String[] args) throws Exception {
 		KettyRequest request = new KettyRequest();
 		request.setUri("/simpleAction/getUserByUid");
@@ -55,9 +58,7 @@ public class Test {
 		System.out.println("result : " + result);
 	}
 }
-
 ```
-
 ####TODO 
 
 - 支持自定义协议扩展
