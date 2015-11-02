@@ -1,4 +1,4 @@
-##Jetty
+##Ketty
 >基于netty实现的rpc框架，提供性能监控，日志分析，动态扩展的功能。
 
 ###jetty-srv模块
@@ -7,8 +7,8 @@
 ####协议
 - Http
 - Websckoket
-- JettyRequest
-- JettyResponse
+- KettyRequest
+- KettyResponse
 
 
 
@@ -41,8 +41,8 @@ public class SimpleAction {
 - HttpJettyServer协议的实现
 - WebSocketJettyServer的实现
 
-###jetty-client模块
->JettyServer高可用NIO客户端
+###ketty-client模块
+>KettyServer高可用NIO客户端
 
 ####High availability
 支持多个节点，节点不可用自动移除
@@ -54,7 +54,7 @@ public class SimpleAction {
 
 #### 自动维护心跳
 
-###jetty-codec模块
+###ketty-codec模块
 >编解码框架
 
 ####JettyRequest
@@ -105,14 +105,14 @@ public class SimpleAction {
 </tr>
 </table>
 
-###jetty-router模块
+###ketty-router模块
 >服务代理模块，提供路由分发功能
 
-###jetty-monitor模块
+###ketty-monitor模块
 >性能监控
 >报警
 
-###jetty-analysis模块
+###ketty-analysis模块
 >接口统计分析
 >智能推荐
 

@@ -2,17 +2,17 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/jetty.iml" filepath="$PROJECT_DIR$/jetty.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jetty-analysis/jetty-analysis.iml" filepath="$PROJECT_DIR$/jetty-analysis/jetty-analysis.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jetty-client/jetty-client.iml" filepath="$PROJECT_DIR$/jetty-client/jetty-client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jetty-common/jetty-common.iml" filepath="$PROJECT_DIR$/jetty-common/jetty-common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jetty-example/jetty-example.iml" filepath="$PROJECT_DIR$/jetty-example/jetty-example.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jetty-halb/jetty-halb.iml" filepath="$PROJECT_DIR$/jetty-halb/jetty-halb.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jetty-monitor/jetty-monitor.iml" filepath="$PROJECT_DIR$/jetty-monitor/jetty-monitor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jetty-mvc/jetty-mvc.iml" filepath="$PROJECT_DIR$/jetty-mvc/jetty-mvc.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jetty-router/jetty-router.iml" filepath="$PROJECT_DIR$/jetty-router/jetty-router.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jetty-srv/jetty-srv.iml" filepath="$PROJECT_DIR$/jetty-srv/jetty-srv.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jetty-transport/jetty-transport.iml" filepath="$PROJECT_DIR$/jetty-transport/jetty-transport.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty.iml" filepath="$PROJECT_DIR$/ketty.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-analysis/ketty-analysis.iml" filepath="$PROJECT_DIR$/ketty-analysis/ketty-analysis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-client/ketty-client.iml" filepath="$PROJECT_DIR$/ketty-client/ketty-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-codec/ketty-codec.iml" filepath="$PROJECT_DIR$/ketty-codec/ketty-codec.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-common/ketty-common.iml" filepath="$PROJECT_DIR$/ketty-common/ketty-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-example/ketty-example.iml" filepath="$PROJECT_DIR$/ketty-example/ketty-example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-halb/ketty-halb.iml" filepath="$PROJECT_DIR$/ketty-halb/ketty-halb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-monitor/ketty-monitor.iml" filepath="$PROJECT_DIR$/ketty-monitor/ketty-monitor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-mvc/ketty-mvc.iml" filepath="$PROJECT_DIR$/ketty-mvc/ketty-mvc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-router/ketty-router.iml" filepath="$PROJECT_DIR$/ketty-router/ketty-router.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-srv/ketty-srv.iml" filepath="$PROJECT_DIR$/ketty-srv/ketty-srv.iml" />
     </modules>
   </component>
 </project>

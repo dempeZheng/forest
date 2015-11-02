@@ -22,29 +22,29 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="jetty-analysis" />
-        <module name="jetty-client" />
-        <module name="jetty-common" />
-        <module name="jetty-example" />
-        <module name="jetty-halb" />
-        <module name="jetty-monitor" />
-        <module name="jetty-mvc" />
-        <module name="jetty-router" />
-        <module name="jetty-srv" />
-        <module name="jetty-transport" />
+        <module name="ketty-analysis" />
+        <module name="ketty-client" />
+        <module name="ketty-codec" />
+        <module name="ketty-common" />
+        <module name="ketty-example" />
+        <module name="ketty-halb" />
+        <module name="ketty-monitor" />
+        <module name="ketty-mvc" />
+        <module name="ketty-router" />
+        <module name="ketty-srv" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="jetty-analysis" target="1.6" />
-      <module name="jetty-client" target="1.6" />
-      <module name="jetty-common" target="1.6" />
-      <module name="jetty-example" target="1.6" />
-      <module name="jetty-halb" target="1.6" />
-      <module name="jetty-monitor" target="1.6" />
-      <module name="jetty-mvc" target="1.6" />
-      <module name="jetty-router" target="1.6" />
-      <module name="jetty-srv" target="1.6" />
-      <module name="jetty-transport" target="1.6" />
+      <module name="ketty-analysis" target="1.6" />
+      <module name="ketty-client" target="1.6" />
+      <module name="ketty-codec" target="1.6" />
+      <module name="ketty-common" target="1.6" />
+      <module name="ketty-example" target="1.6" />
+      <module name="ketty-halb" target="1.6" />
+      <module name="ketty-monitor" target="1.6" />
+      <module name="ketty-mvc" target="1.6" />
+      <module name="ketty-router" target="1.6" />
+      <module name="ketty-srv" target="1.6" />
     </bytecodeTargetLevel>
   </component>
 </project>

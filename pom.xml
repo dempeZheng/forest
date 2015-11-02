@@ -5,20 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.yy.ent</groupId>
-    <artifactId>jetty</artifactId>
+    <artifactId>ketty</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>jetty-mvc</module>
-        <module>jetty-router</module>
-        <module>jetty-srv</module>
-        <module>jetty-client</module>
-        <module>jetty-analysis</module>
-        <module>jetty-transport</module>
-        <module>jetty-common</module>
-        <module>jetty-example</module>
-        <module>jetty-monitor</module>
-        <module>jetty-halb</module>
+        <module>ketty-mvc</module>
+        <module>ketty-router</module>
+        <module>ketty-srv</module>
+        <module>ketty-client</module>
+        <module>ketty-analysis</module>
+        <module>ketty-codec</module>
+        <module>ketty-common</module>
+        <module>ketty-example</module>
+        <module>ketty-monitor</module>
+        <module>ketty-halb</module>
     </modules>
 
     <properties>
