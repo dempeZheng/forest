@@ -3,9 +3,10 @@ package com.yy.ent.action;
 import com.alibaba.fastjson.JSONObject;
 import com.yy.ent.ClientMonitorTest;
 import com.yy.ent.client.ClientSender;
-import com.yy.ent.mvc.ioc.BeanFactory;
 import com.yy.ent.protocol.KettyRequest;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * To change this template use File | Settings | File Templates.
  */
 public class SimpleActionTest extends ClientMonitorTest {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(SimpleActionTest.class);
 
     @Override
     public void init() {
@@ -71,7 +74,7 @@ public class SimpleActionTest extends ClientMonitorTest {
                         }
                         pool.returnObject(sender);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LOGGER.error(e.getMessage(), e);
                     }
 
                 }

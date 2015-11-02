@@ -1,6 +1,9 @@
 package com.yy.ent.common.utils;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.Introspector;
 import java.lang.reflect.*;
 import java.security.AccessControlException;
@@ -22,6 +25,8 @@ import java.util.*;
  */
 @SuppressWarnings("unchecked")
 public abstract class ClassUtils {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(ClassUtils.class);
 
     /**
      * Suffix for array class names: "[]"
@@ -146,6 +151,7 @@ public abstract class ClassUtils {
             cl = Thread.currentThread().getContextClassLoader();
         } catch (Throwable ex) {
             // Cannot access thread context ClassLoader - falling back to system class loader...
+            LOGGER.error(ex.getMessage(),ex);
         }
         if (cl == null) {
             // No thread context class loader -> use class loader of this class.
@@ -337,6 +343,7 @@ public abstract class ClassUtils {
             return true;
         } catch (Throwable ex) {
             // Class or one of its dependencies is not present...
+            LOGGER.error(ex.getMessage(),ex);
             return false;
         }
     }

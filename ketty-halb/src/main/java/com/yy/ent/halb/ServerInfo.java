@@ -190,22 +190,7 @@ public class ServerInfo<T>
     }
 
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public boolean equals(Object obj) {
-        if(obj == null){
-            return false;
-        }else{
-            if(!(obj instanceof ServerInfo)){
-                return false;
-            }
-            ServerInfo info = (ServerInfo)obj;
-            if((this.getIp() != null && this.getIp().equals(info.getIp())) && (this.getPort() == info.getPort())){
-                return true;
-            }else{
-                return false;
-            }
-        }
 
-    }
+
+
 }

@@ -1,5 +1,8 @@
 package com.yy.ent.common.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.net.JarURLConnection;
@@ -20,6 +23,9 @@ import java.util.regex.Pattern;
  * To change this template use File | Settings | File Templates.
  */
 public class PackageUtils {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(PackageUtils.class);
+
     public final static List<String> EMPTY_LIST = new ArrayList<String>(0);
 
     /**
@@ -89,7 +95,7 @@ public class PackageUtils {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace(System.out);
+            LOGGER.error(e.getMessage(), e);
         }
 
         String[] result = vResult.toArray(new String[vResult.size()]);

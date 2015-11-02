@@ -1,5 +1,8 @@
 package com.yy.ent.common.access;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,6 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class AccessPolicy {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(AccessPolicy.class);
 
     private static final int SECOND = 1 * 1000;
 
@@ -228,7 +233,7 @@ public class AccessPolicy {
         return filterInfoMap.get(targetKey);
     }
 
-   
+
     /**
      * 清除记录
      */
@@ -251,7 +256,7 @@ public class AccessPolicy {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 }

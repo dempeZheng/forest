@@ -66,7 +66,7 @@ public class KettyClient {
                 try {
                     close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         }));
@@ -83,7 +83,7 @@ public class KettyClient {
             f = b.connect(host, port).sync();
             channel = f.channel();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
 
 
