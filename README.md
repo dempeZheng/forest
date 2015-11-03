@@ -23,11 +23,33 @@ public class SimpleAction {
     @Inject
     private UserService userService;
 
+	@Interceptor(id = "echoInterceptor")
     @Path
     public User getUserByUid(@Param String uid) {
         return userService.getUserByUid(uid);
     }
 }
+
+####拦截器 example
+``` java
+@Around
+public class EchoInterceptor extends BaseInterceptor {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(EchoInterceptor.class);
+
+    @Override
+    public boolean before() {
+        LOGGER.info("==============EchoInterceptor before=========");
+        return true;
+    }
+
+    @Override
+    public boolean after() {
+        LOGGER.info("==============EchoInterceptor after=========");
+        return true;
+    }
+}
+```
 
 
 ```
@@ -74,7 +96,6 @@ public class SimpleServer {
 ####TODO 
 
 - 支持自定义协议扩展
-- 添加拦截器的支持
 - 安全验证
 - 性能优化
 - WebSocketJettyServer的实现
