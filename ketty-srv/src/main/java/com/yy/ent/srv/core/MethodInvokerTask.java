@@ -1,6 +1,7 @@
 package com.yy.ent.srv.core;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yy.ent.mvc.interceptor.KettyInterceptor;
 import com.yy.ent.protocol.KettyRequest;
 import com.yy.ent.protocol.KettyResponse;
 import com.yy.ent.srv.exception.JServerException;
@@ -12,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,8 +38,6 @@ public class MethodInvokerTask implements Runnable {
     }
 
     /**
-     * 反射调用方法，根据方法参数自动注入value
-     *
      * @param actionMethod
      * @param params
      * @return
@@ -44,10 +45,34 @@ public class MethodInvokerTask implements Runnable {
      */
     public Object invoke(ActionMethod actionMethod, JSONObject params) throws JServerException {
         Method method = actionMethod.getMethod();
-        String[] parameterNames = MethodParam.getParameterNames(method);
 
+        List<KettyInterceptor> interceptorList = actionMethod.getInterceptorList();
+        Iterator<KettyInterceptor> interceptorIterator = interceptorList.iterator();
+
+        String[] parameterNames = MethodParam.getParameterNames(method);
         Object[] parameterValues = MethodParam.getParameterValues(parameterNames, method, params);
-        return actionMethod.call(parameterValues);
+
+
+        boolean flag = true;
+        while (interceptorIterator.hasNext() && flag) {
+            KettyInterceptor interceptor = interceptorIterator.next();
+            flag = interceptor.before();
+        }
+
+        if (!flag) {
+            return null;
+        }
+        // 拦截器前
+
+        Object result = actionMethod.call(parameterValues);
+        interceptorIterator = interceptorList.iterator();
+        // 拦截器后
+        while (interceptorIterator.hasNext() && flag) {
+            KettyInterceptor interceptor = interceptorIterator.next();
+            flag = interceptor.after();
+        }
+
+        return result;
     }
 
     @Override
@@ -82,10 +107,6 @@ public class MethodInvokerTask implements Runnable {
             // 当action method 返回是void的时候，不返回任何消息
             LOGGER.debug("actionMethod:{} return void.", actionMethod);
             return null;
-        }
-
-        if (id == null) {
-            LOGGER.warn("request msg id is null,uri:{},params:{}", uri, requestParams);
         }
         return new KettyResponse(id, ResultConcert.toJSONString(result));
     }

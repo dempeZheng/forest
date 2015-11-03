@@ -87,9 +87,9 @@ public class Injector {
     }
 
     private static void regist(String dependClassName, String id) {
-        BeanFactory.regist(dependClassName);
+        BeanFactory.register(dependClassName);
         if (StringUtils.isNotBlank(id)) {
-            BeanFactory.regist(dependClassName, id);
+            BeanFactory.register(dependClassName, id);
         }
     }
 

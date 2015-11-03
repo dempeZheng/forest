@@ -1,7 +1,6 @@
 package com.yy.ent.mvc.ioc;
 
 import com.yy.ent.common.utils.PackageUtils;
-import com.yy.ent.mvc.anno.Around;
 import com.yy.ent.mvc.anno.Exclude;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -29,28 +28,28 @@ public class BeanFactory {
             String[] classes = PackageUtils.findClassesInPackage(perPak);
             Collections.addAll(clazzs, classes);
         }
-        BeanFactory.regist(clazzs);
+        BeanFactory.register(clazzs);
     }
 
-    public static void regist(Set<String> clazzs) {
+    public static void register(Set<String> clazzs) {
         for (String clazzName : clazzs) {
-            regist(clazzName);
+            register(clazzName);
         }
         show();
     }
 
-    public static void regist(String clazzName) {
-        regist(clazzName, null);
+    public static void register(String clazzName) {
+        register(clazzName, null);
     }
 
 
-    public static void regist(String clazzName, String id) {
+    public static void register(String clazzName, String id) {
         if (exist(clazzName))
             return;
         try {
-            log.debug("invoke class forname:" + clazzName);
+            log.debug("invoke class for name: {} ", clazzName);
             Class<?> clazz = Class.forName(clazzName);
-            log.debug("invoke class forname over");
+            log.debug("invoke class for name over");
 
             //如果是注解Exclude就不管理
             Exclude beanAnnotation = (Exclude) clazz.getAnnotation(Exclude.class);
@@ -76,7 +75,7 @@ public class BeanFactory {
                 bean = clazz.newInstance();
             } else {
                 if (css.length > 1) {
-                    log.error("BeanFactory regist error when initiating " + clazzName + ",not confirm which constructor");
+                    log.error("BeanFactory register error when initiating {}, not confirm which constructor", clazzName);
                     return;
                 } else {
                     Constructor<?> cc = css[0];
@@ -86,32 +85,13 @@ public class BeanFactory {
                         Class<?> param = params[i];
                         Object obj = getBeanByClass(param);
                         if (obj == null) {
-                            log.error("BeanFactory regist error when initiating " + clazzName + ",constructor init error ,not constrnctor param object");
+                            log.error("BeanFactory register error when initiating {}, constructor init error ,not constructor param object", clazzName);
                             return;
                         } else {
                             values[i] = obj;
                         }
                     }
                     bean = cc.newInstance(values);
-                }
-            }
-            //AOP类的注入
-            Class<?>[] interfaces = clazz.getInterfaces();
-            for (Class<?> c : interfaces) {
-                Around around = c.getAnnotation(Around.class);
-                if (around != null) {
-                    Class<? extends Aop>[] classNames = around.classNames();
-                    for (int i = 0; i < classNames.length; i++) {
-                        Aop aopInstance = classNames[i].newInstance();
-                        bean = AopProxy.getProxyInstance(bean, aopInstance);
-
-                        beanMap.put(clazzName, bean);
-                        if (StringUtils.isNotBlank(id)) {
-                            beanMap.put(getBeanKey(clazzName, id), bean);
-                        }
-                        Injector.doInject(bean);
-
-                    }
                 }
             }
             beanMap.put(clazzName, bean);
@@ -122,7 +102,7 @@ public class BeanFactory {
             Injector.doInject(bean);
 
         } catch (Exception e) {
-            log.error("BeanFactory regist error when initiating " + clazzName, e);
+            log.error("BeanFactory register error when initiating " + clazzName, e);
         }
     }
 

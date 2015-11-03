@@ -1,5 +1,6 @@
 package com.yy.ent.srv.core;
 
+import com.yy.ent.mvc.interceptor.KettyInterceptor;
 import com.yy.ent.srv.exception.JServerException;
 import com.yy.ent.srv.exception.ModelConvertJsonException;
 import com.yy.ent.srv.uitl.MethodParam;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +55,7 @@ public class HttpDispatcherHandler extends ChannelHandlerAdapter {
             }
             String result = getResult(req);
             if (result == null) {
-                LOGGER.warn("result is null");
+                LOGGER.debug("result is null , uri:{}", req.getUri());
                 return;
             }
             boolean keepAlive = isKeepAlive(req);
@@ -92,7 +94,22 @@ public class HttpDispatcherHandler extends ChannelHandlerAdapter {
             // TODO return 404
             return "404";
         }
+
+        List<KettyInterceptor> interceptorList = actionMethod.getInterceptorList();
+        Iterator<KettyInterceptor> iterator = interceptorList.iterator();
+        boolean flag = true;
+        while (iterator.hasNext() && flag) {
+            KettyInterceptor interceptor = iterator.next();
+            flag = interceptor.before();
+        }
+
         Object result = invoke(actionMethod, params);
+        iterator = interceptorList.iterator();
+        while (iterator.hasNext() && flag) {
+            KettyInterceptor interceptor = iterator.next();
+            flag = interceptor.after();
+        }
+
         if (result == null) {
             // 当action method 返回是void的时候，不返回任何消息
             LOGGER.debug("actionMethod:{} return void.", actionMethod);

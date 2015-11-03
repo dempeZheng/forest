@@ -2,10 +2,7 @@ package com.yy.ent.action;
 
 
 import com.yy.ent.model.User;
-import com.yy.ent.mvc.anno.Action;
-import com.yy.ent.mvc.anno.Inject;
-import com.yy.ent.mvc.anno.Param;
-import com.yy.ent.mvc.anno.Path;
+import com.yy.ent.mvc.anno.*;
 import com.yy.ent.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +27,7 @@ public class SimpleAction {
         return "hello yy-rpc";
     }
 
+    @Interceptor(id = "echoInterceptor")
     @Path
     public User getUserByUid(@Param String uid) {
         return userService.getUserByUid(uid);

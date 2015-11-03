@@ -17,6 +17,7 @@ public class SimpleServer {
     public static void main(String[] args) throws Exception {
 
         starHttpServer();
+        //startDefServer();
     }
 
     public static void starHttpServer() throws Exception {
@@ -27,7 +28,7 @@ public class SimpleServer {
     }
 
     public static void startDefServer() throws Exception {
-        new KettyServer(ServerType.HTTP_SERVER)
+        new KettyServer(ServerType.KETTY_SERVER)
                 .stopWithJVMShutdown()
                 .initMVC()
                 .start(8888);

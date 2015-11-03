@@ -8,13 +8,14 @@ import java.lang.annotation.Target;
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
- * Date: 2015/10/19
- * Time: 19:55
+ * Date: 2015/11/3
+ * Time: 16:19
  * To change this template use File | Settings | File Templates.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Around {
+@Target(ElementType.METHOD)
+public @interface Interceptor {
 
-    String id() default "";
+    String id();
+
 }

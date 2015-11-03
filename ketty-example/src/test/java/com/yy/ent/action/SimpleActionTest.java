@@ -32,14 +32,14 @@ public class SimpleActionTest extends ClientMonitorTest {
 
     @Test
     public void getUserByUidTest() throws InterruptedException {
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 1; i++) {
             KettyRequest request = new KettyRequest();
             request.setUri("/simpleAction/getUserByUid");
             JSONObject params = new JSONObject();
             params.put("uid", "12345677");
             request.setParameter(params);
             String s = clientSender.sendAndWait(request);
-            //System.out.println("===>"+s);
+            System.out.println("===>"+s);
             //clientSender.sendOnly(request);
 
         }

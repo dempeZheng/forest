@@ -1,9 +1,12 @@
 package com.yy.ent.srv.core;
 
+import com.yy.ent.mvc.interceptor.KettyInterceptor;
 import com.yy.ent.srv.exception.JServerException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,9 +16,13 @@ import java.lang.reflect.Method;
  * To change this template use File | Settings | File Templates.
  */
 public class ActionMethod {
+
+
     private Object target;
 
     private Method method;
+
+    private List<KettyInterceptor> interceptorList = new ArrayList<KettyInterceptor>();
 
     public ActionMethod() {
     }
@@ -55,6 +62,14 @@ public class ActionMethod {
 
     public Method getMethod() {
         return method;
+    }
+
+    public List<KettyInterceptor> getInterceptorList() {
+        return interceptorList;
+    }
+
+    public void addInterceptor(KettyInterceptor interceptor) {
+        interceptorList.add(interceptor);
     }
 
     public String toString() {

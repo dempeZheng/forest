@@ -2,7 +2,10 @@ package com.yy.ent.srv.core;
 
 import com.yy.ent.common.utils.PackageUtils;
 import com.yy.ent.mvc.anno.Action;
+import com.yy.ent.mvc.anno.Around;
+import com.yy.ent.mvc.anno.Interceptor;
 import com.yy.ent.mvc.anno.Path;
+import com.yy.ent.mvc.interceptor.KettyInterceptor;
 import com.yy.ent.mvc.ioc.Injector;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -28,17 +31,60 @@ public class RequestMapping {
 
     public Map<String, ActionMethod> mapping = new ConcurrentHashMap<String, ActionMethod>();
 
+    public Map<String, KettyInterceptor> interceptorMap = new ConcurrentHashMap<String, KettyInterceptor>();
+
+    public final static String PACKAGE_NAME = "com.yy.ent";
+
     public RequestMapping() {
+        initInterceptorMap();
         initMapping();
+    }
+
+
+    public void initInterceptorMap() {
+        List<String> packages = new ArrayList<String>();
+
+        packages.add(PACKAGE_NAME);
+        LOGGER.info("scanned packages :{} ", packages);
+        for (String scanPackage : packages) {
+            LOGGER.info("begin get classes from package : {}", scanPackage);
+            String[] classNames = PackageUtils.findClassesInPackage(scanPackage + ".*"); // 目录下通配
+            for (String className : classNames) {
+                try {
+                    Class<?> actionClass = Class.forName(className);
+                    Around around = actionClass.getAnnotation(Around.class);
+                    if (around == null) {
+                        continue;
+                    }
+                    String id = around.id();
+                    if (StringUtils.isBlank(id)) {
+                        id = StringUtils.uncapitalize(actionClass.getSimpleName());
+                    }
+                    KettyInterceptor target = (KettyInterceptor) actionClass.newInstance();
+                    Injector.doInject(target);
+                    interceptorMap.put(id, target);
+                    LOGGER.info("registering interceptor id: {} , ", id);
+
+                } catch (ClassNotFoundException e) {
+                    LOGGER.error("FAIL to initiate handle instance", e);
+                } catch (Exception e) {
+                    LOGGER.error("FAIL to initiate handle instance", e);
+                }
+
+            }
+        }
+
     }
 
     /**
      * 扫描packet下面所有的映射，初始化mapping
      */
+
     public void initMapping() {
         LOGGER.info("handles begin initiating");
         List<String> packages = new ArrayList<String>();
-        packages.add("com.yy.ent");
+
+        packages.add(PACKAGE_NAME);
         LOGGER.info("scanned packages : " + packages);
         for (String scanPackage : packages) {
             LOGGER.info("begin get classes from package : " + scanPackage);
@@ -69,6 +115,7 @@ public class RequestMapping {
                                 }
 
                                 makeAccessible(method);
+
                                 /**
                                  * 这里注入action里面的依赖
                                  */
@@ -76,6 +123,16 @@ public class RequestMapping {
                                 Injector.doInject(target);
 
                                 ActionMethod actionMethod = new ActionMethod(target, method);
+                                Interceptor interceptor = method.getAnnotation(Interceptor.class);
+                                if (interceptor != null) {
+                                    KettyInterceptor kettyInterceptor = interceptorMap.get(interceptor.id());
+                                    if (kettyInterceptor == null) {
+                                        LOGGER.error("interceptor id :{} is not found !", interceptor.id());
+                                    } else {
+                                        actionMethod.addInterceptor(kettyInterceptor);
+                                    }
+                                }
+
                                 LOGGER.info("[REQUEST MAPPING] = {}, uri = {}", actionVal, uri);
                                 mapping.put(uri, actionMethod);
                             }

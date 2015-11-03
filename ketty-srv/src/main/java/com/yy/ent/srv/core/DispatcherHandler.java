@@ -1,5 +1,6 @@
 package com.yy.ent.srv.core;
 
+import com.yy.ent.common.Constants;
 import com.yy.ent.common.MetricThread;
 import com.yy.ent.protocol.KettyRequest;
 import io.netty.channel.ChannelHandlerAdapter;
@@ -26,13 +27,11 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
 
     private static MetricThread metric = new MetricThread("server");
 
-    private final static int DEF_THREAD_SIZE = Runtime.getRuntime().availableProcessors() * 2;
-
-    private static ExecutorService executorService = Executors.newFixedThreadPool(DEF_THREAD_SIZE, new DefaultThreadFactory("METHOD_TASK"));
+    private static ExecutorService executorService = Executors.newFixedThreadPool(Constants.DEF_THREAD_NUM,
+            new DefaultThreadFactory("METHOD_TASK"));
 
     public DispatcherHandler(ServerContext context) {
         this.context = context;
-
     }
 
     @Override
