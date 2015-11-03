@@ -1,15 +1,13 @@
 ##Ketty
->基于netty实现的rpc框架，提供性能监控，日志分析，动态扩展的功能。
+>基于netty实现的服务端Nio MVC业务开发平台，提供性能监控，日志分析，动态扩展的功能。
 
 ###ketty-srv模块
 >基于netty实现支持自定义协议扩展的Nio MVC高性能业务框架
 
 ####协议
 - Http
-- Websckoket
-- KettyRequest
-- KettyResponse
-
+- WebSocket
+- Ketty(自定义私有协议)
 
 
 ####基于注解的 mvc
@@ -33,15 +31,15 @@ public class SimpleAction {
 
 
 ```
-#### example
+#### KettyServer example
 ``` java
 // nio mvc 业务server启动类example
 public class SimpleServer {
     public static void main(String[] args) throws Exception {
-        new AppServer()
-                .stopWithJVMShutdown()
-                .initMVC()
-                .start(8888);
+        new KettyServer(ServerType.HTTP_SERVER)
+                        .stopWithJVMShutdown()
+                        .initMVC()
+                        .start(8888);
     }
 }
 
@@ -59,13 +57,26 @@ public class JettClientTest {
 	}
 }
 ```
+
+#### HttpServer example
+``` java
+// nio mvc 业务server启动类example
+public class SimpleServer {
+    public static void main(String[] args) throws Exception {
+        new KettyServer(ServerType.KETTY_SERVER)
+                       .stopWithJVMShutdown()
+                       .initMVC()
+                       .start(8888);
+    }
+}
+
+```
 ####TODO 
 
 - 支持自定义协议扩展
 - 添加拦截器的支持
 - 安全验证
 - 性能优化
-- HttpJettyServer协议的实现
 - WebSocketJettyServer的实现
 
 ###ketty-client模块
