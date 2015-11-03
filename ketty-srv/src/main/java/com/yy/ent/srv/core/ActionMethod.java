@@ -1,6 +1,6 @@
 package com.yy.ent.srv.core;
 
-import com.yy.ent.mvc.interceptor.KettyInterceptor;
+import com.yy.ent.srv.interceptor.KettyInterceptor;
 import com.yy.ent.srv.exception.JServerException;
 
 import java.lang.reflect.InvocationTargetException;

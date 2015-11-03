@@ -38,8 +38,10 @@ public class DispatcherHandler extends ChannelHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         metric.increment();
         KettyRequest req = (KettyRequest) msg;
+        context.setCtx(ctx);
+        context.setRequest(req);
         LOGGER.debug("req:", req.toString());
-        executorService.submit(new MethodInvokerTask(ctx, context, req));
+        executorService.submit(new MethodInvokerTask(context));
     }
 
 

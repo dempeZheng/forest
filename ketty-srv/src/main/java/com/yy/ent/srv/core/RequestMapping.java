@@ -5,7 +5,7 @@ import com.yy.ent.mvc.anno.Action;
 import com.yy.ent.mvc.anno.Around;
 import com.yy.ent.mvc.anno.Interceptor;
 import com.yy.ent.mvc.anno.Path;
-import com.yy.ent.mvc.interceptor.KettyInterceptor;
+import com.yy.ent.srv.interceptor.KettyInterceptor;
 import com.yy.ent.mvc.ioc.Injector;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

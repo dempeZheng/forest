@@ -3,6 +3,8 @@ package com.yy.ent.mvc.ioc;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,11 +21,11 @@ public class AopProxy<T> implements InvocationHandler {
     //保存代理类的实现
     private Object proxyInstance = null;
 
-    private Aop aop;
+    private List<Aop> aopList;
 
-    public AopProxy(Object targetCreator, Aop aop) {
+    public AopProxy(Object targetCreator, List<Aop> aopList) {
         this.targetCreator = targetCreator;
-        this.aop = aop;
+        this.aopList = aopList;
     }
 
     /**
@@ -36,7 +38,13 @@ public class AopProxy<T> implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args)
             throws Throwable {
         Object result = null;
-        aop.before(method, args);
+        boolean flag = true;
+        Iterator<Aop> iterator = aopList.iterator();
+        while (iterator.hasNext() && flag) {
+            Aop aop = iterator.next();
+            flag = aop.before(method, args);
+        }
+
         /**
          * 动态代理类$Proxy0调用method方法时会调用它自己的相对应的method方法，
          * 而它自己的方法里面调用的是super.h.invoke(this, , )，也就是父类Proxy的h的invoke方法，
@@ -45,7 +53,11 @@ public class AopProxy<T> implements InvocationHandler {
          * 如果你将其强转成XXXXXInterface然后调用它的方法，然后它就会调用super.h.invoke(this, , )，这样就会死循环。
          */
         result = method.invoke(this.targetCreator, args);
-        aop.after(method, args);
+        iterator = aopList.iterator();
+        while (iterator.hasNext() && flag) {
+            Aop aop = iterator.next();
+            flag = aop.before(method, args);
+        }
         return result;
     }
 
@@ -56,7 +68,7 @@ public class AopProxy<T> implements InvocationHandler {
      * @param target
      * @return
      */
-    public static Object getProxyInstance(Object target, Aop aop) {
+    public static Object getProxyInstance(Object target, List<Aop> aopList) {
         Class<?> targetClass = target.getClass();
         /*
          * loader:  要代理类的类加载器
@@ -65,7 +77,7 @@ public class AopProxy<T> implements InvocationHandler {
     	 */
         ClassLoader loader = targetClass.getClassLoader();
         Class<?>[] interfaces = targetClass.getInterfaces();
-        AopProxy<Object> handler = new AopProxy<Object>(target, aop);
+        AopProxy<Object> handler = new AopProxy<Object>(target, aopList);
         if (handler.proxyInstance == null) {
             // 创建并返回动态代理类实例
             handler.proxyInstance = Proxy.newProxyInstance(loader, interfaces, handler);

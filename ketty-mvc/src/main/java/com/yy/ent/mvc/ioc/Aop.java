@@ -17,7 +17,7 @@ public interface Aop {
      * @return
      * @throws Exception
      */
-    public void before(Method method, Object[] args) throws Exception;
+    public boolean before(Method method, Object[] args) throws Exception;
 
     /**
      * 方法执行后，会执行的方法
@@ -25,5 +25,5 @@ public interface Aop {
      * @return
      * @throws Exception
      */
-    public void after(Method method, Object[] args) throws Exception;
+    public boolean after(Method method, Object[] args) throws Exception;
 }

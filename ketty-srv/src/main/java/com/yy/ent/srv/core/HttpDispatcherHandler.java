@@ -1,8 +1,8 @@
 package com.yy.ent.srv.core;
 
-import com.yy.ent.mvc.interceptor.KettyInterceptor;
 import com.yy.ent.srv.exception.JServerException;
 import com.yy.ent.srv.exception.ModelConvertJsonException;
+import com.yy.ent.srv.interceptor.KettyInterceptor;
 import com.yy.ent.srv.uitl.MethodParam;
 import com.yy.ent.srv.uitl.ResultConcert;
 import io.netty.buffer.ByteBuf;
@@ -50,6 +50,8 @@ public class HttpDispatcherHandler extends ChannelHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof HttpRequest) {
             HttpRequest req = (HttpRequest) msg;
+            context.setCtx(ctx);
+            context.setRequest(req);
             if (is100ContinueExpected(req)) {
                 ctx.write(new DefaultFullHttpResponse(HTTP_1_1, CONTINUE));
             }
@@ -100,14 +102,14 @@ public class HttpDispatcherHandler extends ChannelHandlerAdapter {
         boolean flag = true;
         while (iterator.hasNext() && flag) {
             KettyInterceptor interceptor = iterator.next();
-            flag = interceptor.before();
+            flag = interceptor.before(context);
         }
 
         Object result = invoke(actionMethod, params);
         iterator = interceptorList.iterator();
         while (iterator.hasNext() && flag) {
             KettyInterceptor interceptor = iterator.next();
-            flag = interceptor.after();
+            flag = interceptor.after(context, result);
         }
 
         if (result == null) {

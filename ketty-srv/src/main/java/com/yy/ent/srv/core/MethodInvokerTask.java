@@ -1,11 +1,11 @@
 package com.yy.ent.srv.core;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yy.ent.mvc.interceptor.KettyInterceptor;
 import com.yy.ent.protocol.KettyRequest;
 import com.yy.ent.protocol.KettyResponse;
 import com.yy.ent.srv.exception.JServerException;
 import com.yy.ent.srv.exception.ModelConvertJsonException;
+import com.yy.ent.srv.interceptor.KettyInterceptor;
 import com.yy.ent.srv.uitl.MethodParam;
 import com.yy.ent.srv.uitl.ResultConcert;
 import io.netty.channel.ChannelHandlerContext;
@@ -27,14 +27,10 @@ public class MethodInvokerTask implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodInvokerTask.class);
 
-    private ChannelHandlerContext ctx;
     private ServerContext serverContext;
-    private KettyRequest req;
 
-    public MethodInvokerTask(ChannelHandlerContext ctx, ServerContext serverContext, KettyRequest req) {
-        this.ctx = ctx;
+    public MethodInvokerTask(ServerContext serverContext) {
         this.serverContext = serverContext;
-        this.req = req;
     }
 
     /**
@@ -52,26 +48,22 @@ public class MethodInvokerTask implements Runnable {
         String[] parameterNames = MethodParam.getParameterNames(method);
         Object[] parameterValues = MethodParam.getParameterValues(parameterNames, method, params);
 
-
         boolean flag = true;
         while (interceptorIterator.hasNext() && flag) {
             KettyInterceptor interceptor = interceptorIterator.next();
-            flag = interceptor.before();
+            flag = interceptor.before(serverContext);
         }
-
         if (!flag) {
             return null;
         }
         // 拦截器前
-
         Object result = actionMethod.call(parameterValues);
         interceptorIterator = interceptorList.iterator();
         // 拦截器后
         while (interceptorIterator.hasNext() && flag) {
             KettyInterceptor interceptor = interceptorIterator.next();
-            flag = interceptor.after();
+            flag = interceptor.after(serverContext, result);
         }
-
         return result;
     }
 
@@ -79,6 +71,8 @@ public class MethodInvokerTask implements Runnable {
     public void run() {
         KettyResponse response = null;
         try {
+            KettyRequest req = (KettyRequest) serverContext.getRequest();
+            ChannelHandlerContext ctx = serverContext.getCtx();
             int id = req.getMsgId();
             JSONObject params = req.getParameter();
             String uri = req.getUri();

@@ -16,8 +16,8 @@ public class SimpleServer {
 
     public static void main(String[] args) throws Exception {
 
-        starHttpServer();
-        //startDefServer();
+        //starHttpServer();
+        startDefServer();
     }
 
     public static void starHttpServer() throws Exception {

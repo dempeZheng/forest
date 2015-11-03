@@ -10,9 +10,6 @@
         </packages>
         <beans>
 
-            <bean id="simpleAction" class="com.yy.ent.action.SimpleAction">
-            </bean>
-
         </beans>
     </ioc>
 </cherry>
