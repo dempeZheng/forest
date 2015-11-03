@@ -30,6 +30,8 @@ public class SimpleAction {
     }
 }
 
+```
+
 ####拦截器 example
 ``` java
 @Around
@@ -51,8 +53,6 @@ public class EchoInterceptor extends BaseInterceptor {
 }
 ```
 
-
-```
 #### KettyServer example
 ``` java
 // nio mvc 业务server启动类example
