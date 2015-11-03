@@ -1,6 +1,8 @@
 package com.yy.ent;
 
-import com.yy.ent.srv.AppServer;
+
+import com.yy.ent.srv.KettyServer;
+import com.yy.ent.srv.uitl.ServerType;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,7 +15,19 @@ public class SimpleServer {
 
 
     public static void main(String[] args) throws Exception {
-        new AppServer()
+
+        starHttpServer();
+    }
+
+    public static void starHttpServer() throws Exception {
+        new KettyServer(ServerType.HTTP_SERVER)
+                .stopWithJVMShutdown()
+                .initMVC()
+                .start(8888);
+    }
+
+    public static void startDefServer() throws Exception {
+        new KettyServer(ServerType.HTTP_SERVER)
                 .stopWithJVMShutdown()
                 .initMVC()
                 .start(8888);

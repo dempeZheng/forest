@@ -30,7 +30,7 @@ public class KettyRequest implements Request {
         this.body = body;
     }
 
-    public void setMsgId(Integer msgId){
+    public void setMsgId(Integer msgId) {
         header.setMsgId(msgId);
     }
 
@@ -94,7 +94,7 @@ public class KettyRequest implements Request {
         byteBuf.writeBytes(bytes);
     }
 
-    public  static KettyRequest decoder(ByteBuf byteBuf, int size) throws UnsupportedEncodingException {
+    public static KettyRequest decoder(ByteBuf byteBuf, int size) throws UnsupportedEncodingException {
         short headerSize = byteBuf.readShort();
         byte[] bytes = new byte[headerSize];
         byteBuf.readBytes(bytes);
@@ -103,7 +103,7 @@ public class KettyRequest implements Request {
         Integer msgId = unpack.popInt();
         String params = unpack.popVarstr();
 
-        int bodySize = size - headerSize-2;
+        int bodySize = size - headerSize - 2;
         byte bodyBytes[] = new byte[bodySize];
         byteBuf.readBytes(bodyBytes);
 

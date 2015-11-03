@@ -16,7 +16,7 @@ public abstract class ClientMonitorTest {
 
     public ClientSender clientSender = new ClientSender("localhost", 8888);
 
-    public ClientPool pool = new ClientPool("localhost",8888);
+    public ClientPool pool = new ClientPool("localhost", 8888);
 
     @Before
     public void setUp() {

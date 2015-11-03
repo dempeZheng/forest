@@ -198,6 +198,12 @@
             <artifactId>spring-asm</artifactId>
             <version>3.1.1.RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-example</artifactId>
+            <version>5.0.0.Alpha1</version>
+        </dependency>
     </dependencies>
 
     <build>

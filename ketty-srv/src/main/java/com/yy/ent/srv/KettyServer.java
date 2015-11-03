@@ -1,14 +1,16 @@
 package com.yy.ent.srv;
 
-import com.yy.ent.codec.KettyRequestDecoder;
-import com.yy.ent.codec.KettyRespEncoder;
 import com.yy.ent.mvc.ioc.KettyIOC;
-import com.yy.ent.srv.core.DispatcherHandler;
+import com.yy.ent.srv.core.HttpServerInitializer;
+import com.yy.ent.srv.core.KettyServerInitializer;
 import com.yy.ent.srv.core.ServerContext;
+import com.yy.ent.srv.uitl.ServerType;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
@@ -26,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class KettyServer {
 
-    private static final Logger log = LoggerFactory.getLogger(KettyServer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KettyServer.class);
 
     private EventLoopGroup bossGroup;
 
@@ -42,8 +44,23 @@ public class KettyServer {
 
 
     public KettyServer() {
+        this(ServerType.KETTY_SERVER);
+    }
+
+    public KettyServer(ServerType serverType) {
         executorGroup = new DefaultEventExecutorGroup(4, new DefaultThreadFactory("decode-worker-thread-pool"));
-        init();
+        ChannelInitializer channelInitializer;
+        switch (serverType) {
+            case KETTY_SERVER:
+                channelInitializer = new KettyServerInitializer(context);
+                break;
+            case HTTP_SERVER:
+                channelInitializer = new HttpServerInitializer(context);
+                break;
+            default:
+                channelInitializer = new KettyServerInitializer(context);
+        }
+        init(channelInitializer);
     }
 
     public void start(int port) {
@@ -51,14 +68,14 @@ public class KettyServer {
             ChannelFuture f = b.bind(port).sync();
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            log.info("server start:" + port);
+            LOGGER.info("server start:{}", port);
         } finally {
             stop();
         }
     }
 
 
-    private void init() {
+    private void init(ChannelInitializer channelInitializer) {
         bossGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors() * 2);
         b = new ServerBootstrap();
@@ -67,20 +84,7 @@ public class KettyServer {
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .handler(new LoggingHandler(LogLevel.INFO))
-
-                .childHandler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch)
-                            throws Exception {
-                        ChannelPipeline channel = ch.pipeline();
-                        channel
-                                .addLast(new KettyRespEncoder())
-                                .addLast(new KettyRequestDecoder())
-                                .addLast(new DispatcherHandler(context))
-                        ;
-
-                    }
-                });
+                .childHandler(channelInitializer);
     }
 
 

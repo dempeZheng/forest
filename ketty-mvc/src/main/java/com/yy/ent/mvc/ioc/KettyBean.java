@@ -11,9 +11,9 @@ import java.util.*;
  */
 public class KettyBean {
 
-    private Map<String,PathBean> pathBean = new HashMap<String,PathBean>();
+    private Map<String, PathBean> pathBean = new HashMap<String, PathBean>();
 
-    private Map<String,Bean> beanMap = new LinkedHashMap<String,Bean>();
+    private Map<String, Bean> beanMap = new LinkedHashMap<String, Bean>();
 
     private Set<PackageBean> packageBean = new HashSet<PackageBean>();
 

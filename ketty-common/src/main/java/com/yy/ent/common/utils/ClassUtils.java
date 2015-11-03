@@ -151,7 +151,7 @@ public abstract class ClassUtils {
             cl = Thread.currentThread().getContextClassLoader();
         } catch (Throwable ex) {
             // Cannot access thread context ClassLoader - falling back to system class loader...
-            LOGGER.error(ex.getMessage(),ex);
+            LOGGER.error(ex.getMessage(), ex);
         }
         if (cl == null) {
             // No thread context class loader -> use class loader of this class.
@@ -343,7 +343,7 @@ public abstract class ClassUtils {
             return true;
         } catch (Throwable ex) {
             // Class or one of its dependencies is not present...
-            LOGGER.error(ex.getMessage(),ex);
+            LOGGER.error(ex.getMessage(), ex);
             return false;
         }
     }

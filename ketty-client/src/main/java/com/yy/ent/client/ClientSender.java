@@ -16,7 +16,7 @@ public class ClientSender extends KettyClient {
 
     private static AtomicInteger idMaker = new AtomicInteger(0);
 
-    private  ReplyWaitQueue replyQueue = new ReplyWaitQueue();
+    private ReplyWaitQueue replyQueue = new ReplyWaitQueue();
 
     public ClientSender(String host, int port) {
         super(host, port);

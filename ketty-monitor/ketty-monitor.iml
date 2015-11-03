@@ -29,12 +29,22 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-module-junit4:1.4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-module-junit4-common:1.4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-core:1.4.11" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.javassist:javassist:3.16.1-GA" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-reflect:1.4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-api-mockito:1.4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-api-support:1.4.11" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-asm:3.1.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-example:5.0.0.Alpha1" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-sctp:5.0.0.Alpha1" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-socks:5.0.0.Alpha1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:2.5.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.jcraft:jzlib:1.1.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.javassist:javassist:3.16.1-GA" level="project" />
+    <orderEntry type="library" name="Maven: com.yammer.metrics:metrics-core:2.2.0" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-udt:5.0.0.Alpha1" level="project" />
+    <orderEntry type="library" name="Maven: com.barchart.udt:barchart-udt-bundle:2.3.0" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-rxtx:5.0.0.Alpha1" level="project" />
+    <orderEntry type="library" name="Maven: org.rxtx:rxtx:2.1.7" level="project" />
   </component>
 </module>

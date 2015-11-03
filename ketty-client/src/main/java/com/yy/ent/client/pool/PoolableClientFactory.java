@@ -24,7 +24,7 @@ public class PoolableClientFactory implements PoolableObjectFactory<ClientSender
 
     @Override
     public ClientSender makeObject() throws Exception {
-        return new ClientSender(host,port);
+        return new ClientSender(host, port);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class PoolableClientFactory implements PoolableObjectFactory<ClientSender
 
     @Override
     public boolean validateObject(ClientSender obj) {
-        if(obj instanceof KettyClient){
+        if (obj instanceof KettyClient) {
             return true;
         }
         return false;

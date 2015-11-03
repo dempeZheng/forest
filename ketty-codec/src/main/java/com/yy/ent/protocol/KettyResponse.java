@@ -77,7 +77,7 @@ public class KettyResponse implements Response {
         int id = unpack.popInt();
         short resCode = unpack.popShort();
 
-        int bodySize = size -headerSize -2;
+        int bodySize = size - headerSize - 2;
         byte[] bodyByte = new byte[bodySize];
         byteBuf.readBytes(bodyByte);
         Unpack bodyPack = new Unpack(bodyByte);

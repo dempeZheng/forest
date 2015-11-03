@@ -1,7 +1,6 @@
 package com.yy.ent.protocol;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yy.ent.pack.Pack;
 
 import java.io.UnsupportedEncodingException;
 

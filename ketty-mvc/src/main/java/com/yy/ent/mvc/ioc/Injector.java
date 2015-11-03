@@ -51,7 +51,7 @@ public class Injector {
                 String instance = injectAnnotation.instance().getName();
                 Class<?> type = field.getType();
                 String dependClassName = type.getName();
-                if (null == instance || StringUtils.equals("java.lang.Object",instance)) {
+                if (null == instance || StringUtils.equals("java.lang.Object", instance)) {
                     if (type.isInterface()) {
                         throw new RuntimeException("cannot find interface impl ! field name : " + type + " of class : " + clazz.getName());
                     }

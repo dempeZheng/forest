@@ -24,18 +24,15 @@ public class FilterInfo {
     //末次访问时间
     private Date lastAccessTime = new Date();
 
-    public FilterInfo(Object targetKey)
-    {
+    public FilterInfo(Object targetKey) {
         this.targetKey = targetKey;
     }
 
-    public Date getFirstAccessTime()
-    {
+    public Date getFirstAccessTime() {
         return firstAccessTime;
     }
 
-    public void setFirstAccessTime(Date firstAccessTime)
-    {
+    public void setFirstAccessTime(Date firstAccessTime) {
         this.firstAccessTime = firstAccessTime;
     }
 
@@ -64,8 +61,7 @@ public class FilterInfo {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append(" targetKey:");
         sb.append(this.getTargetKey());

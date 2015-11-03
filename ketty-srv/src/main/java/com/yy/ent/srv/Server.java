@@ -11,8 +11,8 @@ package com.yy.ent.srv;
 
 import com.yy.ent.srv.exception.JServerException;
 
-/**
- * @author hongyuan
+/*
+
  */
 public interface Server {
 

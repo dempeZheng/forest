@@ -90,7 +90,7 @@ public class ProxyHandler<T> implements InvocationHandler {
     public static Object getProxyInstance(Object target, Object halb_proxy, AccessPolicy strategy) {
         Class<?> targetClass = target.getClass();  
         /*
-    	 * loader:  要代理类的类加载器 
+         * loader:  要代理类的类加载器
     	 * interfaces:  要代理类所实现的所有的接口
     	 * handler: 转发方法调用的调用处理类实例，即代理类 
     	 */

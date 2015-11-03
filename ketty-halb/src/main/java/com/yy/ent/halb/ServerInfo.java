@@ -7,8 +7,7 @@ package com.yy.ent.halb;
  * Time: 20:28
  * To change this template use File | Settings | File Templates.
  */
-public class ServerInfo<T>
-{
+public class ServerInfo<T> {
     /**
      * 位置
      */
@@ -39,34 +38,35 @@ public class ServerInfo<T>
 
     /**
      * 是否是缺省的
-     * 		true:缺省
-     * 		false:非缺省
+     * true:缺省
+     * false:非缺省
      */
     private boolean isDefault;
 
-    public ServerInfo()
-    {
+    public ServerInfo() {
 
     }
 
     /**
      * 构造方法
-     * @param ip 地址
+     *
+     * @param ip   地址
      * @param port 端口
      */
-    public ServerInfo(String ip, int port){
+    public ServerInfo(String ip, int port) {
         this.ip = ip;
         this.port = port;
     }
 
     /**
      * 构造方法(index 属性过期,调用不包含index的构造方法)
+     *
      * @param index 位置
-     * @param ip 地址
-     * @param port 端口
+     * @param ip    地址
+     * @param port  端口
      */
     @Deprecated
-    public ServerInfo(int index, String ip, int port){
+    public ServerInfo(int index, String ip, int port) {
         this.index = index;
         this.ip = ip;
         this.port = port;
@@ -74,102 +74,93 @@ public class ServerInfo<T>
 
     /**
      * 构造方法
-     * @param ip 地址
-     * @param port 端口
+     *
+     * @param ip     地址
+     * @param port   端口
      * @param weight 权重
      */
-    public ServerInfo(String ip, int port, int weight){
+    public ServerInfo(String ip, int port, int weight) {
         this(ip, port);
         this.weight = weight;
     }
 
     /**
      * 构造方法(index 属性过期,调用不包含index的构造方法)
-     * @param index 位置
-     * @param ip 地址
-     * @param port 端口
+     *
+     * @param index  位置
+     * @param ip     地址
+     * @param port   端口
      * @param weight 权重
      */
     @Deprecated
-    public ServerInfo(int index, String ip, int port, int weight){
+    public ServerInfo(int index, String ip, int port, int weight) {
         this(index, ip, port);
         this.weight = weight;
     }
 
     /**
      * 构造方法(index 属性过期,调用不包含index的构造方法)
-     * @param index 位置
-     * @param ip 地址
-     * @param port 端口
-     * @param weight 权重
+     *
+     * @param index     位置
+     * @param ip        地址
+     * @param port      端口
+     * @param weight    权重
      * @param isDefault 1:缺省   0:非缺省
      */
     @Deprecated
-    public ServerInfo(int index, String ip, int port, int weight,int isDefault){
+    public ServerInfo(int index, String ip, int port, int weight, int isDefault) {
         this(index, ip, port);
         this.weight = weight;
         this.isDefault = isDefault == 1 ? true : false;
     }
 
-    public String getIp()
-    {
+    public String getIp() {
         return ip;
     }
 
-    public void setIp(String ip)
-    {
+    public void setIp(String ip) {
         this.ip = ip;
     }
 
-    public int getPort()
-    {
+    public int getPort() {
         return port;
     }
 
-    public void setPort(int port)
-    {
+    public void setPort(int port) {
         this.port = port;
     }
 
 
-    public int getIndex()
-    {
+    public int getIndex() {
         return index;
     }
 
-    public void setIndex(int index)
-    {
+    public void setIndex(int index) {
         this.index = index;
     }
 
 
-    public int getWeight()
-    {
+    public int getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight)
-    {
+    public void setWeight(int weight) {
         this.weight = weight;
     }
 
-    public long getHits()
-    {
+    public long getHits() {
         return hits;
     }
 
-    public void setHits(long hits)
-    {
+    public void setHits(long hits) {
         this.hits = hits;
     }
 
-    public boolean isDefault()
-    {
+    public boolean isDefault() {
         return isDefault;
     }
 
-    public void setDefault(boolean isDefault)
-    {
+    public void setDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }
 
@@ -182,15 +173,11 @@ public class ServerInfo<T>
     }
 
     @Override
-    public String toString()
-    {
-        return "index:"+this.getIndex()
-                +" ip:"+this.getIp()+" port:"+this.getPort()
-                +" weight:"+this.getWeight()+" hits:"+this.getHits()+" isDefault:" + this.isDefault();
+    public String toString() {
+        return "index:" + this.getIndex()
+                + " ip:" + this.getIp() + " port:" + this.getPort()
+                + " weight:" + this.getWeight() + " hits:" + this.getHits() + " isDefault:" + this.isDefault();
     }
-
-
-
 
 
 }

@@ -1,8 +1,8 @@
 package com.yy.ent.service;
 
 import com.yy.ent.dao.UserDao;
-import com.yy.ent.mvc.anno.Inject;
 import com.yy.ent.model.User;
+import com.yy.ent.mvc.anno.Inject;
 
 /**
  * Created with IntelliJ IDEA.
