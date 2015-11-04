@@ -39,7 +39,7 @@ public class SimpleActionTest extends ClientMonitorTest {
             params.put("uid", "1234567");
             request.setParameter(params);
             String s = clientSender.sendAndWait(request);
-            System.out.println("===>"+s);
+            System.out.println("===>" + s);
             //clientSender.sendOnly(request);
 
         }

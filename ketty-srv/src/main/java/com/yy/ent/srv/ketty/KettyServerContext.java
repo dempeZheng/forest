@@ -1,7 +1,6 @@
 package com.yy.ent.srv.ketty;
 
 import com.yy.ent.protocol.KettyRequest;
-import com.yy.ent.srv.Conf;
 import com.yy.ent.srv.KettyServer;
 import com.yy.ent.srv.core.ServerContext;
 import io.netty.channel.ChannelHandlerContext;

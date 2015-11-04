@@ -30,7 +30,7 @@ public class KettyRespDecoder extends ByteToMessageDecoder {
         short size = byteBuf.readShort();
         if (length - 2 < size) {
             byteBuf.resetReaderIndex();
-            LOGGER.warn("");
+            LOGGER.warn("packet size not enough");
             return;
         }
         KettyResponse resp = KettyResponse.decode(byteBuf, size);

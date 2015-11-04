@@ -56,14 +56,15 @@ public class EchoInterceptor extends BaseInterceptor {
 #### KettyServer example
 ``` java
 // nio mvc 业务server启动类example
-public class SimpleServer {
-    public static void main(String[] args) throws Exception {
-        new KettyServer(ServerType.HTTP_SERVER)
-                        .stopWithJVMShutdown()
-                        .initMVC()
-                        .start(8888);
-    }
-}
+new KettyServer.Builder()
+                .initPackage("com.yy.ent")
+                .tcpNoDelay(true)
+                .soKeepAlive(true)
+                .setHttpProtocol()
+                .host("localhost")
+                .port(8888)
+                .build()
+                .start();
 
 // 测试jetty客户端
 public class JettClientTest {
@@ -85,10 +86,12 @@ public class JettClientTest {
 // nio mvc 业务server启动类example
 public class SimpleServer {
     public static void main(String[] args) throws Exception {
-        new KettyServer(ServerType.KETTY_SERVER)
-                       .stopWithJVMShutdown()
-                       .initMVC()
-                       .start(8888);
+         new KettyServer.Builder()
+                        .initPackage("com.yy.ent")
+                        .setKettyProtocol()
+                        .port(8888)
+                        .build()
+                        .start();
     }
 }
 
@@ -175,7 +178,7 @@ public class SimpleServer {
 >接口统计分析
 >智能推荐
 
-[READ MORE](https://github.com/dempeZheng/ketty)
+[READ MORE](http://zhizus.com)
 
 
 

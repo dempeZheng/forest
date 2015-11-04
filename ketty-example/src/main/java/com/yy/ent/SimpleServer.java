@@ -21,6 +21,8 @@ public class SimpleServer {
     public static void starHttpServer() throws Exception {
         new KettyServer.Builder()
                 .initPackage("com.yy.ent")
+                .tcpNoDelay(true)
+                .soKeepAlive(true)
                 .setHttpProtocol()
                 .host("localhost")
                 .port(8888)

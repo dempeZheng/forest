@@ -60,8 +60,12 @@ public class ActionMethod {
         interceptorList.add(interceptor);
     }
 
+    @Override
     public String toString() {
-        return "MessageActionMethod [target=" + target.getClass().getSimpleName() + ", method=" + method.getName()
-                + "]";
+        return "ActionMethod{" +
+                "target=" + target +
+                ", method=" + method +
+                ", interceptorList=" + interceptorList +
+                '}';
     }
 }

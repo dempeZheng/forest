@@ -1,18 +1,12 @@
 package com.yy.ent.srv.ketty;
 
-import com.yy.ent.common.Constants;
 import com.yy.ent.common.MetricThread;
 import com.yy.ent.protocol.KettyRequest;
 import com.yy.ent.protocol.KettyResponse;
-import com.yy.ent.protocol.Response;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.concurrent.DefaultThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,10 +32,10 @@ public class KettyDispatcherHandler extends ChannelHandlerAdapter {
         metric.increment();
         KettyRequest req = (KettyRequest) msg;
 
-        context.setReqCxt(req, ctx);
+        KettyServerContext.setReqCxt(req, ctx);
         KettyActionTack tack = new KettyActionTack(context);
         KettyResponse response = tack.act(req);
-        context.removeReqCtx();
+        KettyServerContext.removeReqCtx();
 
         LOGGER.debug("req:", req.toString());
         if (response != null) {

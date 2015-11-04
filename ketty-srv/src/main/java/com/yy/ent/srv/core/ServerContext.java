@@ -1,6 +1,5 @@
 package com.yy.ent.srv.core;
 
-import com.yy.ent.srv.Conf;
 import com.yy.ent.srv.KettyServer;
 
 /**

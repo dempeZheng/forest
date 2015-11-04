@@ -1,7 +1,5 @@
 package com.yy.ent.srv.http;
 
-import com.yy.ent.srv.core.ServerContext;
-import com.yy.ent.srv.http.HttpDispatcherHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;

@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * Time: 16:41
  * To change this template use File | Settings | File Templates.
  */
-public class KettyServer {
+public class KettyServer implements Server {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KettyServer.class);
 
@@ -84,8 +84,8 @@ public class KettyServer {
         b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .option(ChannelOption.TCP_NODELAY, true)
-                .option(ChannelOption.SO_KEEPALIVE, true)
+                .option(ChannelOption.TCP_NODELAY, builder.tcpNoDelay)
+                .option(ChannelOption.SO_KEEPALIVE, builder.soKeepAlive)
                 .handler(new LoggingHandler(LogLevel.INFO))
                 .childHandler(channelInitializer);
     }
@@ -122,6 +122,11 @@ public class KettyServer {
 
         private ServerType serverType = ServerType.HTTP_SERVER;
 
+        private boolean tcpNoDelay = true;
+
+        private boolean soKeepAlive = true;
+
+
         public String getPackageName() {
             return packageName;
         }
@@ -143,6 +148,19 @@ public class KettyServer {
             this.packageName = packageName;
             return this;
         }
+
+        public Builder tcpNoDelay(boolean tcpNoDelay) {
+            LOGGER.info("set tcp_no_delay:{}", tcpNoDelay);
+            this.tcpNoDelay = tcpNoDelay;
+            return this;
+        }
+
+        public Builder soKeepAlive(boolean soKeepAlive) {
+            LOGGER.info("set so_keep_alive:{}", soKeepAlive);
+            this.soKeepAlive = soKeepAlive;
+            return this;
+        }
+
 
         public Builder setHttpProtocol() {
             LOGGER.info("set http protocol");

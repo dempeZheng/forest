@@ -6,7 +6,10 @@ import com.yy.ent.protocol.KettyResponse;
 import com.yy.ent.srv.core.ActionMethod;
 import com.yy.ent.srv.core.ActionTake;
 import com.yy.ent.srv.exception.ModelConvertJsonException;
-import com.yy.ent.srv.uitl.*;
+import com.yy.ent.srv.uitl.MethodInvoker;
+import com.yy.ent.srv.uitl.MethodParam;
+import com.yy.ent.srv.uitl.ResCode;
+import com.yy.ent.srv.uitl.ResultConcert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +53,7 @@ public class KettyActionTack implements ActionTake<KettyResponse, KettyRequest> 
             // 当action method 返回是void的时候，不返回任何消息
             LOGGER.debug("actionMethod:{} return void.", actionMethod);
 
-            return new KettyResponse(id, ResCode.NO_PERMISSION.getResCode(), ResMsgBuilder.getNoPermissionMsg());
+            return new KettyResponse(id, ResCode.NO_PERMISSION.getResCode(), ResCode.NO_PERMISSION.getMsg());
         }
         return new KettyResponse(id, ResultConcert.toJSONString(result));
     }

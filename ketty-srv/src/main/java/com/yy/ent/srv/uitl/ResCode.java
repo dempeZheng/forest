@@ -1,18 +1,23 @@
 package com.yy.ent.srv.uitl;
 
 /**
- * Created with IntelliJ IDEA.
+ * Ketty消息返回值定义枚举类
  * User: Dempe
  * Date: 2015/11/4
  * Time: 15:37
  * To change this template use File | Settings | File Templates.
  */
 public enum ResCode {
-    Success((short) 200), NO_PERMISSION((short) 201);
+
+    SUCCESS((short) 200, ""), NO_PERMISSION((short) 201, ResMsgBuilder.NO_PERMISSION_MSG);
+
     short resCode;
 
-    private ResCode(short resCode) {
+    String msg;
+
+    private ResCode(short resCode, String msg) {
         this.resCode = resCode;
+        this.msg = msg;
     }
 
     public short getResCode() {
@@ -21,5 +26,13 @@ public enum ResCode {
 
     public void setResCode(short resCode) {
         this.resCode = resCode;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }
