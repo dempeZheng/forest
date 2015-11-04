@@ -57,7 +57,6 @@ public class EchoInterceptor extends BaseInterceptor {
 ``` java
 // nio mvc 业务server启动类example
 new KettyServer.Builder()
-                .initPackage("com.yy.ent")
                 .tcpNoDelay(true)
                 .soKeepAlive(true)
                 .setHttpProtocol()
@@ -87,7 +86,6 @@ public class JettClientTest {
 public class SimpleServer {
     public static void main(String[] args) throws Exception {
          new KettyServer.Builder()
-                        .initPackage("com.yy.ent")
                         .setKettyProtocol()
                         .port(8888)
                         .build()
