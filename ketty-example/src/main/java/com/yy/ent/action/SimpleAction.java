@@ -27,7 +27,7 @@ public class SimpleAction {
         return "hello yy-rpc";
     }
 
-    @Interceptor(id = "echoInterceptor")
+    @Interceptor(id = "echoInterceptor,permissionInterceptor")
     @Path
     public User getUserByUid(@Param String uid) {
         return userService.getUserByUid(uid);

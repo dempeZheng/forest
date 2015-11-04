@@ -7,10 +7,14 @@ package com.yy.ent.srv;
  * Time: 16:45
  * To change this template use File | Settings | File Templates.
  */
-public class Config {
+public class Conf {
 
-    private String serverIp;
 
-    private int serverPort;
+    private String def_package = "com.yy.ent";
+
+    public String getDef_package() {
+        return def_package;
+    }
+
 
 }

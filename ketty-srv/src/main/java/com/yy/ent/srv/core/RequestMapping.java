@@ -5,8 +5,9 @@ import com.yy.ent.mvc.anno.Action;
 import com.yy.ent.mvc.anno.Around;
 import com.yy.ent.mvc.anno.Interceptor;
 import com.yy.ent.mvc.anno.Path;
-import com.yy.ent.srv.interceptor.KettyInterceptor;
 import com.yy.ent.mvc.ioc.Injector;
+import com.yy.ent.srv.KettyServer;
+import com.yy.ent.srv.interceptor.KettyInterceptor;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +34,10 @@ public class RequestMapping {
 
     public Map<String, KettyInterceptor> interceptorMap = new ConcurrentHashMap<String, KettyInterceptor>();
 
-    public final static String PACKAGE_NAME = "com.yy.ent";
+    private KettyServer.Builder builder;
 
-    public RequestMapping() {
+    public RequestMapping(KettyServer.Builder builder) {
+        this.builder = builder;
         initInterceptorMap();
         initMapping();
     }
@@ -43,11 +45,8 @@ public class RequestMapping {
 
     public void initInterceptorMap() {
         List<String> packages = new ArrayList<String>();
-
-        packages.add(PACKAGE_NAME);
-        LOGGER.info("scanned packages :{} ", packages);
+        packages.add(builder.getPackageName());
         for (String scanPackage : packages) {
-            LOGGER.info("begin get classes from package : {}", scanPackage);
             String[] classNames = PackageUtils.findClassesInPackage(scanPackage + ".*"); // 目录下通配
             for (String className : classNames) {
                 try {
@@ -84,7 +83,7 @@ public class RequestMapping {
         LOGGER.info("handles begin initiating");
         List<String> packages = new ArrayList<String>();
 
-        packages.add(PACKAGE_NAME);
+        packages.add(builder.getPackageName());
         LOGGER.info("scanned packages : " + packages);
         for (String scanPackage : packages) {
             LOGGER.info("begin get classes from package : " + scanPackage);
@@ -125,11 +124,15 @@ public class RequestMapping {
                                 ActionMethod actionMethod = new ActionMethod(target, method);
                                 Interceptor interceptor = method.getAnnotation(Interceptor.class);
                                 if (interceptor != null) {
-                                    KettyInterceptor kettyInterceptor = interceptorMap.get(interceptor.id());
-                                    if (kettyInterceptor == null) {
-                                        LOGGER.error("interceptor id :{} is not found !", interceptor.id());
-                                    } else {
-                                        actionMethod.addInterceptor(kettyInterceptor);
+                                    String ids = interceptor.id();
+                                    String idArray[] = ids.split(",");
+                                    for (String id : idArray) {
+                                        KettyInterceptor kettyInterceptor = interceptorMap.get(id);
+                                        if (kettyInterceptor == null) {
+                                            LOGGER.error("interceptor id :{} is not found !", id);
+                                        } else {
+                                            actionMethod.addInterceptor(kettyInterceptor);
+                                        }
                                     }
                                 }
 

@@ -1,9 +1,10 @@
 package com.yy.ent.srv;
 
 import com.yy.ent.mvc.ioc.KettyIOC;
-import com.yy.ent.srv.core.HttpServerInitializer;
-import com.yy.ent.srv.core.KettyServerInitializer;
-import com.yy.ent.srv.core.ServerContext;
+import com.yy.ent.srv.http.HttpServerContext;
+import com.yy.ent.srv.http.HttpServerInitializer;
+import com.yy.ent.srv.ketty.KettyServerContext;
+import com.yy.ent.srv.ketty.KettyServerInitializer;
 import com.yy.ent.srv.uitl.ServerType;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -40,35 +41,37 @@ public class KettyServer {
 
     private KettyIOC cherry;
 
-    private ServerContext context = new ServerContext();
+    private Builder builder;
 
 
-    public KettyServer() {
-        this(ServerType.KETTY_SERVER);
+    public KettyServer(Builder builder) {
+        this.builder = builder;
+        init(builder.serverType);
+
     }
 
-    public KettyServer(ServerType serverType) {
+    public void init(ServerType serverType) {
         executorGroup = new DefaultEventExecutorGroup(4, new DefaultThreadFactory("decode-worker-thread-pool"));
         ChannelInitializer channelInitializer;
         switch (serverType) {
             case KETTY_SERVER:
-                channelInitializer = new KettyServerInitializer(context);
+                channelInitializer = new KettyServerInitializer(new KettyServerContext(builder));
                 break;
             case HTTP_SERVER:
-                channelInitializer = new HttpServerInitializer(context);
+                channelInitializer = new HttpServerInitializer(new HttpServerContext(builder));
                 break;
             default:
-                channelInitializer = new KettyServerInitializer(context);
+                channelInitializer = new KettyServerInitializer(new KettyServerContext(builder));
         }
         init(channelInitializer);
     }
 
-    public void start(int port) {
+    public void start() {
         try {
-            ChannelFuture f = b.bind(port).sync();
+            ChannelFuture f = b.bind(builder.host, builder.port).sync();
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            LOGGER.info("server start:{}", port);
+            LOGGER.info("server start:{}", builder.port);
         } finally {
             stop();
         }
@@ -108,5 +111,69 @@ public class KettyServer {
     public KettyServer initMVC() throws Exception {
         cherry = new KettyIOC();
         return this;
+    }
+
+    public static final class Builder {
+        private String packageName = "com.yy.ent";
+
+        private int port = 8888;
+
+        private String host = "localhost";
+
+        private ServerType serverType = ServerType.HTTP_SERVER;
+
+        public String getPackageName() {
+            return packageName;
+        }
+
+        public int getPort() {
+            return port;
+        }
+
+        public ServerType getServerType() {
+            return serverType;
+        }
+
+        public String getHost() {
+            return host;
+        }
+
+        public Builder initPackage(String packageName) {
+            LOGGER.info("set scan package:{}", packageName);
+            this.packageName = packageName;
+            return this;
+        }
+
+        public Builder setHttpProtocol() {
+            LOGGER.info("set http protocol");
+            serverType = ServerType.HTTP_SERVER;
+            return this;
+        }
+
+
+        public Builder setKettyProtocol() {
+            LOGGER.info("set jetty protocol");
+            serverType = ServerType.KETTY_SERVER;
+            return this;
+        }
+
+        public Builder port(int port) {
+            LOGGER.info("use port:{}", port);
+            this.port = port;
+            return this;
+        }
+
+        public Builder host(String host) {
+            LOGGER.info("use host:{}", host);
+            this.host = host;
+            return this;
+        }
+
+
+        public KettyServer build() {
+            return new KettyServer(this);
+        }
+
+
     }
 }

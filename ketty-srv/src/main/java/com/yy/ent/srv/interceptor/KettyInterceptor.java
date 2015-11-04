@@ -1,7 +1,5 @@
 package com.yy.ent.srv.interceptor;
 
-import com.yy.ent.srv.core.ServerContext;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -11,7 +9,7 @@ import com.yy.ent.srv.core.ServerContext;
  */
 public interface KettyInterceptor {
 
-    public boolean before(ServerContext context);
+    public boolean before();
 
-    public boolean after(ServerContext context, Object response);
+    public boolean after();
 }

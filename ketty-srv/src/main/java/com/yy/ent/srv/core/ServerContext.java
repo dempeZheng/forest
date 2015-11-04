@@ -1,6 +1,7 @@
 package com.yy.ent.srv.core;
 
-import io.netty.channel.ChannelHandlerContext;
+import com.yy.ent.srv.Conf;
+import com.yy.ent.srv.KettyServer;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,41 +10,20 @@ import io.netty.channel.ChannelHandlerContext;
  * Time: 上午10:45
  * To change this template use File | Settings | File Templates.
  */
-public class ServerContext {
+public abstract class ServerContext {
 
-    private RequestMapping mapping = new RequestMapping();
+    public RequestMapping mapping;
 
-    private ChannelHandlerContext ctx;
+    public KettyServer.Builder builder;
 
-    private Object request;
-
-    public ChannelHandlerContext getCtx() {
-        return ctx;
+    public ServerContext(KettyServer.Builder builder) {
+        this.builder = builder;
+        this.mapping = new RequestMapping(builder);
     }
 
-    public void setCtx(ChannelHandlerContext ctx) {
-        this.ctx = ctx;
-    }
-
-    public Object getRequest() {
-        return request;
-    }
-
-    public void setRequest(Object request) {
-        this.request = request;
-    }
-
-    public ActionMethod get(String uri) {
+    public ActionMethod tackAction(String uri) {
         return mapping.tack(uri);
     }
 
 
-    @Override
-    public String toString() {
-        return "ServerContext{" +
-                "mapping=" + mapping +
-                ", ctx=" + ctx +
-                ", request=" + request +
-                '}';
-    }
 }

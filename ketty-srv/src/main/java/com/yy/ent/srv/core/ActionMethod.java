@@ -1,7 +1,6 @@
 package com.yy.ent.srv.core;
 
 import com.yy.ent.srv.interceptor.KettyInterceptor;
-import com.yy.ent.srv.exception.JServerException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,9 +23,6 @@ public class ActionMethod {
 
     private List<KettyInterceptor> interceptorList = new ArrayList<KettyInterceptor>();
 
-    public ActionMethod() {
-    }
-
     /**
      * @param target
      * @param method
@@ -36,16 +32,8 @@ public class ActionMethod {
         this.method = method;
     }
 
-    public Object call(Object... args) throws JServerException {
-        try {
-            return method.invoke(target, args);
-        } catch (IllegalAccessException e) {
-            throw new JServerException("MessageAction method exception", e);
-        } catch (IllegalArgumentException e) {
-            throw new JServerException("MessageAction method exception", e);
-        } catch (InvocationTargetException e) {
-            throw new JServerException("MessageAction method exception", e);
-        }
+    public Object call(Object... args) throws InvocationTargetException, IllegalAccessException {
+        return method.invoke(target, args);
     }
 
     public void setTarget(Object target) {

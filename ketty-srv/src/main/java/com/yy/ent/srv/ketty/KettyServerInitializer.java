@@ -1,7 +1,9 @@
-package com.yy.ent.srv.core;
+package com.yy.ent.srv.ketty;
 
 import com.yy.ent.codec.KettyRequestDecoder;
 import com.yy.ent.codec.KettyRespEncoder;
+import com.yy.ent.srv.core.ServerContext;
+import com.yy.ent.srv.ketty.KettyDispatcherHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -15,9 +17,9 @@ import io.netty.channel.socket.SocketChannel;
  */
 public class KettyServerInitializer extends ChannelInitializer<SocketChannel> {
 
-    private ServerContext context;
+    private KettyServerContext context;
 
-    public KettyServerInitializer(ServerContext context) {
+    public KettyServerInitializer(KettyServerContext context) {
         this.context = context;
     }
 
@@ -26,6 +28,6 @@ public class KettyServerInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline pipeline = ch.pipeline();
         pipeline.addLast("encoder", new KettyRespEncoder())
                 .addLast("decoder", new KettyRequestDecoder())
-                .addLast("dispatcher", new DispatcherHandler(context));
+                .addLast("dispatcher", new KettyDispatcherHandler(context));
     }
 }

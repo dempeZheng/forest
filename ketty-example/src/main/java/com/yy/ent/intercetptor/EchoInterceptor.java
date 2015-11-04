@@ -2,7 +2,7 @@ package com.yy.ent.intercetptor;
 
 
 import com.yy.ent.mvc.anno.Around;
-import com.yy.ent.srv.core.ServerContext;
+import com.yy.ent.srv.http.HttpServerContext;
 import com.yy.ent.srv.interceptor.BaseInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +21,14 @@ public class EchoInterceptor extends BaseInterceptor {
 
 
     @Override
-    public boolean before(ServerContext context) {
-        LOGGER.info("==============EchoInterceptor before=========context:{}", context);
+    public boolean before() {
+        LOGGER.info("==============EchoInterceptor before=========context:{}", HttpServerContext.getReqCxt());
         return true;
     }
 
     @Override
-    public boolean after(ServerContext context, Object response) {
-        LOGGER.info("==============EchoInterceptor after=========context:{},response:{}", context, response);
+    public boolean after() {
+        LOGGER.info("==============EchoInterceptor after=========context:{}", HttpServerContext.getReqCxt());
         return true;
     }
 }

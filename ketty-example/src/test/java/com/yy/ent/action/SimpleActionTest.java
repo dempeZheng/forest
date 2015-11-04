@@ -36,7 +36,7 @@ public class SimpleActionTest extends ClientMonitorTest {
             KettyRequest request = new KettyRequest();
             request.setUri("/simpleAction/getUserByUid");
             JSONObject params = new JSONObject();
-            params.put("uid", "12345677");
+            params.put("uid", "1234567");
             request.setParameter(params);
             String s = clientSender.sendAndWait(request);
             System.out.println("===>"+s);

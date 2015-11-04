@@ -1,5 +1,7 @@
-package com.yy.ent.srv.core;
+package com.yy.ent.srv.http;
 
+import com.yy.ent.srv.core.ServerContext;
+import com.yy.ent.srv.http.HttpDispatcherHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -15,9 +17,9 @@ import io.netty.handler.codec.http.HttpResponseEncoder;
  */
 public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
 
-    private ServerContext context;
+    private HttpServerContext context;
 
-    public HttpServerInitializer(ServerContext context) {
+    public HttpServerInitializer(HttpServerContext context) {
         this.context = context;
     }
 
