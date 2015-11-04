@@ -114,6 +114,7 @@ public class KettyServer implements Server {
     }
 
     public static final class Builder {
+
         private String packageName = "com.dempe.ketty";
 
         private int port = 8888;

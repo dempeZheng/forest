@@ -6,7 +6,7 @@
     <ioc>
         <!-- 扫描BeanFactory来管理的包 -->
         <packages>
-            <package>com.yy.ent.service.*</package>
+            <package>com.dempe.ketty.service.*</package>
         </packages>
         <beans>
 
