@@ -8,6 +8,9 @@ import com.dempe.ketty.srv.uitl.MethodInvoker;
 import com.dempe.ketty.srv.uitl.MethodParam;
 import com.dempe.ketty.srv.uitl.ResultConcert;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
+import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
+import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +62,9 @@ public class HttpActionTack implements ActionTake<FullHttpResponse, FullHttpRequ
         Map<String, List<String>> params = null;
         // TODO handler POST
         if (request.getMethod() == HttpMethod.POST) {
+            HttpPostRequestDecoder postRequestDecoder = new HttpPostRequestDecoder(
+                    new DefaultHttpDataFactory(false), request);
+            List<InterfaceHttpData> q = postRequestDecoder.getBodyHttpDatas();
             return new DefaultFullHttpResponse(HTTP_1_1, FORBIDDEN);
 
         } else if (request.getMethod() == HttpMethod.GET) {
