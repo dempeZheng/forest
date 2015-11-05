@@ -3,35 +3,32 @@ package com.dempe.ketty.halb;
 import com.dempe.ketty.common.access.AccessPolicy;
 import com.dempe.ketty.halb.exception.IgnoreException;
 import com.dempe.ketty.halb.listener.HAEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-/**
- * 类说明：代理操作者类;
- *
- * @param <T>
- * @create:创建时间：2013-1-11 下午4:52:58
- * @author:<a href="mailto:chenxu@yy.com">陈顼</a>
- * @version:v1.00
- */
+
 public class ProxyHandler<T> implements InvocationHandler {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(ProxyHandler.class);
 
     //接口的实现类，  
     private Object targetCreator;
 
     //实现HalbProxy的proxy类
-    private Object halbProxy;
+    private Object halProxy;
 
     //保存代理类的实现
     private Object proxyInstance = null;
 
     private AccessPolicy strategy = new AccessPolicy();
 
-    public ProxyHandler(Object targetCreator, Object halbProxy, AccessPolicy strategy) {
+    public ProxyHandler(Object targetCreator, Object halProxy, AccessPolicy strategy) {
         this.targetCreator = targetCreator;
-        this.halbProxy = halbProxy;
+        this.halProxy = halProxy;
         this.strategy = strategy;
     }
 
@@ -54,7 +51,8 @@ public class ProxyHandler<T> implements InvocationHandler {
                 ServerInfo info = (ServerInfo) this.targetCreator;
                 String ip = info.getIp();
                 int port = info.getPort();
-                System.out.println("Thread name:" + Thread.currentThread().getId() + ",invoke exception ip:" + ip + ",port:" + port + ",method:" + method.getName());
+                LOGGER.info("Thread name:{}, invoke exception ip:{}, port:{}, method:{}",
+                        Thread.currentThread().getId(), ip, port, method.getName());
                 strategy.addHit(ip + ":" + port);
                 boolean ret = strategy.getFilterResult(ip + ":" + port);
                 if (!ret) {
@@ -76,7 +74,7 @@ public class ProxyHandler<T> implements InvocationHandler {
     //主动切换代理
     public void changeClient(Object obj) {
         @SuppressWarnings("unchecked")
-        HALBProxy<T> regEvent = (HALBProxy<T>) halbProxy;
+        HALBProxy<T> regEvent = (HALBProxy<T>) halProxy;
         regEvent.notifyHAListener(new HAEvent(obj));
     }
 
@@ -87,7 +85,7 @@ public class ProxyHandler<T> implements InvocationHandler {
      * @param target
      * @return
      */
-    public static Object getProxyInstance(Object target, Object halb_proxy, AccessPolicy strategy) {
+    public static Object getProxyInstance(Object target, Object halProxy, AccessPolicy strategy) {
         Class<?> targetClass = target.getClass();  
         /*
          * loader:  要代理类的类加载器
@@ -96,7 +94,7 @@ public class ProxyHandler<T> implements InvocationHandler {
     	 */
         ClassLoader loader = targetClass.getClassLoader();
         Class<?>[] interfaces = targetClass.getInterfaces();
-        ProxyHandler<Object> handler = new ProxyHandler<Object>(target, halb_proxy, strategy);
+        ProxyHandler<Object> handler = new ProxyHandler<Object>(target, halProxy, strategy);
         if (handler.proxyInstance == null) {
             // 创建并返回动态代理类实例
             handler.proxyInstance = Proxy.newProxyInstance(loader, interfaces, handler);

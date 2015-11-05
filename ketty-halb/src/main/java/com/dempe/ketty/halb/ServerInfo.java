@@ -58,19 +58,6 @@ public class ServerInfo<T> {
         this.port = port;
     }
 
-    /**
-     * 构造方法(index 属性过期,调用不包含index的构造方法)
-     *
-     * @param index 位置
-     * @param ip    地址
-     * @param port  端口
-     */
-    @Deprecated
-    public ServerInfo(int index, String ip, int port) {
-        this.index = index;
-        this.ip = ip;
-        this.port = port;
-    }
 
     /**
      * 构造方法
@@ -84,35 +71,6 @@ public class ServerInfo<T> {
         this.weight = weight;
     }
 
-    /**
-     * 构造方法(index 属性过期,调用不包含index的构造方法)
-     *
-     * @param index  位置
-     * @param ip     地址
-     * @param port   端口
-     * @param weight 权重
-     */
-    @Deprecated
-    public ServerInfo(int index, String ip, int port, int weight) {
-        this(index, ip, port);
-        this.weight = weight;
-    }
-
-    /**
-     * 构造方法(index 属性过期,调用不包含index的构造方法)
-     *
-     * @param index     位置
-     * @param ip        地址
-     * @param port      端口
-     * @param weight    权重
-     * @param isDefault 1:缺省   0:非缺省
-     */
-    @Deprecated
-    public ServerInfo(int index, String ip, int port, int weight, int isDefault) {
-        this(index, ip, port);
-        this.weight = weight;
-        this.isDefault = isDefault == 1 ? true : false;
-    }
 
     public String getIp() {
         return ip;

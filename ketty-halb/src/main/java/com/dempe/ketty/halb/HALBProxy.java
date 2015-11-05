@@ -1,7 +1,8 @@
 package com.dempe.ketty.halb;
 
 import com.dempe.ketty.halb.listener.*;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -14,7 +15,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class HALBProxy<T> extends TimerTask {
-    protected final Logger logger = Logger.getLogger(getClass());
+
+    protected final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     private Timer timer;
 
@@ -46,12 +48,12 @@ public abstract class HALBProxy<T> extends TimerTask {
     /**
      * 可用的服务
      */
-    private CopyOnWriteArrayList<ServerInfo> availServers = new CopyOnWriteArrayList<ServerInfo>();
+    private List<ServerInfo> availServers = new CopyOnWriteArrayList<ServerInfo>();
 
     /**
      * 不可用的服务
      */
-    private CopyOnWriteArrayList<ServerInfo> unavailServers = new CopyOnWriteArrayList<ServerInfo>();
+    private List<ServerInfo> unAvailServers = new CopyOnWriteArrayList<ServerInfo>();
 
     /**
      * 构造方法
@@ -78,7 +80,7 @@ public abstract class HALBProxy<T> extends TimerTask {
     public HALBProxy(Strategy strategy, long period) {
         this(strategy);
         this.timer = new Timer();
-        logger.info("HALBProxy timer check started, period:" + period);
+        LOGGER.info("HALBProxy timer check started, period:{}", period);
         this.timer.schedule(this, 1000, period);
     }
 
@@ -138,8 +140,8 @@ public abstract class HALBProxy<T> extends TimerTask {
      *
      * @param index
      */
-    private void availToUnavail(int index) {
-        this.unavailServers.add(this.availServers.remove(index));
+    private void availToUnAvail(int index) {
+        this.unAvailServers.add(this.availServers.remove(index));
         this.notifyHAListener(new ToAvailEvent(this));
     }
 
@@ -149,7 +151,7 @@ public abstract class HALBProxy<T> extends TimerTask {
      * @param serverInfo
      */
     private void unavailToAvail(ServerInfo serverInfo) {
-        logger.info("[不可用-->可用]节点信息：" + serverInfo.toString());
+        LOGGER.info("unAvail：", serverInfo.toString());
         if (this.availServers.size() == 0) //如果可用节点的列表已空,则不需考虑负载的策略
         {
             this.availServers.add(serverInfo);
@@ -167,21 +169,6 @@ public abstract class HALBProxy<T> extends TimerTask {
                     } else {
                         availServers.add(0, serverInfo);
                     }
-
-//					//Object[] serverInfoArray = (Object[])this.availServers.toArray();
-//					CopyOnWriteArrayList<ServerInfo<T>> tempAvailServers = new CopyOnWriteArrayList<ServerInfo<T>>();
-//					tempAvailServers.add(serverInfo);
-//					if(availServers != null)
-//					{
-//						for(ServerInfo<T> info : availServers)
-//						{
-//							tempAvailServers.add(info);
-//						}
-//					}
-//					//这里不直接使用this.availServers,原因：防止在下面一句执行时,this.availServers被修改了.
-//					//tempAvailServers.addAll(this.availServers);
-//					this.availServers.clear();
-//					this.availServers.addAll(tempAvailServers);
                 }
             } else {
                 availServers.add(serverInfo);
@@ -189,7 +176,7 @@ public abstract class HALBProxy<T> extends TimerTask {
         }
 
         String allAvailServerInfo = this.getAllAvailServerInfo();
-        logger.info("[当前所有可用节点]-->" + allAvailServerInfo);
+        LOGGER.info("avail:{}", allAvailServerInfo);
 
         this.notifyHAListener(new ToUnAvailEvent(this));
     }
@@ -222,7 +209,7 @@ public abstract class HALBProxy<T> extends TimerTask {
     }
 
     public int getUnavailServerSize() {
-        return this.unavailServers.size();
+        return this.unAvailServers.size();
     }
 
     /**
@@ -253,7 +240,7 @@ public abstract class HALBProxy<T> extends TimerTask {
         List<ServerInfo> infos = this.initServerInfo(conf);
         availServer.addAll(infos);
         this.availServers = availServer;
-        this.unavailServers = new CopyOnWriteArrayList<ServerInfo>();
+        this.unAvailServers = new CopyOnWriteArrayList<ServerInfo>();
         this.initLoadBalance();
         return infos;
     }
@@ -283,7 +270,7 @@ public abstract class HALBProxy<T> extends TimerTask {
      * @throws Exception
      */
     public T getClient(ServerInfo<T> serverInfo) {
-        logger.debug("getClient serverInfo:" + serverInfo);
+        LOGGER.debug("getClient serverInfo:" + serverInfo);
         T server = null;
         try {
             if (serverInfo.getClient() != null) {
@@ -291,19 +278,19 @@ public abstract class HALBProxy<T> extends TimerTask {
             } else {
                 server = this.createClient(serverInfo);
                 serverInfo.setClient(server);
-                logger.info("getClient null so createClient:" + server);
+                LOGGER.info("getClient null so createClient:" + server);
             }
 
         } catch (Exception e) {
-            logger.error("getClient error serverInfo:" + serverInfo, e);
+            LOGGER.error("getClient error serverInfo:" + serverInfo, e);
         }
         if (server == null) {
             if (availServers.size() > 1) {
-                this.availToUnavail(serverInfo.getIndex());
+                this.availToUnAvail(serverInfo.getIndex());
                 this.initLoadBalance();
                 return getClient(getAvailServerInfo());
             } else {
-                this.checkUnavailToAvail();
+                this.checkUnAvailToAvail();
             }
         }
         return server;
@@ -317,34 +304,34 @@ public abstract class HALBProxy<T> extends TimerTask {
      */
     public T changeClient(ServerInfo serverInfo) throws Exception {
 
-        logger.info("changeClient serverInfo:" + serverInfo + " availSize:" + availServers.size() + ",unavailSize:" + unavailServers.size());
+        LOGGER.info("changeClient serverInfo:" + serverInfo + " availSize:" + availServers.size() + ",unavailSize:" + unAvailServers.size());
         synchronized (serverInfo) {
             ServerInfo originalInfo = geAvailServerInfo(serverInfo);
             if (null != originalInfo) {
                 if (availServers.size() > 1) {
-                    logger.info("changeClient availToUnavail, serverInfo:" + originalInfo + " availSize:" + availServers.size() + ",unavailSize:" + unavailServers.size());
-                    this.availToUnavail(originalInfo.getIndex());
+                    LOGGER.info("changeClient availToUnAvail, serverInfo:" + originalInfo + " availSize:" + availServers.size() + ",unavailSize:" + unAvailServers.size());
+                    this.availToUnAvail(originalInfo.getIndex());
                     this.initLoadBalance();
                     for (ServerInfo info : this.availServers) {
                         return getClient(info);
                     }
                 } else {
-                    logger.info("changeClient checkUnavailToAvail, availServers is empty,serverInfo:" + originalInfo);
-                    checkUnavailToAvail();
+                    LOGGER.info("changeClient checkUnAvailToAvail, availServers is empty,serverInfo:" + originalInfo);
+                    checkUnAvailToAvail();
                     for (ServerInfo info : availServers) {
-                        logger.info("changeClient checkUnavailToAvail serverInfo list elem:" + info);
+                        LOGGER.info("changeClient checkUnAvailToAvail serverInfo list elem:" + info);
                     }
                     return getClient(originalInfo);
                 }
             }
         }
-        if (logger.isDebugEnabled()) {
+        if (LOGGER.isDebugEnabled()) {
             for (ServerInfo info : availServers) {
-                logger.debug("changeClient serverInfo list elem:" + info);
+                LOGGER.debug("changeClient serverInfo list elem:" + info);
             }
         }
         ServerInfo s = getAvailServerInfo();
-        logger.info("changeClient  not check, serverInfo:" + s);
+        LOGGER.info("changeClient  not check, serverInfo:" + s);
         return getClient(s);
     }
 
@@ -396,23 +383,23 @@ public abstract class HALBProxy<T> extends TimerTask {
      */
     @Override
     public void run() {
-        checkUnavailToAvail();
+        checkUnAvailToAvail();
     }
 
-    private void checkUnavailToAvail() {
-        if (null != unavailServers) {
+    private void checkUnAvailToAvail() {
+        if (null != unAvailServers) {
             int availSize = availServers == null ? 0 : availServers.size();
-            logger.debug("HA check availSize:" + availSize + ",unavailSize:" + unavailServers.size());
-            for (ServerInfo serverInfo : unavailServers) {
+            LOGGER.debug("HA check availSize:" + availSize + ",unavailSize:" + unAvailServers.size());
+            for (ServerInfo serverInfo : unAvailServers) {
                 T server = null;
                 try {
                     server = this.getClient(serverInfo);
                 } catch (Exception e) {
-                    logger.error("HA check error:" + serverInfo + " server:" + server, e);
+                    LOGGER.error("HA check error:" + serverInfo + " server:" + server, e);
                 }
-                logger.info("HA check serverInfo:" + serverInfo + " server:" + server);
+                LOGGER.info("HA check serverInfo:" + serverInfo + " server:" + server);
                 if (server != null) {
-                    unavailServers.remove(serverInfo);
+                    unAvailServers.remove(serverInfo);
                     this.unavailToAvail(serverInfo);
                     this.initLoadBalance();
                 }
@@ -499,7 +486,7 @@ public abstract class HALBProxy<T> extends TimerTask {
                     }
                 }
             } catch (Exception e) {
-                logger.error("notifyHAListener handleEvent error!", e);
+                LOGGER.error("notifyHAListener handleEvent error!", e);
             }
         }
     }
@@ -516,7 +503,7 @@ public abstract class HALBProxy<T> extends TimerTask {
         }
         for (ServerInfo info : this.availServers) {
             if (client.equals(info.getClient())) {
-                logger.info("goto changeClient serverInfo:" + info);
+                LOGGER.info("goto changeClient serverInfo:" + info);
                 return changeClient(info);
 
             }
@@ -528,16 +515,16 @@ public abstract class HALBProxy<T> extends TimerTask {
         this.availServers = availServers;
     }
 
-    public void setUnavailServers(CopyOnWriteArrayList<ServerInfo> unavailServers) {
-        this.unavailServers = unavailServers;
+    public void setUnAvailServers(CopyOnWriteArrayList<ServerInfo> unAvailServers) {
+        this.unAvailServers = unAvailServers;
     }
 
     public List<ServerInfo> getAvailServers() {
         return availServers;
     }
 
-    public List<ServerInfo> getUnavailServers() {
-        return unavailServers;
+    public List<ServerInfo> getUnAvailServers() {
+        return unAvailServers;
     }
 
     public void addServer(ServerInfo serverInfo) {
@@ -551,48 +538,10 @@ public abstract class HALBProxy<T> extends TimerTask {
         if (availServers.contains(serverInfo)) {
             availServers.remove(serverInfo);
             initLoadBalance();
-        } else if (unavailServers.contains(serverInfo)) {
-            unavailServers.remove(serverInfo);
+        } else if (unAvailServers.contains(serverInfo)) {
+            unAvailServers.remove(serverInfo);
         }
 
-    }
-
-    @SuppressWarnings("unchecked")
-    public static void main(String[] args) throws Exception {
-
-        final List list = new ArrayList();
-
-        ServerInfo serverInfo = new ServerInfo();
-        serverInfo.setIp("11");
-        serverInfo.setPort(11);
-
-        ServerInfo serverInfo1 = new ServerInfo();
-        serverInfo1.setIp("22");
-        serverInfo1.setPort(22);
-
-        ServerInfo serverInfo2 = new ServerInfo();
-        serverInfo2.setIp("22");
-        serverInfo2.setPort(22);
-
-        list.add(serverInfo);
-        //list.add(serverInfo1);
-        HALBProxy proxy = new HALBProxy(Strategy.DEFAULT, 1000, "") {
-
-            @Override
-            protected Object createClient(ServerInfo serverInfo)
-                    throws Exception {
-                // TODO Auto-generated method stub
-                return null;
-            }
-
-            @Override
-            protected List initServerInfo(String conf) throws Exception {
-                return list;
-            }
-        };
-        proxy.addServer(serverInfo2);
-
-        System.out.println("availServers:" + proxy.availServers);
     }
 
 
