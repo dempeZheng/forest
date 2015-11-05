@@ -119,6 +119,8 @@ public class KettyServer implements Server {
 
         private int port = 8888;
 
+        private int readTimeout = 120;
+
         private String host = "localhost";
 
         private ServerType serverType = ServerType.HTTP_SERVER;
@@ -142,6 +144,12 @@ public class KettyServer implements Server {
 
         public String getHost() {
             return host;
+        }
+
+        public Builder readTimeout(int readTimeout) {
+            LOGGER.info("set readTimeout:{}", readTimeout);
+            this.readTimeout = readTimeout;
+            return this;
         }
 
         public Builder initPackage(String packageName) {
@@ -188,6 +196,9 @@ public class KettyServer implements Server {
             return this;
         }
 
+        public int getReadTimeout() {
+            return readTimeout;
+        }
 
         public KettyServer build() {
             return new KettyServer(this);

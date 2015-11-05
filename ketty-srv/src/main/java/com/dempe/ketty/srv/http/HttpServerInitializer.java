@@ -5,6 +5,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,7 +25,9 @@ public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
-        pipeline.addLast("decoder", new HttpRequestDecoder())
+        // 设置读超时
+        pipeline.addLast("timeout", new ReadTimeoutHandler(context.builder.getReadTimeout()))
+                .addLast("decoder", new HttpRequestDecoder())
                 .addLast("encoder", new HttpResponseEncoder())
                 .addLast("handler", new HttpDispatcherHandler(context));
     }

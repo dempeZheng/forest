@@ -7,9 +7,7 @@ import com.dempe.ketty.srv.uitl.HttpResponseBuilder;
 import com.dempe.ketty.srv.uitl.MethodInvoker;
 import com.dempe.ketty.srv.uitl.MethodParam;
 import com.dempe.ketty.srv.uitl.ResultConcert;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.QueryStringDecoder;
+import io.netty.handler.codec.http.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +17,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import static io.netty.handler.codec.http.HttpResponseStatus.*;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -26,10 +27,9 @@ import java.util.Map;
  * Time: 10:17
  * To change this template use File | Settings | File Templates.
  */
-public class HttpActionTack implements ActionTake<FullHttpResponse, HttpRequest> {
+public class HttpActionTack implements ActionTake<FullHttpResponse, FullHttpRequest> {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(HttpActionTack.class);
-
 
     private HttpServerContext context;
 
@@ -38,30 +38,36 @@ public class HttpActionTack implements ActionTake<FullHttpResponse, HttpRequest>
     }
 
 
-    public FullHttpResponse act(HttpRequest request) throws InvocationTargetException, IllegalAccessException, ModelConvertJsonException {
+    public FullHttpResponse act(FullHttpRequest request) throws InvocationTargetException, IllegalAccessException, ModelConvertJsonException {
+
+        // Handle a bad request.
+        if (!request.getDecoderResult().isSuccess()) {
+            return new DefaultFullHttpResponse(HTTP_1_1, BAD_REQUEST);
+        }
+
         String uri = request.getUri();
+
         QueryStringDecoder decoder = new QueryStringDecoder(uri);
         String path = decoder.path();
         LOGGER.debug("uri:{}", uri);
 
         if ("/favicon.ico".equals(path)) {
-            return null;
+            return new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND);
         }
 
         uri = StringUtils.substringBefore(uri, "?");
         Map<String, List<String>> params = null;
-        String methodType = request.getMethod().name();
-        if ("POST".equals(methodType)) {
-            // TODO
+        // TODO handler POST
+        if (request.getMethod() == HttpMethod.POST) {
+            return new DefaultFullHttpResponse(HTTP_1_1, FORBIDDEN);
 
-        } else if ("GET".equals(methodType)) {
+        } else if (request.getMethod() == HttpMethod.GET) {
             params = decoder.parameters();
         }
         ActionMethod actionMethod = context.tackAction(uri);
         if (actionMethod == null) {
             LOGGER.warn("[dispatcher]:not find uri {}", uri);
-            // TODO return 404
-            return HttpResponseBuilder.buildResponse("404");
+            return new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND);
         }
 
         Method method = actionMethod.getMethod();
@@ -69,9 +75,6 @@ public class HttpActionTack implements ActionTake<FullHttpResponse, HttpRequest>
         String[] parameterNames = MethodParam.getParameterNames(method);
         Object[] paramValues = MethodParam.getParameterValuesByMap(parameterNames, method, params);
         Object result = MethodInvoker.interceptorInvoker(actionMethod, paramValues);
-        if (result != null) {
-            return HttpResponseBuilder.buildResponse("404");
-        }
         return HttpResponseBuilder.buildResponse(ResultConcert.toJSONString(result));
     }
 

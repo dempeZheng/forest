@@ -24,6 +24,9 @@ public class ResultConcert {
      * @throws com.dempe.ketty.srv.exception.ModelConvertJsonException
      */
     public static String toJSONString(Object result) throws ModelConvertJsonException {
+        if (result == null) {
+            return "null";
+        }
         if (result instanceof String) {
             return result.toString();
         }
