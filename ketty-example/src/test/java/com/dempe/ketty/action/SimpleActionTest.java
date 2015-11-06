@@ -30,7 +30,6 @@ public class SimpleActionTest extends ClientMonitorTest {
     public void init() {
     }
 
-    @Test
     public void getUserByUidTest() throws InterruptedException {
         for (int i = 0; i < 1; i++) {
             KettyRequest request = new KettyRequest();
@@ -46,7 +45,6 @@ public class SimpleActionTest extends ClientMonitorTest {
 
     }
 
-    @Test
     public void ClientPoolTest() throws Exception {
 
 

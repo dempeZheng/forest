@@ -117,13 +117,13 @@ public class KettyClient {
 
     public void close() throws IOException {
 
-        try {
-            f.channel().closeFuture().sync();
-            group.shutdownGracefully();
-
-        } catch (InterruptedException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
+//        try {
+//            f.channel().closeFuture().sync();
+//            group.shutdownGracefully();
+//
+//        } catch (InterruptedException e) {
+//            LOGGER.error(e.getMessage(), e);
+//        }
 
     }
 

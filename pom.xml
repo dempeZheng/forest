@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.yy.ent</groupId>
+    <groupId>com.dempe.ketty</groupId>
     <artifactId>ketty</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -41,7 +41,33 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netty.version>5.0.0.Alpha1</netty.version>
         <netty.groupId>io.netty</netty.groupId>
+        <github.global.server>github</github.global.server>
     </properties>
+
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>dav:https://github.com/dempeZheng/maven-repository/raw/master/releases</url>
+            <!--<url>file://${project.build.directory}/maven-repository</url>-->
+            <!--<url>https://github.com/dempeZheng/maven-repository/raw/master/releases</url>-->
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>maven-repository</id>
+            <url>https://raw.github.com/dempeZheng/maven-repository/master/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 
 
     <dependencyManagement>
@@ -58,9 +84,6 @@
                 <artifactId>javassist</artifactId>
                 <version>${javassist_version}</version>
             </dependency>
-
-
-
 
             <!-- log -->
             <dependency>
@@ -204,6 +227,7 @@
 
     <build>
         <extensions>
+            <!--Wagon 插件可以帮助deploy时的文件传输（http, scp, scm, file, ftp等）-->
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-webdav-jackrabbit</artifactId>
@@ -212,24 +236,66 @@
         </extensions>
         <pluginManagement>
             <plugins>
+                <!--<plugin>-->
+                    <!--<groupId>org.apache.maven.plugins</groupId>-->
+                    <!--<artifactId>maven-resources-plugin</artifactId>-->
+                    <!--<version>2.5</version>-->
+                    <!--<configuration>-->
+                        <!--<encoding>${project_encoding}</encoding>-->
+                    <!--</configuration>-->
+                <!--</plugin>-->
+                <!--<plugin>-->
+                    <!--<groupId>org.apache.maven.plugins</groupId>-->
+                    <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                    <!--<version>2.3.2</version>-->
+                    <!--<configuration>-->
+                        <!--<encoding>${project_encoding}</encoding>-->
+                        <!--<source>${java_source_version}</source>-->
+                        <!--<target>${java_target_version}</target>-->
+                    <!--</configuration>-->
+                <!--</plugin>-->
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.5</version>
+                    <groupId>com.github.github</groupId>
+                    <artifactId>site-maven-plugin</artifactId>
+                    <version>0.12</version>
                     <configuration>
-                        <encoding>${project_encoding}</encoding>
+                        <message>Maven artifacts for ${project.version}</message>
+                        <!-- git commit message -->
+                        <noJekyll>true</noJekyll>
+                        <!-- disable webpage processing -->
+                        <outputDirectory>${project.build.directory}/maven-repository</outputDirectory>
+                        <!-- matches distribution management repository url above -->
+                        <branch>refs/heads/maven-repository</branch>
+                        <!-- remote branch name -->
+                        <includes>
+                            <include>
+                                **/*
+                            </include>
+                        </includes>
+                        <repositoryName>maven-repository</repositoryName>
+                        <repositoryOwner>dempeZheng</repositoryOwner>
+                    </configuration>
+                    <executions>
+                        <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+                        <execution>
+                            <goals>
+                                <goal>site</goal>
+                            </goals>
+                            <phase>deploy</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.1</version>
+                    <configuration>
+                        <altDeploymentRepository>
+                            internal.repo::default::file://${project.build.directory}/maven-repository
+                        </altDeploymentRepository>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
-                    <configuration>
-                        <encoding>${project_encoding}</encoding>
-                        <source>${java_source_version}</source>
-                        <target>${java_target_version}</target>
-                    </configuration>
-                </plugin>
+
             </plugins>
         </pluginManagement>
     </build>
