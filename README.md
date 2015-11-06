@@ -6,7 +6,6 @@
 
 ####协议
 - Http
-- WebSocket
 - Ketty(自定义私有协议)
 
 
@@ -16,6 +15,8 @@
 - @Path 路径支持
 - @Param参数自动注入value
 
+####支持方法调用频率限制RateLimiter
+
 ``` java
 @Action
 public class SimpleAction {
@@ -23,6 +24,8 @@ public class SimpleAction {
     @Inject
     private UserService userService;
 
+    // 每秒最多可调用100次，超过100次丢弃，
+	@Rate(value=100)
 	@Interceptor(id = "echoInterceptor")
     @Path
     public User getUserByUid(@Param String uid) {
@@ -99,7 +102,7 @@ public class SimpleServer {
 - 支持自定义协议扩展
 - 安全验证
 - 性能优化
-- WebSocketJettyServer的实现
+- WebSocket协议的实现
 
 ###ketty-client模块
 >KettyServer高可用NIO客户端
