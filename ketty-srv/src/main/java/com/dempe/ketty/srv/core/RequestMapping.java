@@ -1,13 +1,11 @@
 package com.dempe.ketty.srv.core;
 
 import com.dempe.ketty.common.utils.PackageUtils;
-import com.dempe.ketty.mvc.anno.Action;
-import com.dempe.ketty.mvc.anno.Around;
-import com.dempe.ketty.mvc.anno.Interceptor;
-import com.dempe.ketty.mvc.anno.Path;
+import com.dempe.ketty.mvc.anno.*;
 import com.dempe.ketty.mvc.ioc.Injector;
 import com.dempe.ketty.srv.KettyServer;
 import com.dempe.ketty.srv.interceptor.KettyInterceptor;
+import com.google.common.util.concurrent.RateLimiter;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,6 +134,17 @@ public class RequestMapping {
                                     }
                                 }
 
+
+                                // RateLimiter
+                                Rate rate = method.getAnnotation(Rate.class);
+                                if (rate != null) {
+                                    int value = rate.value();
+                                    if (value < 0) {
+                                        LOGGER.warn("rate value:{} < 0 ,set 1000 as default. ", value);
+                                        value = 1000;
+                                    }
+                                    actionMethod.setRateLimiter(RateLimiter.create(value));
+                                }
                                 LOGGER.info("[REQUEST MAPPING] = {}, uri = {}", actionVal, uri);
                                 mapping.put(uri, actionMethod);
                             }

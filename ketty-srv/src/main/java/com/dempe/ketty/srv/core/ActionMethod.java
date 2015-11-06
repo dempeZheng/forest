@@ -1,11 +1,13 @@
 package com.dempe.ketty.srv.core;
 
 import com.dempe.ketty.srv.interceptor.KettyInterceptor;
+import com.google.common.util.concurrent.RateLimiter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,6 +24,9 @@ public class ActionMethod {
     private Method method;
 
     private List<KettyInterceptor> interceptorList = new ArrayList<KettyInterceptor>();
+
+    private RateLimiter rateLimiter = null;
+
 
     /**
      * @param target
@@ -58,6 +63,15 @@ public class ActionMethod {
 
     public void addInterceptor(KettyInterceptor interceptor) {
         interceptorList.add(interceptor);
+    }
+
+
+    public RateLimiter getRateLimiter() {
+        return rateLimiter;
+    }
+
+    public void setRateLimiter(RateLimiter rateLimiter) {
+        this.rateLimiter = rateLimiter;
     }
 
     @Override

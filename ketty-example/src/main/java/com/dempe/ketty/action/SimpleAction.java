@@ -1,9 +1,9 @@
 package com.dempe.ketty.action;
 
 
+import com.dempe.ketty.model.User;
 import com.dempe.ketty.mvc.anno.*;
 import com.dempe.ketty.service.UserService;
-import com.dempe.ketty.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +27,8 @@ public class SimpleAction {
         return "hello yy-rpc";
     }
 
+    // 限制每秒处理2个请求
+    @Rate(value = 2)
     @Interceptor(id = "echoInterceptor,permissionInterceptor")
     @Path
     public User getUserByUid(@Param String uid) {

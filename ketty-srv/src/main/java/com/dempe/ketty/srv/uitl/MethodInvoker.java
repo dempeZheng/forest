@@ -2,6 +2,7 @@ package com.dempe.ketty.srv.uitl;
 
 import com.dempe.ketty.srv.core.ActionMethod;
 import com.dempe.ketty.srv.interceptor.KettyInterceptor;
+import com.google.common.util.concurrent.RateLimiter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
@@ -19,6 +20,13 @@ public class MethodInvoker {
 
     public static Object interceptorInvoker(ActionMethod actionMethod, Object[] parameterValues)
             throws InvocationTargetException, IllegalAccessException {
+
+        // 速率限定
+        RateLimiter rateLimiter = actionMethod.getRateLimiter();
+        if (rateLimiter != null) {
+            rateLimiter.acquire();
+        }
+
         List<KettyInterceptor> interceptorList = actionMethod.getInterceptorList();
         Iterator<KettyInterceptor> interceptorIterator = interceptorList.iterator();
         boolean flag = true;
