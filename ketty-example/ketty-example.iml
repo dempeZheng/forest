@@ -15,6 +15,10 @@
     <orderEntry type="module" module-name="ketty-mvc" />
     <orderEntry type="module" module-name="ketty-codec" />
     <orderEntry type="library" name="Maven: org.msgpack:msgpack-core:0.7.0-M6" level="project" />
+    <orderEntry type="library" name="Maven: org.msgpack:jackson-dataformat-msgpack:0.7.0-M6" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.5.3" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.5.0" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.5.3" level="project" />
     <orderEntry type="module" module-name="ketty-client" />
     <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.6" level="project" />
     <orderEntry type="module" module-name="ketty-common" />

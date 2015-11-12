@@ -18,6 +18,12 @@
             <artifactId>msgpack-core</artifactId>
             <version>0.7.0-M6</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.msgpack</groupId>
+            <artifactId>jackson-dataformat-msgpack</artifactId>
+            <version>0.7.0-M6</version>
+        </dependency>
     </dependencies>
 
 

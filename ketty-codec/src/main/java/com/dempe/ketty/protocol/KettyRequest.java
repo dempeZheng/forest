@@ -96,6 +96,8 @@ public class KettyRequest implements Request {
         byteBuf.writeShort(headSize);
 
         byteBuf.writeBytes(bytes);
+
+
     }
 
 

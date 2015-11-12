@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.msgpack:jackson-dataformat-msgpack:0.7.0-M6">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/msgpack/jackson-dataformat-msgpack/0.7.0-M6/jackson-dataformat-msgpack-0.7.0-M6.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/msgpack/jackson-dataformat-msgpack/0.7.0-M6/jackson-dataformat-msgpack-0.7.0-M6-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/msgpack/jackson-dataformat-msgpack/0.7.0-M6/jackson-dataformat-msgpack-0.7.0-M6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
