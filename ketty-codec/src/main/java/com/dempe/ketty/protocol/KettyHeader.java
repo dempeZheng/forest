@@ -1,8 +1,11 @@
 package com.dempe.ketty.protocol;
 
 import com.alibaba.fastjson.JSONObject;
+import org.msgpack.core.MessagePack;
+import org.msgpack.core.MessagePacker;
 
-import java.io.UnsupportedEncodingException;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,8 +50,14 @@ public class KettyHeader {
     }
 
 
-    public byte[] encode() throws UnsupportedEncodingException {
-        return null;
+    public byte[] encode() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        MessagePacker packer = MessagePack.newDefaultPacker(out);
+        packer.packInt(1).packString(uri)
+                .packInt(msgId)
+                .packString(param.toJSONString());
+        packer.close();
+        return out.toByteArray();
 
 
     }

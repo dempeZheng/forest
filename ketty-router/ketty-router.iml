@@ -13,6 +13,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="ketty-client" />
     <orderEntry type="module" module-name="ketty-codec" />
+    <orderEntry type="library" name="Maven: org.msgpack:msgpack-core:0.7.0-M6" level="project" />
     <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.6" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-buffer:5.0.0.Alpha1" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:5.0.0.Alpha1" level="project" />

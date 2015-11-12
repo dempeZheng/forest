@@ -23,6 +23,7 @@
     <orderEntry type="library" name="Maven: org.ccil.cowan.tagsoup:tagsoup:0.9.7" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
+    <orderEntry type="library" name="Maven: org.aeonbits.owner:owner:1.0.8" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-buffer:5.0.0.Alpha1" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:5.0.0.Alpha1" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec:5.0.0.Alpha1" level="project" />
