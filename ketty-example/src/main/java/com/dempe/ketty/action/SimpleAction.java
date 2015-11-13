@@ -28,8 +28,8 @@ public class SimpleAction {
     }
 
     // 限制每秒处理2个请求
-    @Rate(value = 2)
-    @Interceptor(id = "echoInterceptor,permissionInterceptor")
+    //@Rate(value = 2)
+    //@Interceptor(id = "echoInterceptor,permissionInterceptor")
     @Path
     public User getUserByUid(@Param String uid) {
         return userService.getUserByUid(uid);

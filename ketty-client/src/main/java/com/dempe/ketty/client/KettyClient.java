@@ -8,6 +8,8 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +35,7 @@ public class KettyClient {
 
     protected EventLoopGroup group;
 
-
-    //private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+    private DefaultEventExecutorGroup executorGroup;
 
     private String host;
 
@@ -45,10 +46,12 @@ public class KettyClient {
         this.port = port;
 
         b = new Bootstrap();
-        group = new NioEventLoopGroup();
+        group = new NioEventLoopGroup(4);
+        executorGroup = new DefaultEventExecutorGroup(4,
+                new DefaultThreadFactory("nioclient-decode-worker-thread-pool"));
         b.group(group)
-                .option(ChannelOption.TCP_NODELAY, true)
-                .option(ChannelOption.SO_KEEPALIVE, true)
+//                .option(ChannelOption.TCP_NODELAY, true)
+//                .option(ChannelOption.SO_KEEPALIVE, true)
                 .channel(NioSocketChannel.class)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
@@ -56,7 +59,7 @@ public class KettyClient {
                         ChannelPipeline p = ch.pipeline();
                         p.addLast(new KettyRequestEncoder())
                                 .addLast(new KettyRespDecoder())
-                                .addLast(new ClientHandler());
+                                .addLast(executorGroup,new ClientHandler());
                     }
                 });
 
@@ -128,7 +131,9 @@ public class KettyClient {
     }
 
     public void send(KettyRequest request) {
-        channel.writeAndFlush(request);
+        if (channel.isActive()){
+            channel.writeAndFlush(request);
+        }
 
     }
 }

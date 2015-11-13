@@ -52,7 +52,8 @@ public class KettyActionTack implements ActionTake<KettyResponse, KettyRequest> 
         if (result == null) {
             // 当action method 返回是void的时候，不返回任何消息
             LOGGER.debug("actionMethod:{} return void.", actionMethod);
-            return new KettyResponse(id, ResCode.NO_PERMISSION.getResCode(), ResCode.NO_PERMISSION.getMsg());
+            return null;
+            //return new KettyResponse(id, ResCode.NO_PERMISSION.getResCode(), ResCode.NO_PERMISSION.getMsg());
         }
         return new KettyResponse(id, ResultConcert.toJSONString(result));
     }

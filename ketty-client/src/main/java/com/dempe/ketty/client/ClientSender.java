@@ -3,6 +3,8 @@ package com.dempe.ketty.client;
 
 import com.dempe.ketty.protocol.KettyRequest;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -18,6 +20,7 @@ public class ClientSender extends KettyClient {
 
     private ReplyWaitQueue replyQueue = new ReplyWaitQueue();
 
+
     public ClientSender(String host, int port) {
         super(host, port);
     }
@@ -28,7 +31,10 @@ public class ClientSender extends KettyClient {
         request.setMsgId(id);
         send(request);
 
+
     }
+
+
 
     public String sendAndWait(KettyRequest request) {
         int id = idMaker.incrementAndGet();

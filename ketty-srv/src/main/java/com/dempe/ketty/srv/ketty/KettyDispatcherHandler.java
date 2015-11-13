@@ -3,10 +3,14 @@ package com.dempe.ketty.srv.ketty;
 import com.dempe.ketty.common.MetricThread;
 import com.dempe.ketty.protocol.KettyRequest;
 import com.dempe.ketty.protocol.KettyResponse;
+import com.dempe.ketty.srv.exception.ModelConvertJsonException;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class KettyDispatcherHandler extends ChannelHandlerAdapter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KettyDispatcherHandler.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(KettyDispatcherHandler.class);
 
     private KettyServerContext context;
 
@@ -32,17 +36,49 @@ public class KettyDispatcherHandler extends ChannelHandlerAdapter {
         metric.increment();
         KettyRequest req = (KettyRequest) msg;
 
-        KettyServerContext.setReqCxt(req, ctx);
-        KettyActionTack tack = new KettyActionTack(context);
-        KettyResponse response = tack.act(req);
-        KettyServerContext.removeReqCtx();
+        ctx.executor().submit(new KettyWorkTask(ctx, context, req));
 
-        LOGGER.debug("req:", req.toString());
-        if (response != null) {
-//            // 写入的时候已经release msg 无需显示的释放
-            ctx.writeAndFlush(response);
-        }
     }
 
 
+}
+
+class KettyWorkTask implements Runnable {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(KettyWorkTask.class);
+    private ChannelHandlerContext ctx;
+    private KettyRequest req;
+
+    private KettyServerContext context;
+
+    public KettyWorkTask(ChannelHandlerContext ctx, KettyServerContext context, KettyRequest req) {
+        this.context = context;
+        this.ctx = ctx;
+        this.req = req;
+    }
+
+
+    @Override
+    public void run() {
+        try {
+            KettyServerContext.setReqCxt(req, ctx);
+            KettyActionTack tack = new KettyActionTack(context);
+            KettyResponse response = tack.act(req);
+            KettyServerContext.removeReqCtx();
+
+            if (response != null) {
+//            // 写入的时候已经release msg 无需显示的释放
+                ctx.writeAndFlush(response);
+            }else {
+                ReferenceCountUtil.release(req);
+            }
+        } catch (InvocationTargetException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (IllegalAccessException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (ModelConvertJsonException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+    }
 }

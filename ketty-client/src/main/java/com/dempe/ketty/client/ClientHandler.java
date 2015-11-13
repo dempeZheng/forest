@@ -27,6 +27,10 @@ public class ClientHandler extends ChannelHandlerAdapter {
             KettyResponse resp = (KettyResponse) msg;
             Integer id = resp.getMsgId();
             ReplyFuture future = replyQueue.take(id);
+            if (future == null) {
+                //TODO
+                return;
+            }
             future.onReceivedReply(resp);
             LOGGER.debug("result = {}", resp.toString());
         } finally {

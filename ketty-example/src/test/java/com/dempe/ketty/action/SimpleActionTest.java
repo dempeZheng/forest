@@ -2,8 +2,8 @@ package com.dempe.ketty.action;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dempe.ketty.ClientMonitorTest;
-import com.dempe.ketty.protocol.KettyRequest;
 import com.dempe.ketty.client.ClientSender;
+import com.dempe.ketty.protocol.KettyRequest;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,15 +30,21 @@ public class SimpleActionTest extends ClientMonitorTest {
     public void init() {
     }
 
+    @Test
     public void getUserByUidTest() throws InterruptedException {
-        for (int i = 0; i < 1; i++) {
-            KettyRequest request = new KettyRequest();
-            request.setUri("/simpleAction/getUserByUid");
-            JSONObject params = new JSONObject();
-            params.put("uid", "1234567");
-            request.setParameter(params);
-            String s = clientSender.sendAndWait(request);
-            System.out.println("===>" + s);
+
+        KettyRequest request = new KettyRequest();
+        request.setUri("/simpleAction/getUserByUid");
+        JSONObject params = new JSONObject();
+        params.put("uid", "1234567");
+        request.setParameter(params);
+        for (int i = 0; i < 10000000; i++) {
+            clientSender.sendOnly(request);
+            if (i % 30000 == 0) {
+                TimeUnit.SECONDS.sleep(1);
+            }
+            //  String s = clientSender.sendAndWait(request);
+            //System.out.println("===>" + s);
             //clientSender.sendOnly(request);
 
         }

@@ -31,7 +31,7 @@ public class MetricThread extends TimerTask implements Runnable {
 
     @Override
     public void run() {
-        LOGGER.debug("[name=" + name + "], " + "[ps/s=" + ps.get() + "]");
+        LOGGER.info("[name=" + name + "], " + "[ps/s=" + ps.get() + "]");
         ps = new AtomicInteger(0);
     }
 }

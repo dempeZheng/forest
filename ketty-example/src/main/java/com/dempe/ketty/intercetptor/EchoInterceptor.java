@@ -22,13 +22,13 @@ public class EchoInterceptor extends BaseInterceptor {
 
     @Override
     public boolean before() {
-        LOGGER.info("==============EchoInterceptor before=========context:{}", HttpServerContext.getReqCxt());
+        LOGGER.debug("==============EchoInterceptor before=========context:{}", HttpServerContext.getReqCxt());
         return true;
     }
 
     @Override
     public boolean after() {
-        LOGGER.info("==============EchoInterceptor after=========context:{}", HttpServerContext.getReqCxt());
+        LOGGER.debug("==============EchoInterceptor after=========context:{}", HttpServerContext.getReqCxt());
         return true;
     }
 }
