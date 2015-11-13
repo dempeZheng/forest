@@ -39,9 +39,9 @@ public class SimpleActionTest extends ClientMonitorTest {
         params.put("uid", "1234567");
         request.setParameter(params);
         for (int i = 0; i < 10000000; i++) {
-            clientSender.sendOnly(request);
+            clientSender.sendAndWait(request);
             if (i % 30000 == 0) {
-                TimeUnit.SECONDS.sleep(1);
+               // TimeUnit.SECONDS.sleep(1);
             }
             //  String s = clientSender.sendAndWait(request);
             //System.out.println("===>" + s);

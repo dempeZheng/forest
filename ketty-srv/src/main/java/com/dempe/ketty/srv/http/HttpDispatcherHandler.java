@@ -16,9 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.CONNECTION;
 import static io.netty.handler.codec.http.HttpHeaders.is100ContinueExpected;
-import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
-import static io.netty.handler.codec.http.HttpResponseStatus.CONTINUE;
-import static io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR;
+import static io.netty.handler.codec.http.HttpResponseStatus.*;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 /**
@@ -56,17 +54,7 @@ public class HttpDispatcherHandler extends HttpStaticFileServerHandler {
         if (is100ContinueExpected(req)) {
             ctx.write(new DefaultFullHttpResponse(HTTP_1_1, CONTINUE));
         }
-        HttpServerContext.setReqCxt(req, ctx);
-        HttpActionTack tack = new HttpActionTack(context);
-        FullHttpResponse response = tack.act(req);
-        HttpServerContext.removeReqCtx();
-        boolean keepAlive = HttpHeaders.isKeepAlive(req);
-        if (!keepAlive) {
-            ctx.write(response).addListener(ChannelFutureListener.CLOSE);
-        } else {
-            response.headers().set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
-            ctx.writeAndFlush(response);
-        }
+        ctx.executor().execute(new HttpWorkTask(ctx, req, context));
 
     }
 
@@ -100,4 +88,44 @@ public class HttpDispatcherHandler extends HttpStaticFileServerHandler {
     }
 
 
+}
+
+class HttpWorkTask implements Runnable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpWorkTask.class);
+
+    private ChannelHandlerContext ctx;
+    private FullHttpRequest req;
+    private HttpServerContext context;
+
+    public HttpWorkTask(ChannelHandlerContext ctx, FullHttpRequest req, HttpServerContext context) {
+        this.context = context;
+        this.req = req;
+        this.context = context;
+    }
+
+    @Override
+    public void run() {
+
+        try {
+            HttpServerContext.setReqCxt(req, ctx);
+            HttpActionTack tack = new HttpActionTack(context);
+            FullHttpResponse response = tack.act(req);
+            HttpServerContext.removeReqCtx();
+            boolean keepAlive = HttpHeaders.isKeepAlive(req);
+            if (!keepAlive) {
+                ctx.write(response).addListener(ChannelFutureListener.CLOSE);
+            } else {
+                response.headers().set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+                ctx.writeAndFlush(response);
+            }
+        } catch (InvocationTargetException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (IllegalAccessException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (ModelConvertJsonException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+    }
 }

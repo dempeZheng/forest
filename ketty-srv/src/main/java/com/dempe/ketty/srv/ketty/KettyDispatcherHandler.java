@@ -35,7 +35,6 @@ public class KettyDispatcherHandler extends ChannelHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         metric.increment();
         KettyRequest req = (KettyRequest) msg;
-
         ctx.executor().submit(new KettyWorkTask(ctx, context, req));
 
     }
@@ -65,7 +64,6 @@ class KettyWorkTask implements Runnable {
             KettyActionTack tack = new KettyActionTack(context);
             KettyResponse response = tack.act(req);
             KettyServerContext.removeReqCtx();
-
             if (response != null) {
 //            // 写入的时候已经release msg 无需显示的释放
                 ctx.writeAndFlush(response);
