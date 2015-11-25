@@ -1,5 +1,6 @@
 package com.dempe.ketty.srv.http;
 
+import com.codahale.metrics.MetricRegistry;
 import com.dempe.ketty.srv.KettyServer;
 import com.dempe.ketty.srv.core.ActionMethod;
 import com.dempe.ketty.srv.core.ServerContext;
@@ -18,7 +19,7 @@ public class HttpServerContext extends ServerContext {
     private final static ThreadLocal<HttpRequestContext> contextThreadLocal = new ThreadLocal<HttpRequestContext>();
 
     public HttpServerContext(KettyServer.Builder builder) {
-        super(builder);
+        super(builder,new MetricRegistry());
     }
 
 

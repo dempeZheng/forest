@@ -1,6 +1,6 @@
 package com.dempe.ketty.srv.ketty;
 
-import com.dempe.ketty.common.MetricThread;
+import com.codahale.metrics.Meter;
 import com.dempe.ketty.protocol.KettyRequest;
 import com.dempe.ketty.protocol.KettyResponse;
 import com.dempe.ketty.srv.exception.ModelConvertJsonException;
@@ -25,18 +25,19 @@ public class KettyDispatcherHandler extends ChannelHandlerAdapter {
 
     private KettyServerContext context;
 
-    private static MetricThread metric = new MetricThread("server");
+    private Meter requests = null;
+
 
     public KettyDispatcherHandler(KettyServerContext context) {
         this.context = context;
+        requests = context.registry.meter("requests");
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        metric.increment();
+        requests.mark();
         KettyRequest req = (KettyRequest) msg;
         ctx.executor().submit(new KettyWorkTask(ctx, context, req));
-
     }
 
 
@@ -67,7 +68,7 @@ class KettyWorkTask implements Runnable {
             if (response != null) {
 //            // 写入的时候已经release msg 无需显示的释放
                 ctx.writeAndFlush(response);
-            }else {
+            } else {
                 ReferenceCountUtil.release(req);
             }
         } catch (InvocationTargetException e) {

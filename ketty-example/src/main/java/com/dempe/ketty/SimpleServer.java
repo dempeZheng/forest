@@ -35,6 +35,7 @@ public class SimpleServer {
                 .initPackage("com.dempe.ketty")
                 .setKettyProtocol()
                 .port(8888)
+                .starReport(true)
                 .build()
                 .start();
     }

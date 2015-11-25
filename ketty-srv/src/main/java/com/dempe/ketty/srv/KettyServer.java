@@ -1,5 +1,8 @@
 package com.dempe.ketty.srv;
 
+import com.codahale.metrics.ConsoleReporter;
+import com.codahale.metrics.MetricRegistry;
+import com.dempe.ketty.mvc.ioc.Injector;
 import com.dempe.ketty.mvc.ioc.KettyIOC;
 import com.dempe.ketty.srv.http.HttpServerContext;
 import com.dempe.ketty.srv.http.HttpServerInitializer;
@@ -19,6 +22,8 @@ import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,9 +48,13 @@ public class KettyServer implements Server {
 
     private Builder builder;
 
+    private MetricRegistry registry;
 
-    public KettyServer(Builder builder) {
+
+    public KettyServer(Builder builder) throws Exception {
         this.builder = builder;
+        registry = new MetricRegistry();
+        Injector.doInject(registry);
         init(builder.serverType);
 
     }
@@ -55,16 +64,31 @@ public class KettyServer implements Server {
         ChannelInitializer channelInitializer;
         switch (serverType) {
             case KETTY_SERVER:
-                channelInitializer = new KettyServerInitializer(new KettyServerContext(builder));
+                channelInitializer = new KettyServerInitializer(new KettyServerContext(builder, registry));
                 break;
             case HTTP_SERVER:
                 channelInitializer = new HttpServerInitializer(new HttpServerContext(builder));
                 break;
             default:
-                channelInitializer = new KettyServerInitializer(new KettyServerContext(builder));
+                channelInitializer = new KettyServerInitializer(new KettyServerContext(builder, registry));
         }
         init(channelInitializer);
+        if (builder.startReport) {
+            startReport();
+        }
+
+
     }
+
+    public void startReport() {
+
+        ConsoleReporter reporter = ConsoleReporter.forRegistry(registry)
+                .convertRatesTo(TimeUnit.SECONDS)
+                .convertDurationsTo(TimeUnit.MILLISECONDS)
+                .build();
+        reporter.start(1, TimeUnit.SECONDS);
+    }
+
 
     public void start() {
         try {
@@ -129,6 +153,7 @@ public class KettyServer implements Server {
 
         private boolean soKeepAlive = true;
 
+        private boolean startReport = true;
 
         public String getPackageName() {
             return packageName;
@@ -145,6 +170,13 @@ public class KettyServer implements Server {
         public String getHost() {
             return host;
         }
+
+        public Builder starReport(boolean startReport) {
+            LOGGER.info("set startReport:{}", startReport);
+            this.startReport = startReport;
+            return this;
+        }
+
 
         public Builder readTimeout(int readTimeout) {
             LOGGER.info("set readTimeout:{}", readTimeout);
@@ -200,7 +232,7 @@ public class KettyServer implements Server {
             return readTimeout;
         }
 
-        public KettyServer build() {
+        public KettyServer build() throws Exception {
             return new KettyServer(this);
         }
 

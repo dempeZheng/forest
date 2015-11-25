@@ -1,5 +1,6 @@
 package com.dempe.ketty.srv.ketty;
 
+import com.codahale.metrics.MetricRegistry;
 import com.dempe.ketty.protocol.KettyRequest;
 import com.dempe.ketty.srv.KettyServer;
 import com.dempe.ketty.srv.core.ServerContext;
@@ -16,8 +17,8 @@ public class KettyServerContext extends ServerContext {
 
     private final static ThreadLocal<KettyRequestContext> contextThreadLocal = new ThreadLocal<KettyRequestContext>();
 
-    public KettyServerContext(KettyServer.Builder builder) {
-        super(builder);
+    public KettyServerContext(KettyServer.Builder builder, MetricRegistry registry) {
+        super(builder, registry);
     }
 
 
@@ -32,6 +33,8 @@ public class KettyServerContext extends ServerContext {
     public static void removeReqCtx() {
         contextThreadLocal.remove();
     }
+
+
 
 
 }

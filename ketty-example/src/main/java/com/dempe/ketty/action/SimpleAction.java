@@ -1,6 +1,7 @@
 package com.dempe.ketty.action;
 
 
+import com.codahale.metrics.MetricRegistry;
 import com.dempe.ketty.model.User;
 import com.dempe.ketty.mvc.anno.*;
 import com.dempe.ketty.service.UserService;
@@ -20,7 +21,14 @@ public class SimpleAction {
     public static final Logger LOGGER = LoggerFactory.getLogger(SimpleAction.class);
 
     @Inject
+    private MetricRegistry metricRegistry;
+
+    @Inject
     private UserService userService;
+
+
+
+
 
     @Path
     public String hello() {
