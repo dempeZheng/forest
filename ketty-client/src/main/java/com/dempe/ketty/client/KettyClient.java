@@ -2,6 +2,7 @@ package com.dempe.ketty.client;
 
 import com.dempe.ketty.codec.KettyRequestEncoder;
 import com.dempe.ketty.codec.KettyRespDecoder;
+import com.dempe.ketty.ha.ServerInfo;
 import com.dempe.ketty.protocol.KettyRequest;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -41,6 +42,10 @@ public class KettyClient {
 
     private int port;
 
+    public KettyClient(ServerInfo serverInfo) {
+        this(serverInfo.getIp(), serverInfo.getPort());
+    }
+
     public KettyClient(String host, int port) {
         this.host = host;
         this.port = port;
@@ -59,7 +64,7 @@ public class KettyClient {
                         ChannelPipeline p = ch.pipeline();
                         p.addLast(new KettyRequestEncoder())
                                 .addLast(new KettyRespDecoder())
-                                .addLast(executorGroup,new ClientHandler());
+                                .addLast(executorGroup, new ClientHandler());
                     }
                 });
 
@@ -131,7 +136,7 @@ public class KettyClient {
     }
 
     public void send(KettyRequest request) {
-        if (channel.isActive()){
+        if (channel.isActive()) {
             channel.writeAndFlush(request);
         }
 

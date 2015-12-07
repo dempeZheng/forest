@@ -1,8 +1,8 @@
-package com.dempe.ketty.halb;
+package com.dempe.ketty.ha;
 
 import com.dempe.ketty.common.access.AccessPolicy;
-import com.dempe.ketty.halb.exception.IgnoreException;
-import com.dempe.ketty.halb.listener.HAEvent;
+import com.dempe.ketty.ha.exception.IgnoreException;
+import com.dempe.ketty.ha.listener.HAEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +74,7 @@ public class ProxyHandler<T> implements InvocationHandler {
     //主动切换代理
     public void changeClient(Object obj) {
         @SuppressWarnings("unchecked")
-        HALBProxy<T> regEvent = (HALBProxy<T>) halProxy;
+        HAProxy<T> regEvent = (HAProxy<T>) halProxy;
         regEvent.notifyHAListener(new HAEvent(obj));
     }
 

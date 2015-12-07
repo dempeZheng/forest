@@ -1,6 +1,6 @@
-package com.dempe.ketty.halb;
+package com.dempe.ketty.ha;
 
-import com.dempe.ketty.halb.listener.*;
+import com.dempe.ketty.ha.listener.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Time: 20:27
  * To change this template use File | Settings | File Templates.
  */
-public abstract class HALBProxy<T> extends TimerTask {
+public abstract class HAProxy<T> extends TimerTask {
 
     protected final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -58,7 +58,7 @@ public abstract class HALBProxy<T> extends TimerTask {
     /**
      * 构造方法
      */
-    public HALBProxy() {
+    public HAProxy() {
         this.strategy = Strategy.RR;
     }
 
@@ -67,7 +67,7 @@ public abstract class HALBProxy<T> extends TimerTask {
      *
      * @param strategy 策略
      */
-    public HALBProxy(Strategy strategy) {
+    public HAProxy(Strategy strategy) {
         this.strategy = strategy;
     }
 
@@ -77,7 +77,7 @@ public abstract class HALBProxy<T> extends TimerTask {
      * @param period   定时检查服务可用性
      * @param strategy 策略
      */
-    public HALBProxy(Strategy strategy, long period) {
+    public HAProxy(Strategy strategy, long period) {
         this(strategy);
         this.timer = new Timer();
         LOGGER.info("HALBProxy timer check started, period:{}", period);
@@ -92,7 +92,7 @@ public abstract class HALBProxy<T> extends TimerTask {
      * @param conf     服务器链接配置
      * @throws Exception
      */
-    public HALBProxy(Strategy strategy, long period, String conf) throws Exception {
+    public HAProxy(Strategy strategy, long period, String conf) throws Exception {
         this(strategy, period);
         this.initServer(conf);
     }
@@ -102,7 +102,7 @@ public abstract class HALBProxy<T> extends TimerTask {
      *
      * @param period 定时检查服务可用性
      */
-    public HALBProxy(long period) {
+    public HAProxy(long period) {
         this(Strategy.RR, period);
     }
 

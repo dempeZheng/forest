@@ -1,4 +1,4 @@
-package com.dempe.ketty.halb.exception;
+package com.dempe.ketty.ha.exception;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.dempe.ketty.halb;
+package com.dempe.ketty.ha;
 
 import java.math.BigInteger;
 

@@ -27,6 +27,7 @@
         <module name="ketty-codec" />
         <module name="ketty-common" />
         <module name="ketty-example" />
+        <module name="ketty-ha" />
         <module name="ketty-halb" />
         <module name="ketty-monitor" />
         <module name="ketty-mvc" />

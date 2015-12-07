@@ -8,7 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/ketty-codec/ketty-codec.iml" filepath="$PROJECT_DIR$/ketty-codec/ketty-codec.iml" />
       <module fileurl="file://$PROJECT_DIR$/ketty-common/ketty-common.iml" filepath="$PROJECT_DIR$/ketty-common/ketty-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/ketty-example/ketty-example.iml" filepath="$PROJECT_DIR$/ketty-example/ketty-example.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ketty-halb/ketty-halb.iml" filepath="$PROJECT_DIR$/ketty-halb/ketty-halb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-ha/ketty-ha.iml" filepath="$PROJECT_DIR$/ketty-ha/ketty-ha.iml" />
       <module fileurl="file://$PROJECT_DIR$/ketty-monitor/ketty-monitor.iml" filepath="$PROJECT_DIR$/ketty-monitor/ketty-monitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/ketty-mvc/ketty-mvc.iml" filepath="$PROJECT_DIR$/ketty-mvc/ketty-mvc.iml" />
       <module fileurl="file://$PROJECT_DIR$/ketty-router/ketty-router.iml" filepath="$PROJECT_DIR$/ketty-router/ketty-router.iml" />

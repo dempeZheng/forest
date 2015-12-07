@@ -18,7 +18,7 @@
         <module>ketty-common</module>
         <module>ketty-example</module>
         <module>ketty-monitor</module>
-        <module>ketty-halb</module>
+        <module>ketty-ha</module>
     </modules>
 
     <properties>

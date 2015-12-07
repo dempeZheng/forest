@@ -1,4 +1,4 @@
-package com.dempe.ketty.halb.listener;
+package com.dempe.ketty.ha.listener;
 
 
 public class ToAvailEvent extends HAEvent {
