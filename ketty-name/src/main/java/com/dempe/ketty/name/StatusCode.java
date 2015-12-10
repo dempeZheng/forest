@@ -9,7 +9,7 @@ package com.dempe.ketty.name;
  */
 public enum StatusCode {
 
-    SUCCESS(0), EXIST_ERR(1);
+    SUCCESS(0), EXIST_ERR(1), UN_EXIST_ERR(2);
 
     private int code;
 

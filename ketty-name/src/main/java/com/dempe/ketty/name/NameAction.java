@@ -30,16 +30,26 @@ public class NameAction {
     @Path
     public String registerServerByName(String name, String host, int port) {
         JSONResult result = new JSONResult();
-        String nodeId = IDMaker.buildID(name, host, port);
-        if (nameManager.isRegister(nodeId)) {
-            result.putResult(StatusCode.EXIST_ERR.getCode());
-        } else {
-            nameManager.registerServer(name, host, port);
-        }
+        result.putResult(nameManager.registerServer(name, host, port).getCode());
         return result.toJSONString();
-
-
     }
+
+
+    /**
+     * 注销服务接口
+     *
+     * @param name
+     * @param host
+     * @param port
+     * @return
+     */
+    @Path
+    public String deRegisterServerByName(String name, String host, int port) {
+        JSONResult result = new JSONResult();
+        result.putResult(nameManager.deRegisterServer(name, host, port).getCode());
+        return result.toJSONString();
+    }
+
 
     /**
      * 通过名称获取服务接口

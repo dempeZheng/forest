@@ -1,5 +1,7 @@
 package com.dempe.ketty.name;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -48,6 +50,23 @@ public class NameManager implements Runnable {
             }
             nodeInfoList.add(nodeInfo);
             nameMap.put(name, nodeInfoList);
+        }
+        return StatusCode.SUCCESS;
+    }
+
+    public StatusCode deRegisterServer(String name, String host, int port) {
+        String nodeId = IDMaker.buildID(name, host, port);
+        if (!nodeIDSet.contains(nodeId)) {
+            return StatusCode.UN_EXIST_ERR;
+        } else {
+            List<NodeInfo> nodeInfoList = nameMap.get(name);
+            for (NodeInfo nodeInfo : nodeInfoList) {
+                if (StringUtils.equals(nodeInfo.getHost(), host)
+                        && StringUtils.equals(nodeInfo.getName(), name)
+                        && nodeInfo.getPort() == port) {
+                    nodeInfoList.remove(nodeInfo);
+                }
+            }
         }
         return StatusCode.SUCCESS;
     }
