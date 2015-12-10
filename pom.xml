@@ -19,6 +19,7 @@
         <module>ketty-example</module>
         <module>ketty-monitor</module>
         <module>ketty-ha</module>
+        <module>ketty-name</module>
     </modules>
 
     <properties>

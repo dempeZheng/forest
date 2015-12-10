@@ -31,6 +31,7 @@
         <module name="ketty-halb" />
         <module name="ketty-monitor" />
         <module name="ketty-mvc" />
+        <module name="ketty-name" />
         <module name="ketty-router" />
         <module name="ketty-srv" />
       </profile>

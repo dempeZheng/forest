@@ -24,6 +24,15 @@ public class KettyHeader {
 
     private JSONObject param;
 
+
+    public KettyHeader() {
+
+    }
+
+    public KettyHeader(String uri) {
+        this.uri = uri;
+    }
+
     public String getUri() {
         return uri;
     }

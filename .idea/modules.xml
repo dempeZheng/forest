@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/ketty-ha/ketty-ha.iml" filepath="$PROJECT_DIR$/ketty-ha/ketty-ha.iml" />
       <module fileurl="file://$PROJECT_DIR$/ketty-monitor/ketty-monitor.iml" filepath="$PROJECT_DIR$/ketty-monitor/ketty-monitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/ketty-mvc/ketty-mvc.iml" filepath="$PROJECT_DIR$/ketty-mvc/ketty-mvc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ketty-name/ketty-name.iml" filepath="$PROJECT_DIR$/ketty-name/ketty-name.iml" />
       <module fileurl="file://$PROJECT_DIR$/ketty-router/ketty-router.iml" filepath="$PROJECT_DIR$/ketty-router/ketty-router.iml" />
       <module fileurl="file://$PROJECT_DIR$/ketty-srv/ketty-srv.iml" filepath="$PROJECT_DIR$/ketty-srv/ketty-srv.iml" />
     </modules>

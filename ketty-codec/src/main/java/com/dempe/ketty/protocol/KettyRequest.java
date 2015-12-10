@@ -5,11 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dempe.ketty.pack.Pack;
 import com.dempe.ketty.pack.Unpack;
 import io.netty.buffer.ByteBuf;
-import org.msgpack.core.MessagePack;
-import org.msgpack.core.MessagePacker;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -44,6 +40,12 @@ public class KettyRequest implements Request {
 
     public String getUri() {
         return header.getUri();
+    }
+
+
+    public KettyRequest(String uri) {
+        header = new KettyHeader(uri);
+        body = new JSONObject();
     }
 
     public KettyRequest() {
@@ -99,7 +101,6 @@ public class KettyRequest implements Request {
 
 
     }
-
 
 
     public static KettyRequest decoder(ByteBuf byteBuf, int size) throws UnsupportedEncodingException {
