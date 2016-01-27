@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,19 +21,26 @@ import java.util.Map;
  */
 public class MethodParam {
 
+    private final static Map<Method, String[]> paramCacheMap = new ConcurrentHashMap<Method, String[]>();
+
     public static String[] getParameterNames(Method method) {
-        String[] parameterNames = new LocalVariableTableParameterNameDiscoverer().getParameterNames(method);
-        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-        for (Annotation[] parameterAnnotation : parameterAnnotations) {
-            for (int i = 0; i < parameterAnnotation.length; i++) {
-                if (parameterAnnotation[i].annotationType() == Param.class) {
-                    String value = ((Param) parameterAnnotation[i]).value();
-                    if (StringUtils.isNotBlank(value)) {
-                        parameterNames[i] = value;
+        String[] parameterNames = paramCacheMap.get(method);
+        if (parameterNames == null) {
+            parameterNames = new LocalVariableTableParameterNameDiscoverer().getParameterNames(method);
+            Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+            for (Annotation[] parameterAnnotation : parameterAnnotations) {
+                for (int i = 0; i < parameterAnnotation.length; i++) {
+                    if (parameterAnnotation[i].annotationType() == Param.class) {
+                        String value = ((Param) parameterAnnotation[i]).value();
+                        if (StringUtils.isNotBlank(value)) {
+                            parameterNames[i] = value;
+                        }
                     }
                 }
             }
+            paramCacheMap.put(method, parameterNames);
         }
+
         return parameterNames;
     }
 

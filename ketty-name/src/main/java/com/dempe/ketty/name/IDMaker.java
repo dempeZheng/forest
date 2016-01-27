@@ -1,5 +1,7 @@
 package com.dempe.ketty.name;
 
+import com.dempe.ketty.common.utils.MD5;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -10,8 +12,8 @@ package com.dempe.ketty.name;
 public class IDMaker {
 
     public static String buildID(String name, String host, int port) {
-        return new StringBuffer(name).append("|")
+        return MD5.hash(new StringBuffer(name).append("|")
                 .append(host)
-                .append(port).toString();
+                .append(port).toString());
     }
 }

@@ -23,7 +23,7 @@ import java.io.IOException;
  * Time: 13:17
  * To change this template use File | Settings | File Templates.
  */
-public class KettyClient {
+public class KettyClient implements Client {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KettyClient.class);

@@ -1,5 +1,6 @@
 package com.dempe.ketty.client.ha;
 
+import com.dempe.ketty.client.Client;
 import com.dempe.ketty.client.KettyClient;
 import com.dempe.ketty.common.access.AccessPolicy;
 import com.dempe.ketty.ha.HAProxy;
@@ -17,24 +18,25 @@ import java.util.List;
  * Time: 10:48
  * To change this template use File | Settings | File Templates.
  */
-public class HAKettyClient extends HAProxy<KettyClient> {
+public class HAKettyClient extends HAProxy<Client> {
 
     private String url;
 
-    private int accessPolicy = 10;
+    private int accessPolicy = 20000;
 
     public HAKettyClient(String url) {
         this.url = url;
     }
 
 
-    public HAKettyClient(String url, int accessPolicy) {
+    public HAKettyClient(String url, int accessPolicy) throws Exception {
         this.url = url;
         this.accessPolicy = accessPolicy;
+        initServer(url);
     }
 
     @Override
-    protected List<ServerInfo> initServerInfo(String conf) throws Exception {
+    protected List<ServerInfo> initServerInfo(String url) throws Exception {
         List<ServerInfo> serverInfoList = new ArrayList<ServerInfo>();
         String[] arr = url.split(",");
         int index = 0;
@@ -48,16 +50,15 @@ public class HAKettyClient extends HAProxy<KettyClient> {
                 serverInfo.setIndex(index);
                 serverInfoList.add(serverInfo);
                 index++;
-
             }
         }
         return serverInfoList;
     }
 
     @Override
-    protected KettyClient createClient(ServerInfo serverInfo) throws Exception {
+    protected Client createClient(ServerInfo serverInfo) throws Exception {
         AccessPolicy policy = new AccessPolicy(this.accessPolicy);
-        KettyClient kettyClient = (KettyClient) ProxyHandler.getProxyInstance(new KettyClient(serverInfo), this, policy);
-        return kettyClient;
+        Client client = (Client) ProxyHandler.getProxyInstance(new KettyClient(serverInfo), this, policy);
+        return client;
     }
 }
