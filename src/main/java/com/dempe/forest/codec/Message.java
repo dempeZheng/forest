@@ -7,7 +7,7 @@ package com.dempe.forest.codec;
  * Time: 16:29
  * To change this template use File | Settings | File Templates.
  */
-public class Message implements Codec{
+public class Message {
 
     private Header header;
 

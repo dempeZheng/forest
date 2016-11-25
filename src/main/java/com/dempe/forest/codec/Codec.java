@@ -1,5 +1,8 @@
 package com.dempe.forest.codec;
 
+import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.handler.codec.MessageToByteEncoder;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -7,9 +10,9 @@ package com.dempe.forest.codec;
  * Time: 16:39
  * To change this template use File | Settings | File Templates.
  */
-public interface Codec {
+public interface Codec<I> {
 
-    byte[] encode(Object message);
+    MessageToByteEncoder<I> getEncoder();
 
-    Object decode(byte[] buffer);
+    ByteToMessageDecoder getDecoder();
 }

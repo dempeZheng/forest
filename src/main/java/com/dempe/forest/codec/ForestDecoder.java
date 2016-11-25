@@ -15,7 +15,7 @@ import java.util.List;
  * Time: 16:34
  * To change this template use File | Settings | File Templates.
  */
-public class MessageDecoder extends ByteToMessageDecoder {
+public class ForestDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
@@ -29,7 +29,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
         if (magic != Constants.MAGIC) {
             byteBuf.resetReaderIndex();
-            throw new ForestFrameworkException("MessageDecoder transport header not support, type: " + magic);
+            throw new ForestFrameworkException("ForestDecoder transport header not support, type: " + magic);
         }
 
         byte version = byteBuf.readByte();

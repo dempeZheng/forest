@@ -11,15 +11,13 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * Time: 16:34
  * To change this template use File | Settings | File Templates.
  */
-public class MessageEncoder extends MessageToByteEncoder<Message> {
-
-    // TODO
-    private Codec codec;
+public class ForestEncoder extends MessageToByteEncoder<Message> {
 
 
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Message message, ByteBuf byteBuf) throws Exception {
-        byte[] encode = codec.encode(message);
+        Header header = message.getHeader();
+        byte[] encode = null;
         byteBuf.writeBytes(encode);
     }
 }

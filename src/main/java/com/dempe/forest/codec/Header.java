@@ -15,7 +15,7 @@ package com.dempe.forest.codec;
  * Time: 16:23
  * To change this template use File | Settings | File Templates.
  */
-public class Header implements Codec{
+public class Header{
 
     private short magic;
     private Byte version;
@@ -63,11 +63,4 @@ public class Header implements Codec{
         this.size = size;
     }
 
-    public byte[] encode(Object message) {
-        return new byte[0];
-    }
-
-    public Object decode(byte[] buffer) {
-        return null;
-    }
 }
