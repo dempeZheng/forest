@@ -2,6 +2,7 @@ package com.dempe.forest.transport;
 
 import com.dempe.forest.codec.Codec;
 import com.dempe.forest.conf.ServerConf;
+import com.dempe.forest.core.exception.ForestFrameworkException;
 import com.dempe.forest.core.handler.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public abstract class AbstractServer {
             doBind();
         } catch (Throwable t) {
             LOGGER.error(t.getMessage(), t);
-            throw new Exception("Failed to bind " + getClass().getSimpleName() + " on " + getBindAddress() + ", cause: " + t.getMessage(),
+            throw new ForestFrameworkException("Failed to bind " + getClass().getSimpleName() + " on " + getBindAddress() + ", cause: " + t.getMessage(),
                     t);
         }
     }

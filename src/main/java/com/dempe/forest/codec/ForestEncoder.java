@@ -17,7 +17,11 @@ public class ForestEncoder extends MessageToByteEncoder<Message> {
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Message message, ByteBuf byteBuf) throws Exception {
         Header header = message.getHeader();
-        byte[] encode = null;
-        byteBuf.writeBytes(encode);
+        byteBuf.writeShort(header.getMagic());
+        byteBuf.writeByte(header.getVersion());
+        byteBuf.writeByte(header.getExtend());
+        byteBuf.writeLong(header.getMessageID());
+        byteBuf.writeShort(message.getPayload().length);
+        byteBuf.writeBytes(message.getPayload());
     }
 }

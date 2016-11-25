@@ -2,7 +2,6 @@ package com.dempe.forest.conf;
 
 import com.dempe.forest.codec.Codec;
 import com.dempe.forest.core.handler.Handler;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Created with IntelliJ IDEA.
