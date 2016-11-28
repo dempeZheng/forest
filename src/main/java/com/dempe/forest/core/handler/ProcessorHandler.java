@@ -1,10 +1,13 @@
 package com.dempe.forest.core.handler;
 
 import com.dempe.forest.codec.Message;
+import com.dempe.forest.core.ForestContext;
 import com.dempe.forest.core.URIMapping;
 import com.dempe.forest.core.invoker.InvokerWrapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executor;
 
@@ -17,6 +20,8 @@ import java.util.concurrent.Executor;
  */
 public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(ProcessorHandler.class);
+
     private URIMapping mapping;
 
     private Executor executor;
@@ -28,7 +33,6 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
 
     @Override
     protected void channelRead0(final ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
-
         short uri = message.getHeader().getUri();
         final InvokerWrapper invokerWrapperByURI = mapping.getInvokerWrapperByURI(uri);
         executor.execute(new InvokerRunnable(invokerWrapperByURI, channelHandlerContext));
@@ -43,6 +47,7 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
 
 class InvokerRunnable implements Runnable {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(InvokerRunnable.class);
     private InvokerWrapper invokerWrapper;
     private ChannelHandlerContext ctx;
 
@@ -54,11 +59,20 @@ class InvokerRunnable implements Runnable {
     @Override
     public void run() {
         // todo exception handle
-        Object result = invokerWrapper.invoke();
-        //
-        Message message = invokerWrapper.getMessage();
+        Message message = invokerWrapper.getMessage().setRsp();
+        ForestContext.setForestContext(ctx.channel(), message.getHeader());
+        try {
+            Object result = invokerWrapper.invoke();
+            //
 //        message.setPayload(message);
-        ctx.writeAndFlush(result);
+
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        } finally {
+            ForestContext.removeForestContext();
+        }
+        ctx.writeAndFlush(message);
+
 
     }
 

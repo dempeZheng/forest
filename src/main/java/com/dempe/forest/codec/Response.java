@@ -8,4 +8,24 @@ package com.dempe.forest.codec;
  * To change this template use File | Settings | File Templates.
  */
 public class Response {
+
+    private short resCode;
+
+    private String errMsg;
+
+    public short getResCode() {
+        return resCode;
+    }
+
+    public void setResCode(short resCode) {
+        this.resCode = resCode;
+    }
+
+    public String getErrMsg() {
+        return errMsg;
+    }
+
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
+    }
 }

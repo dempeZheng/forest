@@ -39,10 +39,9 @@ public class Message {
         return null;
     }
 
-    public void setRsp(){
-        byte rsp = Constants.RSP;
-        Byte extend = header.getExtend();
-        byte result = (byte) (rsp|extend);
-        header.setExtend(rsp);
+    public Message setRsp(){
+        header.setExtend((byte) (header.getExtend()|Constants.RSP));
+        return this;
+
     }
 }
