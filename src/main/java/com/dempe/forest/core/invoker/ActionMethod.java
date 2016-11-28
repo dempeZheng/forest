@@ -6,7 +6,6 @@ import com.google.common.util.concurrent.RateLimiter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,13 +29,14 @@ public class ActionMethod {
 
     /**
      * 服务限流
+     *
      * @param args
      * @return
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
     public Object rateLimiterInvoker(Object... args) throws InvocationTargetException, IllegalAccessException {
-        if(rateLimiter!=null){
+        if (rateLimiter != null) {
             rateLimiter.acquire();
         }
         return interceptorInvoker(args);
@@ -44,6 +44,7 @@ public class ActionMethod {
 
     /**
      * 调用前后拦截器
+     *
      * @param args
      * @return
      * @throws InvocationTargetException
@@ -102,5 +103,17 @@ public class ActionMethod {
 
     public void setInterceptorList(List<InvokerInterceptor> interceptorList) {
         this.interceptorList = interceptorList;
+    }
+
+    /**
+     * 添加拦截器
+     * @param invokerInterceptor
+     * @return
+     */
+    public boolean addInterceptorList(InvokerInterceptor invokerInterceptor) {
+        if (interceptorList == null) {
+            interceptorList = Lists.newArrayList();
+        }
+        return interceptorList.add(invokerInterceptor);
     }
 }
