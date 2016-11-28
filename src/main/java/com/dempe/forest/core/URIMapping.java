@@ -23,14 +23,14 @@ public class URIMapping  implements ApplicationListener<ContextRefreshedEvent> {
     @Value("base.package")
     private String basePackage;
 
-    private Map<Short, InvokerWrapper> mapping = Maps.newConcurrentMap();
+    private Map<String, InvokerWrapper> mapping = Maps.newConcurrentMap();
 
     public void initMapping() {
         // init mapping
 
     }
 
-    public InvokerWrapper getInvokerWrapperByURI(short uri) {
+    public InvokerWrapper getInvokerWrapperByURI(String uri) {
         return mapping.get(uri);
     }
 

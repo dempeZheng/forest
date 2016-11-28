@@ -33,7 +33,7 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
 
     @Override
     protected void channelRead0(final ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
-        short uri = message.getHeader().getUri();
+        String uri = message.getHeader().getUri();
         final InvokerWrapper invokerWrapperByURI = mapping.getInvokerWrapperByURI(uri);
         executor.execute(new InvokerRunnable(invokerWrapperByURI, channelHandlerContext));
     }

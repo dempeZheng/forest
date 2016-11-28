@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
+import java.nio.charset.Charset;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -21,7 +23,8 @@ public class ForestEncoder extends MessageToByteEncoder<Message> {
         byteBuf.writeByte(header.getVersion());
         byteBuf.writeByte(header.getExtend());
         byteBuf.writeLong(header.getMessageID());
-        byteBuf.writeShort(header.getUri());
+        byteBuf.writeShort(header.getUri().length());
+        byteBuf.writeBytes(header.getUri().getBytes());
         byteBuf.writeShort(message.getPayload().length);
         byteBuf.writeBytes(message.getPayload());
     }

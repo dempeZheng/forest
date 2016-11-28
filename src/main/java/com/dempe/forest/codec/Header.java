@@ -21,7 +21,7 @@ public class Header {
     private Byte version; // 协议版本
     private byte extend;// 扩展字段
     private Long messageID;// 消息id
-    private short uri;// 协议路由uri
+    private String uri;// 协议路由uri
     private Integer size;// 消息payload长度
 
     public short getMagic() {
@@ -64,11 +64,15 @@ public class Header {
         this.size = size;
     }
 
-    public short getUri() {
+    public String getUri() {
         return uri;
     }
 
-    public void setUri(short uri) {
+    public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public void setExtend(byte extend) {
+        this.extend = extend;
     }
 }

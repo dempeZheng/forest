@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -35,7 +36,10 @@ public class ForestDecoder extends ByteToMessageDecoder {
         byte version = byteBuf.readByte();
         byte extend = byteBuf.readByte();
         long messageID = byteBuf.readLong();
-        short uri = byteBuf.readShort();
+        short uriLen = byteBuf.readShort();
+        byte[] uriArr = new byte[uriLen];
+        byteBuf.readBytes(uriArr);
+        String uri = new String(uriArr);
 
         int size = byteBuf.readInt();
 
