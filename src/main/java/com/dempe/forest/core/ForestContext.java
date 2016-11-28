@@ -22,7 +22,7 @@ public class ForestContext {
 
     private Header header;
 
-    private Map<String, String> attr = Maps.newHashMap();
+    private Map<String, String> attrs = Maps.newHashMap();
 
     private ForestContext(Channel channel, Header header) {
         this.channel = channel;
@@ -37,6 +37,13 @@ public class ForestContext {
         return getForestContext().channel;
     }
 
+    public static String getAttr(String key){
+        return getForestContext().attrs.get(key);
+    }
+    public static String putAttr(String key,String value){
+        return getForestContext().attrs.put(key,value);
+    }
+
     public static ForestContext getForestContext() {
         ForestContext forestContext = contextMap.get();
         if (forestContext == null) {
@@ -49,7 +56,6 @@ public class ForestContext {
         contextMap.remove();
 
     }
-
 
     public static void setForestContext(Channel channel, Header header) {
         contextMap.set(new ForestContext(channel, header));

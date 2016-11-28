@@ -3,7 +3,6 @@ package com.dempe.forest.transport;
 import com.dempe.forest.codec.Codec;
 import com.dempe.forest.conf.ServerConf;
 import com.dempe.forest.core.exception.ForestFrameworkException;
-import com.dempe.forest.core.handler.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,14 +56,6 @@ public abstract class AbstractServer {
 
     public void setCodec(Codec<?> codec) {
         this.codec = codec;
-    }
-
-
-    /* (non-Javadoc)
-     * @see com.yy.ent.yyp.transport.Endpoint#getHandler()
-     */
-    public Handler getHandler() {
-        return null;
     }
 
     public ServerConf getServerConf() {

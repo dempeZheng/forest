@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
  */
 public interface InvokerInterceptor {
 
-    void beforeInvoke(Object target, Method method, Object[] args);
+    boolean before(Object... args);
 
-    Object process(Object target, Method method, Object[] args);
+    boolean after(Object result);
 }

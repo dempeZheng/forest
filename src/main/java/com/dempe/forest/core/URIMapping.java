@@ -17,6 +17,10 @@ public class URIMapping {
 
     private Map<Short, InvokerWrapper> mapping = Maps.newConcurrentMap();
 
+    public void initMapping() {
+
+    }
+
     public InvokerWrapper getInvokerWrapperByURI(short uri) {
         return mapping.get(uri);
     }
