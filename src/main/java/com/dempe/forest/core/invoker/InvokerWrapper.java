@@ -1,5 +1,7 @@
 package com.dempe.forest.core.invoker;
 
+import com.dempe.forest.codec.Message;
+
 import java.lang.reflect.Method;
 
 /**
@@ -11,4 +13,14 @@ import java.lang.reflect.Method;
  */
 public class InvokerWrapper {
     private Method method;
+
+    private Message message;
+
+    public Object invoke() {
+        return null;
+    }
+
+    public Message getMessage() {
+        return message;
+    }
 }

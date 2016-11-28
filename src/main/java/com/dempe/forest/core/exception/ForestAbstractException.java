@@ -10,16 +10,16 @@ package com.dempe.forest.core.exception;
 public abstract class ForestAbstractException extends RuntimeException {
     private static final long serialVersionUID = -8742311167276890503L;
 
-    protected MotanErrorMsg motanErrorMsg = MotanErrorMsgConstant.FRAMEWORK_DEFAULT_ERROR;
+    protected ForestErrorMsg forestErrorMsg = ForestErrorMsgConstant.FRAMEWORK_DEFAULT_ERROR;
     protected String errorMsg = null;
 
     public ForestAbstractException() {
         super();
     }
 
-    public ForestAbstractException(MotanErrorMsg motanErrorMsg) {
+    public ForestAbstractException(ForestErrorMsg forestErrorMsg) {
         super();
-        this.motanErrorMsg = motanErrorMsg;
+        this.forestErrorMsg = forestErrorMsg;
     }
 
     public ForestAbstractException(String message) {
@@ -27,9 +27,9 @@ public abstract class ForestAbstractException extends RuntimeException {
         this.errorMsg = message;
     }
 
-    public ForestAbstractException(String message, MotanErrorMsg motanErrorMsg) {
+    public ForestAbstractException(String message, ForestErrorMsg forestErrorMsg) {
         super(message);
-        this.motanErrorMsg = motanErrorMsg;
+        this.forestErrorMsg = forestErrorMsg;
         this.errorMsg = message;
     }
 
@@ -38,9 +38,9 @@ public abstract class ForestAbstractException extends RuntimeException {
         this.errorMsg = message;
     }
 
-    public ForestAbstractException(String message, Throwable cause, MotanErrorMsg motanErrorMsg) {
+    public ForestAbstractException(String message, Throwable cause, ForestErrorMsg forestErrorMsg) {
         super(message, cause);
-        this.motanErrorMsg = motanErrorMsg;
+        this.forestErrorMsg = forestErrorMsg;
         this.errorMsg = message;
     }
 
@@ -48,14 +48,14 @@ public abstract class ForestAbstractException extends RuntimeException {
         super(cause);
     }
 
-    public ForestAbstractException(Throwable cause, MotanErrorMsg motanErrorMsg) {
+    public ForestAbstractException(Throwable cause, ForestErrorMsg forestErrorMsg) {
         super(cause);
-        this.motanErrorMsg = motanErrorMsg;
+        this.forestErrorMsg = forestErrorMsg;
     }
 
     @Override
     public String getMessage() {
-        if (motanErrorMsg == null) {
+        if (forestErrorMsg == null) {
             return super.getMessage();
         }
 
@@ -64,23 +64,23 @@ public abstract class ForestAbstractException extends RuntimeException {
         if (errorMsg != null && !"".equals(errorMsg)) {
             message = errorMsg;
         } else {
-            message = motanErrorMsg.getMessage();
+            message = forestErrorMsg.getMessage();
         }
 
         // TODO 统一上下文 requestid
-        return "error_message: " + message + ", status: " + motanErrorMsg.getStatus() + ", error_code: " + motanErrorMsg.getErrorCode()
+        return "error_message: " + message + ", status: " + forestErrorMsg.getStatus() + ", error_code: " + forestErrorMsg.getErrorCode()
                 + ",r=";
     }
 
     public int getStatus() {
-        return motanErrorMsg != null ? motanErrorMsg.getStatus() : 0;
+        return forestErrorMsg != null ? forestErrorMsg.getStatus() : 0;
     }
 
     public int getErrorCode() {
-        return motanErrorMsg != null ? motanErrorMsg.getErrorCode() : 0;
+        return forestErrorMsg != null ? forestErrorMsg.getErrorCode() : 0;
     }
 
-    public MotanErrorMsg getMotanErrorMsg() {
-        return motanErrorMsg;
+    public ForestErrorMsg getForestErrorMsg() {
+        return forestErrorMsg;
     }
 }

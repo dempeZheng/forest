@@ -1,5 +1,7 @@
 package com.dempe.forest.codec;
 
+import com.dempe.forest.Constants;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -35,5 +37,12 @@ public class Message {
 
     public Object decode(byte[] buffer) {
         return null;
+    }
+
+    public void setRsp(){
+        byte rsp = Constants.RSP;
+        Byte extend = header.getExtend();
+        byte result = (byte) (rsp|extend);
+        header.setExtend(rsp);
     }
 }

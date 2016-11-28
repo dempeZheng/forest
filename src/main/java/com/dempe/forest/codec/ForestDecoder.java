@@ -35,6 +35,7 @@ public class ForestDecoder extends ByteToMessageDecoder {
         byte version = byteBuf.readByte();
         byte extend = byteBuf.readByte();
         long messageID = byteBuf.readLong();
+        short uri = byteBuf.readShort();
 
         int size = byteBuf.readInt();
 
@@ -51,6 +52,7 @@ public class ForestDecoder extends ByteToMessageDecoder {
         header.setVersion(version);
         header.setExtend(extend);
         header.setMessageID(messageID);
+        header.setUri(uri);
         header.setSize(size);
         Message message = new Message();
         message.setHeader(header);

@@ -1,7 +1,8 @@
 package com.dempe.forest.transport;
 
 import com.dempe.forest.conf.ServerConf;
-import com.dempe.forest.core.handler.Handler;
+import com.dempe.forest.core.URIMapping;
+import com.dempe.forest.core.handler.ProcessorHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -18,6 +19,7 @@ import io.netty.util.concurrent.EventExecutorGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -40,13 +42,17 @@ public class NettyServer extends AbstractServer {
 
     private GlobalTrafficShapingHandler globalTrafficShapingHandler;
 
+    private Executor executor = new StandardThreadExecutor();
+
+    private URIMapping uriMapping = new URIMapping();
+
     /**
      * 业务处理handler
      *
      * @throws Exception
      */
-    public NettyServer(ServerConf transportConf) throws Exception {
-        super(transportConf);
+    public NettyServer(ServerConf conf) throws Exception {
+        super(conf);
     }
 
     protected void doBind() throws Throwable {
@@ -63,7 +69,7 @@ public class NettyServer extends AbstractServer {
                 ch.pipeline().addLast(globalTrafficShapingHandler);
                 ch.pipeline().addLast("decoder", getCodec().getDecoder());
                 ch.pipeline().addLast("encoder", getCodec().getEncoder());
-                ch.pipeline().addLast("business_handler", new NettyHandler());
+                ch.pipeline().addLast("business_handler", new ProcessorHandler(uriMapping, executor));
             }
         });
 
@@ -102,10 +108,6 @@ public class NettyServer extends AbstractServer {
     public void close() {
         if (boss != null)
             boss.shutdownGracefully().awaitUninterruptibly(15000);
-        Handler handler = getHandler();
-        if (handler != null) {
-            handler.stop();
-        }
         if (worker != null)
             worker.shutdownGracefully().awaitUninterruptibly(15000);
         LOGGER.info("NettyServer stopped...");

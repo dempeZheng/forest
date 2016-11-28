@@ -20,7 +20,7 @@ package com.dempe.forest.core.exception;
  * @author maijunsheng
  * @version 创建时间：2013-5-30
  */
-public class MotanErrorMsgConstant {
+public class ForestErrorMsgConstant {
     // service error status 503
     public static final int SERVICE_DEFAULT_ERROR_CODE = 10001;
     public static final int SERVICE_REJECT_ERROR_CODE = 10002;
@@ -44,35 +44,35 @@ public class MotanErrorMsgConstant {
      * service error start
      **/
 
-    public static final MotanErrorMsg SERVICE_DEFAULT_ERROR = new MotanErrorMsg(503, SERVICE_DEFAULT_ERROR_CODE, "service error");
-    public static final MotanErrorMsg SERVICE_REJECT = new MotanErrorMsg(503, SERVICE_REJECT_ERROR_CODE, "service reject");
-    public static final MotanErrorMsg SERVICE_UNFOUND = new MotanErrorMsg(404, SERVICE_UNFOUND_ERROR_CODE, "service unfound");
-    public static final MotanErrorMsg SERVICE_TIMEOUT = new MotanErrorMsg(503, SERVICE_TIMEOUT_ERROR_CODE, "service request timeout");
-    public static final MotanErrorMsg SERVICE_TASK_CANCEL = new MotanErrorMsg(503, SERVICE_TASK_CANCEL_ERROR_CODE, "service task cancel");
-    public static final MotanErrorMsg SERVICE_REQUEST_LENGTH_OUT_OF_LIMIT = new MotanErrorMsg(403,
+    public static final ForestErrorMsg SERVICE_DEFAULT_ERROR = new ForestErrorMsg(503, SERVICE_DEFAULT_ERROR_CODE, "service error");
+    public static final ForestErrorMsg SERVICE_REJECT = new ForestErrorMsg(503, SERVICE_REJECT_ERROR_CODE, "service reject");
+    public static final ForestErrorMsg SERVICE_UNFOUND = new ForestErrorMsg(404, SERVICE_UNFOUND_ERROR_CODE, "service unfound");
+    public static final ForestErrorMsg SERVICE_TIMEOUT = new ForestErrorMsg(503, SERVICE_TIMEOUT_ERROR_CODE, "service request timeout");
+    public static final ForestErrorMsg SERVICE_TASK_CANCEL = new ForestErrorMsg(503, SERVICE_TASK_CANCEL_ERROR_CODE, "service task cancel");
+    public static final ForestErrorMsg SERVICE_REQUEST_LENGTH_OUT_OF_LIMIT = new ForestErrorMsg(403,
             SERVICE_REQUEST_LENGTH_OUT_OF_LIMIT_ERROR_CODE, "servier requset data length over of limit");
     /**
      * framework error start
      **/
-    public static final MotanErrorMsg FRAMEWORK_DEFAULT_ERROR = new MotanErrorMsg(503, FRAMEWORK_DEFAULT_ERROR_CODE,
+    public static final ForestErrorMsg FRAMEWORK_DEFAULT_ERROR = new ForestErrorMsg(503, FRAMEWORK_DEFAULT_ERROR_CODE,
             "framework default error");
 
     /** service error end **/
-    public static final MotanErrorMsg FRAMEWORK_ENCODE_ERROR =
-            new MotanErrorMsg(503, FRAMEWORK_ENCODE_ERROR_CODE, "framework encode error");
-    public static final MotanErrorMsg FRAMEWORK_DECODE_ERROR =
-            new MotanErrorMsg(503, FRAMEWORK_DECODE_ERROR_CODE, "framework decode error");
-    public static final MotanErrorMsg FRAMEWORK_INIT_ERROR = new MotanErrorMsg(503, FRAMEWORK_INIT_ERROR_CODE, "framework init error");
-    public static final MotanErrorMsg FRAMEWORK_EXPORT_ERROR =
-            new MotanErrorMsg(503, FRAMEWORK_EXPORT_ERROR_CODE, "framework export error");
-    public static final MotanErrorMsg FRAMEWORK_REFER_ERROR = new MotanErrorMsg(503, FRAMEWORK_REFER_ERROR_CODE, "framework refer error");
+    public static final ForestErrorMsg FRAMEWORK_ENCODE_ERROR =
+            new ForestErrorMsg(503, FRAMEWORK_ENCODE_ERROR_CODE, "framework encode error");
+    public static final ForestErrorMsg FRAMEWORK_DECODE_ERROR =
+            new ForestErrorMsg(503, FRAMEWORK_DECODE_ERROR_CODE, "framework decode error");
+    public static final ForestErrorMsg FRAMEWORK_INIT_ERROR = new ForestErrorMsg(503, FRAMEWORK_INIT_ERROR_CODE, "framework init error");
+    public static final ForestErrorMsg FRAMEWORK_EXPORT_ERROR =
+            new ForestErrorMsg(503, FRAMEWORK_EXPORT_ERROR_CODE, "framework export error");
+    public static final ForestErrorMsg FRAMEWORK_REFER_ERROR = new ForestErrorMsg(503, FRAMEWORK_REFER_ERROR_CODE, "framework refer error");
     /**
      * biz error start
      **/
-    public static final MotanErrorMsg BIZ_DEFAULT_EXCEPTION = new MotanErrorMsg(503, BIZ_DEFAULT_ERROR_CODE, "provider error");
+    public static final ForestErrorMsg BIZ_DEFAULT_EXCEPTION = new ForestErrorMsg(503, BIZ_DEFAULT_ERROR_CODE, "provider error");
     /** framework error end **/
 
-    private MotanErrorMsgConstant() {
+    private ForestErrorMsgConstant() {
     }
     /** biz error end **/
 }
