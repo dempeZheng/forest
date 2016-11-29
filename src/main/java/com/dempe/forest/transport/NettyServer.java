@@ -45,7 +45,7 @@ public class NettyServer extends AbstractServer {
 
     private Executor executor = new StandardThreadExecutor();
 
-    private URIMapping uriMapping = new URIMapping();
+    private URIMapping uriMapping = new URIMapping(null);
 
     /**
      * 业务处理handler

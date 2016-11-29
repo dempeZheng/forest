@@ -23,6 +23,11 @@ public class ActionMethod {
     private RateLimiter rateLimiter;
     private List<InvokerInterceptor> interceptorList;
 
+    public ActionMethod(Object target, Method method) {
+        this.target = target;
+        this.method = method;
+    }
+
     public Object call(Object... args) throws InvocationTargetException, IllegalAccessException {
         return method.invoke(target, args);
     }
@@ -107,6 +112,7 @@ public class ActionMethod {
 
     /**
      * 添加拦截器
+     *
      * @param invokerInterceptor
      * @return
      */

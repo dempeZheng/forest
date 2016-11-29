@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.*;
 
 /**
- * Created with IntelliJ IDEA.
  * User: Dempe
  * Date: 2016/11/28
  * Time: 19:04

@@ -3,6 +3,7 @@ package com.dempe.forest.core.handler;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.core.ForestContext;
 import com.dempe.forest.core.URIMapping;
+import com.dempe.forest.core.invoker.ActionMethod;
 import com.dempe.forest.core.invoker.InvokerWrapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -34,8 +35,8 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
     @Override
     protected void channelRead0(final ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
         String uri = message.getHeader().getUri();
-        final InvokerWrapper invokerWrapperByURI = mapping.getInvokerWrapperByURI(uri);
-        executor.execute(new InvokerRunnable(invokerWrapperByURI, channelHandlerContext));
+        final ActionMethod actionMethod = mapping.getInvokerWrapperByURI(uri);
+        executor.execute(new InvokerRunnable(new InvokerWrapper(actionMethod, message), channelHandlerContext));
     }
 
 

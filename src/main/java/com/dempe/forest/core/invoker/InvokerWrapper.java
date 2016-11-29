@@ -1,6 +1,7 @@
 package com.dempe.forest.core.invoker;
 
 import com.dempe.forest.codec.Message;
+import com.dempe.forest.core.annotation.Action;
 import com.google.common.collect.Lists;
 import com.sun.corba.se.impl.interceptors.InterceptorInvoker;
 
@@ -20,7 +21,10 @@ public class InvokerWrapper {
 
     private Message message;
 
-    private List<InterceptorInvoker> interceptorInvokers = Lists.newArrayList();
+    public InvokerWrapper(ActionMethod actionMethod, Message message) {
+        this.actionMethod = actionMethod;
+        this.message = message;
+    }
 
     public Object invoke() throws InvocationTargetException, IllegalAccessException {
         //TODO message转换为args[]
