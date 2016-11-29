@@ -1,6 +1,7 @@
 package com.dempe.forest.example;
 
 import com.dempe.forest.core.annotation.Action;
+import com.dempe.forest.core.annotation.Param;
 import com.dempe.forest.core.annotation.URI;
 
 /**
@@ -14,9 +15,8 @@ import com.dempe.forest.core.annotation.URI;
 public class SampleAction {
 
     @URI("hello")
-    public String hello() {
-        System.out.println("-------------");
-        return "hello world";
+    public String hello(@Param String word) {
+        return "hello>>>" + word;
     }
 
 }

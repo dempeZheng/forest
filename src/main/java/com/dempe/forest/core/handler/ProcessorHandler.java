@@ -1,8 +1,7 @@
 package com.dempe.forest.core.handler;
 
 import com.dempe.forest.codec.Message;
-import com.dempe.forest.codec.serialize.FastJsonSerialization;
-import com.dempe.forest.codec.serialize.KryoSerialization;
+import com.dempe.forest.codec.serialize.Hessian2Serialization;
 import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.AnnotationRouterMapping;
 import com.dempe.forest.core.ForestContext;
@@ -75,7 +74,7 @@ class InvokerRunnable implements Runnable {
             ForestContext.removeForestContext();
         }
         // 序列化
-        Serialization serialization = new FastJsonSerialization();
+        Serialization serialization = new Hessian2Serialization();
         try {
             byte[] payload = serialization.serialize(result);
             message.setPayload(payload);

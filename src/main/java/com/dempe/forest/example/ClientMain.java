@@ -4,7 +4,10 @@ import com.dempe.forest.Constants;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.RpcProtocolVersion;
+import com.dempe.forest.codec.serialize.Hessian2Serialization;
 import com.dempe.forest.transport.NettyClient;
+
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +18,7 @@ import com.dempe.forest.transport.NettyClient;
  */
 public class ClientMain {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         NettyClient client = new NettyClient("127.0.0.1", 9999);
         client.connect();
         Message message = new Message();
@@ -26,7 +29,9 @@ public class ClientMain {
         header.setExtend((byte) 1);
         header.setUri("/sample/hello");
         message.setHeader(header);
-        message.setPayload(new byte[0]);
+        Hessian2Serialization serialization = new Hessian2Serialization();
+        byte[] tests = serialization.serialize("test");
+        message.setPayload(tests);
         client.write(message);
 
     }
