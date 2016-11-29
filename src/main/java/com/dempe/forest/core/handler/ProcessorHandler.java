@@ -1,8 +1,11 @@
 package com.dempe.forest.core.handler;
 
 import com.dempe.forest.codec.Message;
-import com.dempe.forest.core.ForestContext;
+import com.dempe.forest.codec.serialize.FastJsonSerialization;
+import com.dempe.forest.codec.serialize.KryoSerialization;
+import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.AnnotationRouterMapping;
+import com.dempe.forest.core.ForestContext;
 import com.dempe.forest.core.invoker.ActionMethod;
 import com.dempe.forest.core.invoker.InvokerWrapper;
 import io.netty.channel.ChannelHandlerContext;
@@ -10,6 +13,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.concurrent.Executor;
 
 /**
@@ -62,15 +66,21 @@ class InvokerRunnable implements Runnable {
         // todo exception handle
         Message message = invokerWrapper.getMessage().setRsp();
         ForestContext.setForestContext(ctx.channel(), message.getHeader());
+        Object result = null;
         try {
-            Object result = invokerWrapper.invoke();
-            //
-//        message.setPayload(message);
-
+            result = invokerWrapper.invoke();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         } finally {
             ForestContext.removeForestContext();
+        }
+        // 序列化
+        Serialization serialization = new FastJsonSerialization();
+        try {
+            byte[] payload = serialization.serialize(result);
+            message.setPayload(payload);
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
         }
         ctx.writeAndFlush(message);
 

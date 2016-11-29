@@ -14,7 +14,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Time: 9:43
  * To change this template use File | Settings | File Templates.
  */
-public class Main {
+public class ServerMain {
 
     public static void main(String[] args) throws InterruptedException {
        ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
