@@ -43,7 +43,7 @@ public class ForestDecoder extends ByteToMessageDecoder {
 
         int size = byteBuf.readInt();
 
-        if (byteBuf.readableBytes() < Constants.HEADER_SIZE + size) {
+        if (byteBuf.readableBytes() < size) {
             byteBuf.resetReaderIndex();
             return;
         }

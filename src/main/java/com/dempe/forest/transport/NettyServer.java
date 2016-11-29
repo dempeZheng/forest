@@ -69,6 +69,7 @@ public class NettyServer {
 
         ChannelFuture channelFuture = bootstrap.bind(9999).sync();
         channel = channelFuture.channel();
+        channel.closeFuture().sync();
     }
 
 

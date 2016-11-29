@@ -34,7 +34,7 @@ public class InvokerWrapper {
         byte[] payload = message.getPayload();
         Serialization serialization = new FastJsonSerialization();
         String[] parameterNames = MethodParam.getParameterNames(actionMethod.getMethod());
-        Object[] args = new Object[]{parameterNames.length};
+        Object[] args = new Object[parameterNames.length];
         for (int i = 0; i < args.length; i++) {
             Class<?> aClass = ReflectUtil.forName(parameterNames[i]);
             Object param = serialization.deserialize(payload, aClass);

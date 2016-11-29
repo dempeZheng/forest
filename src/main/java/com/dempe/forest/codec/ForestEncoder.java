@@ -25,7 +25,8 @@ public class ForestEncoder extends MessageToByteEncoder<Message> {
         byteBuf.writeLong(header.getMessageID());
         byteBuf.writeShort(header.getUri().length());
         byteBuf.writeBytes(header.getUri().getBytes());
-        byteBuf.writeShort(message.getPayload().length);
+        byteBuf.writeInt(message.getPayload().length);
         byteBuf.writeBytes(message.getPayload());
+
     }
 }

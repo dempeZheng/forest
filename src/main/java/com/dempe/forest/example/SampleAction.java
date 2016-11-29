@@ -14,8 +14,9 @@ import com.dempe.forest.core.annotation.URI;
 public class SampleAction {
 
     @URI("hello")
-    public void hello() {
+    public String hello() {
         System.out.println("-------------");
+        return "hello world";
     }
 
 }

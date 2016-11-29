@@ -29,7 +29,7 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
 
     private AnnotationRouterMapping mapping;
 
-    private Executor executor;
+    private static Executor executor;
 
     public ProcessorHandler(AnnotationRouterMapping mapping, Executor executor) {
         this.mapping = mapping;
