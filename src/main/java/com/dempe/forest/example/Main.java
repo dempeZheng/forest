@@ -1,6 +1,9 @@
 package com.dempe.forest.example;
 
+import com.dempe.forest.ForestServer;
+import com.dempe.forest.core.AnnotationRouterMapping;
 import com.dempe.forest.core.annotation.Action;
+import com.dempe.forest.transport.NettyServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -13,14 +16,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
        ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
-        SampleAction bean = context.getBean(SampleAction.class);
-        String[] beanNamesForAnnotation = context.getBeanNamesForAnnotation(Action.class);
-        for (String s : beanNamesForAnnotation) {
-            System.out.println(s);
-        }
-        bean.hello();
+        AnnotationRouterMapping mapping = new AnnotationRouterMapping(context);
+
+        NettyServer server = new NettyServer(mapping);
 
     }
 }

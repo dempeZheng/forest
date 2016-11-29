@@ -1,6 +1,7 @@
 package com.dempe.forest.example;
 
 import com.dempe.forest.core.annotation.Action;
+import com.dempe.forest.core.annotation.URI;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,6 +13,7 @@ import com.dempe.forest.core.annotation.Action;
 @Action("sample")
 public class SampleAction {
 
+    @URI("hello")
     public void hello() {
         System.out.println("-------------");
     }

@@ -3,7 +3,6 @@ package com.dempe.forest.core;
 import com.dempe.forest.core.annotation.Action;
 import com.dempe.forest.core.annotation.URI;
 import com.dempe.forest.core.invoker.ActionMethod;
-import com.dempe.forest.core.invoker.InvokerWrapper;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,9 +20,9 @@ import java.util.Map;
  * Time: 9:59
  * To change this template use File | Settings | File Templates.
  */
-public class URIMapping {
+public class AnnotationRouterMapping {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(URIMapping.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(AnnotationRouterMapping.class);
 
     private ApplicationContext context;
 
@@ -33,17 +32,17 @@ public class URIMapping {
         return mapping.get(uri);
     }
 
-    public URIMapping(ApplicationContext context) {
+    public AnnotationRouterMapping(ApplicationContext context) {
         this.context = context;
         initMapping();
     }
 
 
     public void initMapping() {
+        // 获取spring中Action注解的bean
         String[] beanNamesForAnnotation = context.getBeanNamesForAnnotation(Action.class);
         for (String actionBeanName : beanNamesForAnnotation) {
             Object actionBean = context.getBean(actionBeanName);
-            LOGGER.info("registered action  :{} ", actionBeanName);
             for (Method method : actionBean.getClass().getDeclaredMethods()) {
                 if (method.getModifiers() == Modifier.PUBLIC) {
                     URI refs = method.getAnnotation(URI.class);
@@ -54,15 +53,11 @@ public class URIMapping {
                         }
                         String uri = buildURI(actionBeanName, pathVal);
                         if (mapping.containsKey(uri)) {
-                            LOGGER.warn("Method:{} declares duplicated jsonURI:{}, previous one will be overwritten", method, uri);
+                            LOGGER.warn("Method:{} declares duplicated uri:{}, previous one will be overwritten", method, uri);
                         }
                         makeAccessible(method);
-                        /**
-                         * 从spring ioc容器中获取相应的bean
-                         */
-
                         ActionMethod actionMethod = new ActionMethod(actionBean, method);
-                        LOGGER.info("[REQUEST MAPPING] = {}, uri = {}", actionBeanName, uri);
+                        LOGGER.info("Register router mapping : {}, uri : {}", actionBeanName, uri);
                         mapping.put(uri, actionMethod);
                     }
                 }

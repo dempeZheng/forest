@@ -1,29 +1,21 @@
 package com.dempe.forest.transport;
 
-import com.dempe.forest.conf.ServerConf;
+import com.dempe.forest.codec.ForestDecoder;
+import com.dempe.forest.codec.ForestEncoder;
+import com.dempe.forest.core.AnnotationRouterMapping;
 import com.dempe.forest.core.StandardThreadExecutor;
-import com.dempe.forest.core.URIMapping;
 import com.dempe.forest.core.handler.ProcessorHandler;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.traffic.GlobalTrafficShapingHandler;
-import io.netty.util.concurrent.DefaultEventExecutorGroup;
-import io.netty.util.concurrent.EventExecutorGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,79 +24,53 @@ import java.util.concurrent.TimeUnit;
  * Time: 16:41
  * To change this template use File | Settings | File Templates.
  */
-public class NettyServer extends AbstractServer {
+public class NettyServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyServer.class);
 
     private EventLoopGroup boss;
     private EventLoopGroup worker;
     private ServerBootstrap bootstrap;
-    private io.netty.channel.Channel channel;
+    private Channel channel;
+    private Executor executor;
+    private AnnotationRouterMapping uriMapping;
 
-    private GlobalTrafficShapingHandler globalTrafficShapingHandler;
 
-    private Executor executor = new StandardThreadExecutor();
-
-    private URIMapping uriMapping = new URIMapping(null);
-
-    /**
-     * 业务处理handler
-     *
-     * @throws Exception
-     */
-    public NettyServer(ServerConf conf) throws Exception {
-        super(conf);
+    public NettyServer(Executor executor, AnnotationRouterMapping mapping) throws InterruptedException {
+        this.executor = executor;
+        this.uriMapping = mapping;
+        doBind();
     }
 
-    protected void doBind() throws Throwable {
+    public NettyServer(AnnotationRouterMapping mapping) throws InterruptedException {
+        this.uriMapping = mapping;
+        doBind();
+    }
+
+
+    protected void doBind() throws InterruptedException {
         boss = new NioEventLoopGroup();
         worker = new NioEventLoopGroup();
         bootstrap = new ServerBootstrap();
-        EventExecutorGroup trafficExecutorGroup = new DefaultEventExecutorGroup(1);
-        globalTrafficShapingHandler = new GlobalTrafficShapingHandler(trafficExecutorGroup, 1000);
+        if (executor == null) {
+            executor = new StandardThreadExecutor();
+        }
         bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
-                .option(ChannelOption.SO_BACKLOG, getServerConf().getAccepts()).option(ChannelOption.SO_KEEPALIVE, true)
+//                .option(ChannelOption.SO_BACKLOG, getServerConf().getAccepts())
+                .option(ChannelOption.SO_KEEPALIVE, true)
                 .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(globalTrafficShapingHandler);
-                ch.pipeline().addLast("decoder", getCodec().getDecoder());
-                ch.pipeline().addLast("encoder", getCodec().getEncoder());
-                ch.pipeline().addLast("business_handler", new ProcessorHandler(uriMapping, executor));
+                ch.pipeline().addLast("decoder", new ForestDecoder());
+                ch.pipeline().addLast("encoder", new ForestEncoder());
+                ch.pipeline().addLast("processor", new ProcessorHandler(uriMapping, executor));
             }
         });
 
-        try {
-            ChannelFuture channelFuture = bootstrap.bind(getBindAddress()).sync();
-            channel = channelFuture.channel();
-            //			channel.closeFuture().sync();
-            startMornitor();
-        } finally {
-            //close();
-        }
+        ChannelFuture channelFuture = bootstrap.bind(9999).sync();
+        channel = channelFuture.channel();
     }
 
-    private void startMornitor() {
-        Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = Executors.defaultThreadFactory().newThread(r);
-                t.setName("netty mornitor");
-                t.setDaemon(true);
-                t.setPriority(Thread.MIN_PRIORITY);
-                return t;
-            }
-        }).scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                LOGGER.info(getBindAddress()
-                                + " read speed: {} KB/S , write speed: {} KB/S, cumulative read: {} KB, cumulative write: {} KB, ",
-                        globalTrafficShapingHandler.trafficCounter().lastReadThroughput() >> 10, globalTrafficShapingHandler
-                                .trafficCounter().lastWriteThroughput() >> 10, globalTrafficShapingHandler.trafficCounter()
-                                .cumulativeReadBytes() >> 10, globalTrafficShapingHandler.trafficCounter().cumulativeWrittenBytes() >> 10);
-            }
-        }, 1000, globalTrafficShapingHandler.trafficCounter().checkInterval(), TimeUnit.MILLISECONDS);
-    }
 
     public void close() {
         if (boss != null)
@@ -114,7 +80,7 @@ public class NettyServer extends AbstractServer {
         LOGGER.info("NettyServer stopped...");
     }
 
-    public io.netty.channel.Channel getChannel() {
+    public Channel getChannel() {
         return channel;
     }
 }
