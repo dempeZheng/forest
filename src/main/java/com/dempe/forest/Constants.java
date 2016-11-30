@@ -12,5 +12,5 @@ public class Constants {
 
     public static final int HEADER_SIZE = 16;
 
-    public static final byte RSP = 1 >> 8;
+    public static final byte RSP_TYPE = (byte) (1 << 7);
 }

@@ -83,7 +83,7 @@ class InvokerRunnable implements Runnable {
         Byte extend = message.getHeader().getExtend();
         Serialization serialization = SerializeType.getSerializationByExtend(extend);
         try {
-            response.setObject(result);
+            response.setResult(result);
             byte[] payload = serialization.serialize(response);
             Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
             message.setPayload(compress.compress(payload));

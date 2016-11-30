@@ -31,17 +31,4 @@ public class Message {
         this.payload = payload;
     }
 
-    public byte[] encode(Object message) {
-        return new byte[0];
-    }
-
-    public Object decode(byte[] buffer) {
-        return null;
-    }
-
-    public Message setRsp(){
-        header.setExtend((byte) (header.getExtend()|Constants.RSP));
-        return this;
-
-    }
 }

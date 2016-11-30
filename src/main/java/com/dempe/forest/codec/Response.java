@@ -15,15 +15,15 @@ public class Response  implements Serializable{
 
     private String errMsg = "";
 
-    private Object object;
+    private Object result;
 
 
-    public Object getObject() {
-        return object;
+    public Object getResult() {
+        return result;
     }
 
-    public void setObject(Object object) {
-        this.object = object;
+    public void setResult(Object result) {
+        this.result = result;
     }
 
     public short getResCode() {
@@ -47,7 +47,7 @@ public class Response  implements Serializable{
         return "Response{" +
                 "resCode=" + resCode +
                 ", errMsg='" + errMsg + '\'' +
-                ", object=" + object +
+                ", result=" + result +
                 '}';
     }
 }

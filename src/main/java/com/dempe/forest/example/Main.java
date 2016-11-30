@@ -1,5 +1,9 @@
 package com.dempe.forest.example;
 
+import com.dempe.forest.codec.Response;
+import com.dempe.forest.codec.serialize.KryoSerialization;
+import com.dempe.forest.codec.serialize.Serialization;
+
 import java.io.IOException;
 
 /**
@@ -11,9 +15,16 @@ import java.io.IOException;
  */
 public class Main {
 
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        for (int i = 0; i < 10000; i++) {
+            Response response = new Response();
+            response.setResult("hello");
+            Serialization serialization =new KryoSerialization();
+            byte[] serialize = serialization.serialize(response);
+            Response deserialize = serialization.deserialize(serialize, Response.class);
+            System.out.println(deserialize);
+        }
 
-    public static void main(String[] args) {
-        System.out.println((10& 0x7));
     }
 
 

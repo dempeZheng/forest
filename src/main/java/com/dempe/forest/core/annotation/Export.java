@@ -1,5 +1,8 @@
 package com.dempe.forest.core.annotation;
 
+import com.dempe.forest.core.CompressType;
+import com.dempe.forest.core.SerializeType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,7 +17,12 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface URI {
-    String value() default "";
+public @interface Export {
+
+    String uri() default "";
+
+    SerializeType serializeType() default SerializeType.kyro;
+
+    CompressType compressType() default CompressType.compressNo;
 }
 

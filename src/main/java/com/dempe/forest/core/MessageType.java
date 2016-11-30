@@ -1,5 +1,7 @@
 package com.dempe.forest.core;
 
+import com.dempe.forest.Constants;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -9,10 +11,9 @@ package com.dempe.forest.core;
  */
 public enum MessageType {
 
-    request((byte) 0), response((byte) (1 << 7));
+    request((byte) 0), response(Constants.RSP_TYPE);
 
     private byte value;
-
 
     MessageType(byte value) {
         this.value = value;
@@ -30,7 +31,7 @@ public enum MessageType {
         switch (value) {
             case 0:
                 return request;
-            case (byte) (1 << 7):
+            case  (Constants.RSP_TYPE):
                 return response;
             default:
                 return request;

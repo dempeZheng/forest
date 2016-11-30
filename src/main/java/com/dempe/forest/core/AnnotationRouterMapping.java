@@ -1,7 +1,7 @@
 package com.dempe.forest.core;
 
 import com.dempe.forest.core.annotation.Action;
-import com.dempe.forest.core.annotation.URI;
+import com.dempe.forest.core.annotation.Export;
 import com.dempe.forest.core.invoker.ActionMethod;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -45,13 +45,13 @@ public class AnnotationRouterMapping {
             Object actionBean = context.getBean(actionBeanName);
             for (Method method : actionBean.getClass().getDeclaredMethods()) {
                 if (method.getModifiers() == Modifier.PUBLIC) {
-                    URI refs = method.getAnnotation(URI.class);
+                    Export refs = method.getAnnotation(Export.class);
                     if (refs != null) {
-                        String pathVal = String.valueOf(refs.value());
+                        String pathVal = String.valueOf(refs.uri());
                         if (StringUtils.isBlank(pathVal)) {
                             pathVal = method.getName();
                         }
-                        String uri = buildURI(actionBeanName, pathVal);
+                        String uri = ForestUtil.buildURI(actionBeanName, pathVal);
                         if (mapping.containsKey(uri)) {
                             LOGGER.warn("Method:{} declares duplicated uri:{}, previous one will be overwritten", method, uri);
                         }
@@ -67,9 +67,7 @@ public class AnnotationRouterMapping {
 
     }
 
-    private String buildURI(String actionBeanName, String uri) {
-        return "/" + actionBeanName + "/" + uri;
-    }
+
 
 
     protected void makeAccessible(Method method) {
