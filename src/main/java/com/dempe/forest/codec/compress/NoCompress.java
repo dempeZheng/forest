@@ -1,31 +1,23 @@
 package com.dempe.forest.codec.compress;
 
-
-import org.xerial.snappy.Snappy;
-
 import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
- * Date: 2016/11/28
- * Time: 15:41
+ * Date: 2016/11/30
+ * Time: 13:14
  * To change this template use File | Settings | File Templates.
  */
-public class SnappyCompress implements Compress {
+public class NoCompress implements Compress {
 
+    @Override
     public byte[] compress(byte[] array) throws IOException {
-        if (array == null) {
-            return null;
-        }
-        return Snappy.compress(array);
+        return array;
     }
 
-
+    @Override
     public byte[] unCompress(byte[] array) throws IOException {
-        if (array == null) {
-            return null;
-        }
-        return Snappy.uncompress(array);
+        return array;
     }
 }

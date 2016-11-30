@@ -2,8 +2,10 @@ package com.dempe.forest.core.handler;
 
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
+import com.dempe.forest.codec.compress.Compress;
 import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.AnnotationRouterMapping;
+import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.ForestContext;
 import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.invoker.ActionMethod;
@@ -64,7 +66,7 @@ class InvokerRunnable implements Runnable {
     @Override
     public void run() {
         // todo exception handle
-        Message message = invokerWrapper.getMessage().setRsp();
+        Message message = invokerWrapper.getMessage();
         Response response = new Response();
         ForestContext.setForestContext(ctx.channel(), message.getHeader());
         Object result = null;
@@ -73,16 +75,18 @@ class InvokerRunnable implements Runnable {
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             response.setErrMsg(e.getMessage());
-            response.setResCode((short)-1);
+            response.setResCode((short) -1);
         } finally {
             ForestContext.removeForestContext();
         }
 
-        Serialization serialization = SerializeType.getSerializationByExtend(message.getHeader().getExtend());
+        Byte extend = message.getHeader().getExtend();
+        Serialization serialization = SerializeType.getSerializationByExtend(extend);
         try {
             response.setObject(result);
             byte[] payload = serialization.serialize(response);
-            message.setPayload(payload);
+            Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
+            message.setPayload(compress.compress(payload));
 
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);

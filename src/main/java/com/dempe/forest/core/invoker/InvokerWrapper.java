@@ -1,7 +1,9 @@
 package com.dempe.forest.core.invoker;
 
 import com.dempe.forest.codec.Message;
+import com.dempe.forest.codec.compress.Compress;
 import com.dempe.forest.codec.serialize.Serialization;
+import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
 
 import java.io.IOException;
@@ -27,7 +29,10 @@ public class InvokerWrapper {
 
     public Object invoke() throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, IOException {
         byte[] payload = message.getPayload();
-        Serialization serialization = SerializeType.getSerializationByExtend(message.getHeader().getExtend());
+        Byte extend = message.getHeader().getExtend();
+        Serialization serialization = SerializeType.getSerializationByExtend(extend);
+        Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
+        payload = compress.unCompress(payload);
         Object[] args = serialization.deserialize(payload, Object[].class);
         return actionMethod.rateLimiterInvoker(args);
     }

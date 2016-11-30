@@ -11,7 +11,7 @@ package com.dempe.forest.core;
 public class ExtendUtil {
 
 
-    public static byte getExtend(SerializeType serializeType, InvokeType invokeType, MessageType messageType) {
+    public static byte getExtend(SerializeType serializeType, CompressType invokeType, MessageType messageType) {
         return (byte) (serializeType.getValue() | invokeType.getValue() | messageType.getValue());
 
     }

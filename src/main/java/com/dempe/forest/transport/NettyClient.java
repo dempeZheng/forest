@@ -4,7 +4,10 @@ import com.dempe.forest.codec.ForestDecoder;
 import com.dempe.forest.codec.ForestEncoder;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
-import com.dempe.forest.codec.serialize.Hessian2Serialization;
+import com.dempe.forest.codec.compress.Compress;
+import com.dempe.forest.codec.serialize.Serialization;
+import com.dempe.forest.core.CompressType;
+import com.dempe.forest.core.SerializeType;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -58,7 +61,10 @@ public class NettyClient {
             @Override
             protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
                 byte[] payload = message.getPayload();
-                Hessian2Serialization serialization = new Hessian2Serialization();
+                Byte extend = message.getHeader().getExtend();
+                Serialization serialization = SerializeType.getSerializationByExtend(extend);
+                Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
+                payload = compress.unCompress(payload);
                 Response response = serialization.deserialize(payload, Response.class);
                 System.out.println(response);
 
