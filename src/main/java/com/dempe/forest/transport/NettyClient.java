@@ -3,6 +3,8 @@ package com.dempe.forest.transport;
 import com.dempe.forest.codec.ForestDecoder;
 import com.dempe.forest.codec.ForestEncoder;
 import com.dempe.forest.codec.Message;
+import com.dempe.forest.codec.Response;
+import com.dempe.forest.codec.serialize.Hessian2Serialization;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -56,7 +58,10 @@ public class NettyClient {
             @Override
             protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
                 byte[] payload = message.getPayload();
-                System.out.println(new String(payload));
+                Hessian2Serialization serialization = new Hessian2Serialization();
+                Response response = serialization.deserialize(payload, Response.class);
+                System.out.println(response);
+
 
             }
         });

@@ -5,6 +5,10 @@ import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.RpcProtocolVersion;
 import com.dempe.forest.codec.serialize.Hessian2Serialization;
+import com.dempe.forest.core.ExtendUtil;
+import com.dempe.forest.core.InvokeType;
+import com.dempe.forest.core.MessageType;
+import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.transport.NettyClient;
 
 import java.io.IOException;
@@ -26,11 +30,13 @@ public class ClientMain {
         header.setMessageID(1L);
         header.setMagic(Constants.MAGIC);
         header.setVersion(RpcProtocolVersion.VERSION_1.getVersion());
-        header.setExtend((byte) 1);
+        byte extend = ExtendUtil.getExtend(SerializeType.hession2, InvokeType.normal, MessageType.request);
+        header.setExtend(extend);
         header.setUri("/sample/hello");
         message.setHeader(header);
         Hessian2Serialization serialization = new Hessian2Serialization();
-        byte[] tests = serialization.serialize("test");
+        Object[] params = new Object[]{"test"};
+        byte[] tests = serialization.serialize(params);
         message.setPayload(tests);
         client.write(message);
 

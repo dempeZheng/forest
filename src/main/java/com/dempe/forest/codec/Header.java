@@ -18,8 +18,12 @@ package com.dempe.forest.codec;
 public class Header {
 
     private short magic;// 魔数
-    private Byte version; // 协议版本
-    private byte extend;// 扩展字段
+    private byte version; // 协议版本
+    /**
+     * 扩展字段[24-26=>序列化方式，27-28=>请求方式，0 normal,1 oneway ,2 async,
+     * 29-30=>(event( 可支持4种event， 如normal, exception等)),	31=>0:request,1:response]
+     */
+    private byte extend;
     private Long messageID;// 消息id
     private String uri;// 协议路由uri
     private Integer size;// 消息payload长度
@@ -76,3 +80,4 @@ public class Header {
         this.extend = extend;
     }
 }
+

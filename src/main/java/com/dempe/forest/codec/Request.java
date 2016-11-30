@@ -8,4 +8,16 @@ package com.dempe.forest.codec;
  * To change this template use File | Settings | File Templates.
  */
 public class Request {
+
+    // 请求参数
+    private Object[] args;
+
+    public Object[] getArgs() {
+        return args;
+    }
+
+    public void setArgs(Object[] args) {
+        this.args = args;
+    }
+
 }

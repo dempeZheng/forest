@@ -1,10 +1,11 @@
 package com.dempe.forest.core.handler;
 
 import com.dempe.forest.codec.Message;
-import com.dempe.forest.codec.serialize.Hessian2Serialization;
+import com.dempe.forest.codec.Response;
 import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.AnnotationRouterMapping;
 import com.dempe.forest.core.ForestContext;
+import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.invoker.ActionMethod;
 import com.dempe.forest.core.invoker.InvokerWrapper;
 import io.netty.channel.ChannelHandlerContext;
@@ -64,22 +65,28 @@ class InvokerRunnable implements Runnable {
     public void run() {
         // todo exception handle
         Message message = invokerWrapper.getMessage().setRsp();
+        Response response = new Response();
         ForestContext.setForestContext(ctx.channel(), message.getHeader());
         Object result = null;
         try {
             result = invokerWrapper.invoke();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
+            response.setErrMsg(e.getMessage());
+            response.setResCode((short)-1);
         } finally {
             ForestContext.removeForestContext();
         }
-        // 序列化
-        Serialization serialization = new Hessian2Serialization();
+
+        Serialization serialization = SerializeType.getSerializationByExtend(message.getHeader().getExtend());
         try {
-            byte[] payload = serialization.serialize(result);
+            response.setObject(result);
+            byte[] payload = serialization.serialize(response);
             message.setPayload(payload);
+
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
+
         }
         ctx.writeAndFlush(message);
 
