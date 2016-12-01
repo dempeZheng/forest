@@ -68,8 +68,6 @@ public class AnnotationRouterMapping {
     }
 
 
-
-
     protected void makeAccessible(Method method) {
         if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers()))
                 && !method.isAccessible()) {

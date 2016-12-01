@@ -37,11 +37,12 @@ public class ForestContext {
         return getForestContext().channel;
     }
 
-    public static String getAttr(String key){
+    public static String getAttr(String key) {
         return getForestContext().attrs.get(key);
     }
-    public static String putAttr(String key,String value){
-        return getForestContext().attrs.put(key,value);
+
+    public static String putAttr(String key, String value) {
+        return getForestContext().attrs.put(key, value);
     }
 
     public static ForestContext getForestContext() {
@@ -52,7 +53,7 @@ public class ForestContext {
         return forestContext;
     }
 
-    public static void removeForestContext(){
+    public static void removeForestContext() {
         contextMap.remove();
 
     }

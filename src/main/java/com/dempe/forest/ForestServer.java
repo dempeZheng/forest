@@ -19,17 +19,15 @@ public class ForestServer {
     private ServerBuilder builder;
     private NettyServer server;
 
-    public ForestServer(ServerBuilder builder){
+    public ForestServer(ServerBuilder builder) {
         this.builder = builder;
     }
 
-    public void start(){
+    public void start() {
         builder.xmlInitSpring("");
 
 
-
     }
-
 
 
 }
@@ -76,7 +74,7 @@ class ServerBuilder {
         return this;
     }
 
-    public ForestServer build(){
+    public ForestServer build() {
         return new ForestServer(this);
     }
 

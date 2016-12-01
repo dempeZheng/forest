@@ -1,14 +1,13 @@
 package com.dempe.forest.example;
 
 import com.dempe.forest.Constants;
-import com.dempe.forest.client.proxy.JdkProxyFactory;
-import com.dempe.forest.client.proxy.ReferInvocationHandler;
+import com.dempe.forest.client.proxy.CglibProxy;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.RpcProtocolVersion;
 import com.dempe.forest.codec.serialize.Hessian2Serialization;
-import com.dempe.forest.core.ForestUtil;
 import com.dempe.forest.core.CompressType;
+import com.dempe.forest.core.ForestUtil;
 import com.dempe.forest.core.MessageType;
 import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.transport.NettyClient;
@@ -27,7 +26,7 @@ public class ClientMain {
     public static void main(String[] args) throws InterruptedException, IOException {
 
 
-        proxyTest();
+        cglibProxyTest();
     }
 
     public static void simpleTest() throws InterruptedException, IOException {
@@ -49,10 +48,13 @@ public class ClientMain {
         client.write(message);
     }
 
-    public static void proxyTest() throws InterruptedException {
+    public static void cglibProxyTest() throws InterruptedException {
         NettyClient client = new NettyClient("127.0.0.1", 9999);
         client.connect();
-        SampleActionInterface proxy = new JdkProxyFactory().getProxy(SampleActionInterface.class, new ReferInvocationHandler(client));
-        proxy.hello("test");
+        CglibProxy proxy = new CglibProxy();
+        SampleAction sampleAction = proxy.getProxy(SampleAction.class, client);
+        String hello = sampleAction.hello("hello >>>>");
+        System.out.println(hello);
+
     }
 }

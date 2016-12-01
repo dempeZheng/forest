@@ -43,12 +43,11 @@ public class MethodParam {
         return parameterNames;
     }
 
-    public static  Class<?>[] getParameterClazz(Method method){
+    public static Class<?>[] getParameterClazz(Method method) {
         Class<?>[] parameterTypes = method.getParameterTypes();
         return parameterTypes;
 
     }
-
 
 
 }

@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * TODO【严重】 消息发送超时情况，contextMap内上下文对象无法清除，存在内存溢出的风险 待添加定时任务，定期清除超时的contextMap，
- *
+ * <p>
  * User: Dempe
  * Date: 2015/12/11
  * Time: 17:42
@@ -88,7 +88,6 @@ public class CommonClient {
         }
         return f;
     }
-
 
 
 }

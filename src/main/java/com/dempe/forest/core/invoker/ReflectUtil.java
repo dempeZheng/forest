@@ -23,10 +23,10 @@ public class ReflectUtil {
     private static final ConcurrentMap<String, Class<?>> name2ClassCache = new ConcurrentHashMap<String, Class<?>>();
     private static final ConcurrentMap<Class<?>, String> class2NameCache = new ConcurrentHashMap<Class<?>, String>();
 
-    private static final String[] PRIMITIVE_NAMES = new String[] {"boolean", "byte", "char", "double", "float", "int", "long", "short",
+    private static final String[] PRIMITIVE_NAMES = new String[]{"boolean", "byte", "char", "double", "float", "int", "long", "short",
             "void"};
 
-    private static final Class<?>[] PRIMITIVE_CLASSES = new Class[] {boolean.class, byte.class, char.class, double.class, float.class,
+    private static final Class<?>[] PRIMITIVE_CLASSES = new Class[]{boolean.class, byte.class, char.class, double.class, float.class,
             int.class, long.class, short.class, Void.TYPE};
 
     private static final int PRIMITIVE_CLASS_NAME_MAX_LENGTH = 7;
@@ -193,7 +193,7 @@ public class ReflectUtil {
 
     /**
      * 获取clz public method
-     *
+     * <p>
      * <pre>
      *      1）不包含构造函数
      *      2）不包含Object.class
@@ -272,7 +272,8 @@ public class ReflectUtil {
                                     field.setAccessible(true);
                                 }
                                 field.set(value, property);
-                            } catch (Throwable e) {}
+                            } catch (Throwable e) {
+                            }
                         }
                     }
                     cls = cls.getSuperclass();

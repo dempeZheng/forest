@@ -15,7 +15,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class ServerMain {
 
     public static void main(String[] args) throws InterruptedException {
-       ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
+        ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
         AnnotationRouterMapping mapping = new AnnotationRouterMapping(context);
 
         NettyServer server = new NettyServer(mapping);

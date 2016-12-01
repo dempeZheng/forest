@@ -1,11 +1,11 @@
 package com.dempe.forest.example;
 
-import com.dempe.forest.codec.compress.GZipCompress;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.annotation.Action;
-import com.dempe.forest.core.annotation.Param;
 import com.dempe.forest.core.annotation.Export;
+import com.dempe.forest.core.annotation.Param;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,9 +17,12 @@ import com.dempe.forest.core.annotation.Export;
 @Action("sample")
 public class SampleAction {
 
+    @Autowired
+    private SampleService sampleService;
+
     @Export(uri = "hello", compressType = CompressType.gizp, serializeType = SerializeType.kyro)
     public String hello(@Param String word) {
-        return "hello>>>" + word;
+        return sampleService.hello(word);
     }
 
 }

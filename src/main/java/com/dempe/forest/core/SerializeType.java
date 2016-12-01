@@ -30,8 +30,8 @@ public enum SerializeType {
         this.value = value;
     }
 
-   public static Serialization getSerializationByExtend(byte value) {
-        switch (value & 0x7){
+    public static Serialization getSerializationByExtend(byte value) {
+        switch (value & 0x7) {
             case 0x0:
                 return new KryoSerialization();
             case 0x1:

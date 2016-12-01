@@ -1,6 +1,5 @@
 package com.dempe.forest.client.proxy;
 
-
 import com.dempe.forest.Constants;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
@@ -16,42 +15,48 @@ import com.dempe.forest.core.annotation.Export;
 import com.dempe.forest.core.exception.ForestFrameworkException;
 import com.dempe.forest.transport.NettyClient;
 import com.google.common.base.Strings;
+import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.cglib.proxy.MethodProxy;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
- * Date: 2016/11/30
- * Time: 15:36
+ * Date: 2016/12/1
+ * Time: 9:47
  * To change this template use File | Settings | File Templates.
  */
-public class ReferInvocationHandler implements InvocationHandler {
+public class ReferMethodInterceptor implements MethodInterceptor {
 
     private final static AtomicLong id = new AtomicLong(0);
 
     private NettyClient client;
-    private Object target;
+    private Class clz;
 
     // TODO 容灾&负载均衡的支持
-    public ReferInvocationHandler(NettyClient client) {
+    public ReferMethodInterceptor(NettyClient client) {
         this.client = client;
     }
 
-    public ReferInvocationHandler(Object target, NettyClient client) {
+    public ReferMethodInterceptor(Class clz, NettyClient client) {
         this.client = client;
-        this.target = target;
+        this.clz = clz;
     }
+
+
+    public long nextMessageId() {
+        return id.incrementAndGet();
+    }
+
 
     @Override
-    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
         Export export = method.getAnnotation(Export.class);
 
-        Action action = method.getClass().getAnnotation(Action.class);
-        if (export != null || action != null) {
+        Action action = (Action) clz.getAnnotation(Action.class);
+        if (export == null || action == null) {
             new ForestFrameworkException("method annotation Export or Action is null ");
         }
         String value = Strings.isNullOrEmpty(action.value()) ? method.getClass().getSimpleName() : action.value();
@@ -78,9 +83,5 @@ public class ReferInvocationHandler implements InvocationHandler {
 
 
         return null;
-    }
-
-    public long nextMessageId() {
-        return id.incrementAndGet();
     }
 }

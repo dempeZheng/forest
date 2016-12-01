@@ -31,7 +31,7 @@ public enum MessageType {
         switch (value) {
             case 0:
                 return request;
-            case  (Constants.RSP_TYPE):
+            case (Constants.RSP_TYPE):
                 return response;
             default:
                 return request;

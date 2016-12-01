@@ -57,7 +57,9 @@ public class ForestErrorMsgConstant {
     public static final ForestErrorMsg FRAMEWORK_DEFAULT_ERROR = new ForestErrorMsg(503, FRAMEWORK_DEFAULT_ERROR_CODE,
             "framework default error");
 
-    /** service error end **/
+    /**
+     * service error end
+     **/
     public static final ForestErrorMsg FRAMEWORK_ENCODE_ERROR =
             new ForestErrorMsg(503, FRAMEWORK_ENCODE_ERROR_CODE, "framework encode error");
     public static final ForestErrorMsg FRAMEWORK_DECODE_ERROR =
@@ -70,7 +72,10 @@ public class ForestErrorMsgConstant {
      * biz error start
      **/
     public static final ForestErrorMsg BIZ_DEFAULT_EXCEPTION = new ForestErrorMsg(503, BIZ_DEFAULT_ERROR_CODE, "provider error");
-    /** framework error end **/
+
+    /**
+     * framework error end
+     **/
 
     private ForestErrorMsgConstant() {
     }

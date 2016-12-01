@@ -14,7 +14,7 @@ import java.io.IOException;
  * Time: 17:34
  * To change this template use File | Settings | File Templates.
  */
-public class Hessian2Serialization  implements Serialization {
+public class Hessian2Serialization implements Serialization {
 
     @Override
     public byte[] serialize(Object data) throws IOException {
