@@ -19,13 +19,13 @@ public class PrintInterceptor implements InvokerInterceptor {
 
     @Override
     public boolean before(Object... args) {
-        LOGGER.info("before args:{}", args);
+        LOGGER.debug("before args:{}", args);
         return true;
     }
 
     @Override
     public boolean after(Object result) {
-        LOGGER.info("after result:{}", result);
+        LOGGER.debug("after result:{}", result);
         return true;
     }
 }

@@ -43,7 +43,6 @@ public class AnnotationRouterMapping {
         initMapping();
     }
 
-
     public void initMapping() {
         // 获取spring中Action注解的bean
         String[] beanNamesForAnnotation = context.getBeanNamesForAnnotation(Action.class);
@@ -91,7 +90,6 @@ public class AnnotationRouterMapping {
                 }
             }
         }
-
 
     }
 
