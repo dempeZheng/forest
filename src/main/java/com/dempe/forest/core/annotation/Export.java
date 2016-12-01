@@ -21,6 +21,8 @@ public @interface Export {
 
     String uri() default "";
 
+    long timeOut() default 5000;
+
     SerializeType serializeType() default SerializeType.kyro;
 
     CompressType compressType() default CompressType.compressNo;

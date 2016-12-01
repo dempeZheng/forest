@@ -9,5 +9,5 @@ package com.dempe.forest.client;
  */
 public interface Callback<T> {
 
-    public void onReceive(T message);
+    void onReceive(T message);
 }

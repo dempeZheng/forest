@@ -24,8 +24,6 @@ import java.io.IOException;
 public class ClientMain {
 
     public static void main(String[] args) throws InterruptedException, IOException {
-
-
         cglibProxyTest();
     }
 
@@ -45,7 +43,7 @@ public class ClientMain {
         Object[] params = new Object[]{"test"};
         byte[] tests = serialization.serialize(params);
         message.setPayload(tests);
-        client.write(message);
+        client.write(message, 5000);
     }
 
     public static void cglibProxyTest() throws InterruptedException {

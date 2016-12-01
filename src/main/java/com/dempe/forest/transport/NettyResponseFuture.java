@@ -1,13 +1,8 @@
 package com.dempe.forest.transport;
 
-import com.dempe.forest.client.Callback;
-import com.dempe.forest.client.Future;
+import com.dempe.forest.client.Promise;
 import com.dempe.forest.codec.Message;
 import io.netty.channel.Channel;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,19 +11,29 @@ import java.util.concurrent.TimeoutException;
  * Time: 11:21
  * To change this template use File | Settings | File Templates.
  */
-public class NettyResponseFuture<T> implements Callback<T>, Future<T> {
-    private long sendTime;
+public class NettyResponseFuture<T>  {
+    private long createTime;
+    private long timeOut;
     private Message request;
-    private T response;
-    Throwable error;
-    private final CountDownLatch latch = new CountDownLatch(1);
-
     private Channel channel;
+    private Promise<T> promise;
 
-    public NettyResponseFuture( long sendTime, Message request, Channel channel) {
-        this.sendTime = sendTime;
+    public NettyResponseFuture(long createTime, long timeOut, Message request, Channel channel, Promise<T> promise) {
+        this.createTime = createTime;
+        this.timeOut = timeOut;
         this.request = request;
         this.channel = channel;
+        this.promise = promise;
+    }
+
+
+
+    public long getTimeOut() {
+        return timeOut;
+    }
+
+    public void setTimeOut(long timeOut) {
+        this.timeOut = timeOut;
     }
 
     public Message getRequest() {
@@ -47,50 +52,20 @@ public class NettyResponseFuture<T> implements Callback<T>, Future<T> {
         this.channel = channel;
     }
 
-    public long getSendTime() {
-        return sendTime;
+    public long getCreateTime() {
+        return createTime;
     }
 
-    public void setSendTime(long sendTime) {
-        this.sendTime = sendTime;
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 
-    @Override
-    public void onReceive(T response) {
-        synchronized (this) {
-            this.response = response;
-            latch.countDown();
-        }
+
+    public Promise<T> getPromise() {
+        return promise;
     }
 
-    @Override
-    public T await() throws Exception {
-        latch.await();
-        return get();
-    }
-
-    @Override
-    public T await(long amount, TimeUnit unit) throws Exception {
-        if (latch.await(amount, unit)) {
-            return get();
-        } else {
-            throw new TimeoutException();
-        }
-    }
-    private T get() throws Exception {
-        Throwable e = error;
-        if (e != null) {
-            if (e instanceof RuntimeException) {
-                throw (RuntimeException) e;
-            } else if (e instanceof Exception) {
-                throw (Exception) e;
-            } else if (e instanceof Error) {
-                throw (Error) e;
-            } else {
-                // don'M expect to hit this case.
-                throw new RuntimeException(e);
-            }
-        }
-        return response;
+    public void setPromise(Promise<T> promise) {
+        this.promise = promise;
     }
 }

@@ -63,6 +63,7 @@ public class ReferMethodInterceptor implements MethodInterceptor {
         }
         String value = Strings.isNullOrEmpty(action.value()) ? method.getClass().getSimpleName() : action.value();
         String uri = Strings.isNullOrEmpty(export.uri()) ? method.getName() : export.uri();
+        long timeOut = export.timeOut() <= 0 ? 5000 : export.timeOut();
         String headerURI = ForestUtil.buildURI(value, uri);
         byte extend = ForestUtil.getExtend(export.serializeType(), export.compressType(), MessageType.request);
         Header header = new Header();
@@ -79,7 +80,7 @@ public class ReferMethodInterceptor implements MethodInterceptor {
         Serialization serialization = SerializeType.getSerializationByExtend(extend);
         byte[] serialize = serialization.serialize(objects);
         message.setPayload(compress.compress(serialize));
-        NettyResponseFuture<Response> responseFuture = client.write(message);
-        return responseFuture.await().getResult();
+        NettyResponseFuture<Response> responseFuture = client.write(message, timeOut);
+        return responseFuture.getPromise().await().getResult();
     }
 }

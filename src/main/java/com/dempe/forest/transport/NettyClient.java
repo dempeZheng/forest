@@ -1,5 +1,6 @@
 package com.dempe.forest.transport;
 
+import com.dempe.forest.client.Promise;
 import com.dempe.forest.codec.ForestDecoder;
 import com.dempe.forest.codec.ForestEncoder;
 import com.dempe.forest.codec.Message;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
  * To change this template use File | Settings | File Templates.
  */
 public class NettyClient {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyClient.class);
 
     protected Bootstrap b;
@@ -68,11 +70,17 @@ public class NettyClient {
     }
 
 
-    public NettyResponseFuture<Response> write(Message message) {
+    public NettyResponseFuture<Response> write(Message message, long timeOut) {
         channel.writeAndFlush(message);
-        NettyResponseFuture<Response> responseFuture = new NettyResponseFuture<>(System.currentTimeMillis(), message, channel);
+        NettyResponseFuture responseFuture = new NettyResponseFuture(System.currentTimeMillis(), timeOut, message, channel, new Promise<Response>());
         handler.registerCallbackMap(message.getHeader().getMessageID(), responseFuture);
         return responseFuture;
+    }
+
+    public void callback(Message message, long timeOut, Promise<Response> promise) {
+        channel.writeAndFlush(message);
+        NettyResponseFuture responseFuture = new NettyResponseFuture(System.currentTimeMillis(), timeOut, message, channel, promise);
+        handler.registerCallbackMap(message.getHeader().getMessageID(), responseFuture);
     }
 
 
