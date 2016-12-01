@@ -34,11 +34,8 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message> {
         payload = compress.unCompress(payload);
         Response response = serialization.deserialize(payload, Response.class);
         long messageID = message.getHeader().getMessageID();
-        NettyResponseFuture responseFuture = null;
-        responseFuture = Connection.callbackMap.remove(messageID);
+        NettyResponseFuture responseFuture = Connection.callbackMap.remove(messageID);
         responseFuture.getPromise().onReceive(response);
-
-
     }
 
     @Override

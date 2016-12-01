@@ -14,5 +14,4 @@ public interface Future<T> {
     T await() throws Exception;
 
     T await(long amount, TimeUnit unit) throws Exception;
-
 }

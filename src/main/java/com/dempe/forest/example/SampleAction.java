@@ -2,9 +2,7 @@ package com.dempe.forest.example;
 
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
-import com.dempe.forest.core.annotation.Action;
-import com.dempe.forest.core.annotation.Export;
-import com.dempe.forest.core.annotation.HttpParam;
+import com.dempe.forest.core.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -20,7 +18,9 @@ public class SampleAction {
     @Autowired
     private SampleService sampleService;
 
-    @Export(uri = "hello", compressType = CompressType.gizp, serializeType = SerializeType.fastjson)
+    @Interceptor(id = "printInterceptor")
+    @Rate(value = 5)
+    @Export(uri = "hello", compressType = CompressType.gizp, serializeType = SerializeType.fastjson, timeOut = 1000)
     public String hello(@HttpParam String word) {
         return sampleService.hello(word);
     }

@@ -13,7 +13,6 @@ import io.netty.handler.codec.MessageToByteEncoder;
  */
 public class ForestEncoder extends MessageToByteEncoder<Message> {
 
-
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Message message, ByteBuf byteBuf) throws Exception {
         Header header = message.getHeader();
@@ -25,6 +24,5 @@ public class ForestEncoder extends MessageToByteEncoder<Message> {
         byteBuf.writeBytes(header.getUri().getBytes());
         byteBuf.writeInt(message.getPayload().length);
         byteBuf.writeBytes(message.getPayload());
-
     }
 }

@@ -29,29 +29,17 @@ import java.util.logging.Logger;
 public class ChannelPoolObjectFactory extends BasePooledObjectFactory<Connection> {
 
     private static final Logger LOGGER = Logger.getLogger(ChannelPoolObjectFactory.class.getName());
-
     private NettyClient client;
 
     public ChannelPoolObjectFactory(NettyClient client) {
         this.client = client;
-
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.commons.pool2.BasePooledObjectFactory#create()
-     */
     @Override
     public Connection create() throws Exception {
         return fetchConnection();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.commons.pool2.BasePooledObjectFactory#wrap(java.lang.Object)
-     */
     @Override
     public PooledObject<Connection> wrap(Connection connection) {
         ChannelFuture future = this.client.connect();
@@ -63,7 +51,6 @@ public class ChannelPoolObjectFactory extends BasePooledObjectFactory<Connection
             connection.setIsConnected(true);
         }
         connection.setFuture(future);
-
         return new DefaultPooledObject<>(connection);
     }
 
@@ -85,6 +72,5 @@ public class ChannelPoolObjectFactory extends BasePooledObjectFactory<Connection
         return channel.isOpen() && channel.isActive();
 
     }
-
 
 }

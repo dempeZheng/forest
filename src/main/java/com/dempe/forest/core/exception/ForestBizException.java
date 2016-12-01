@@ -16,11 +16,7 @@
 
 package com.dempe.forest.core.exception;
 
-/**
- * wrapper biz exception.
- *
- * @author maijunsheng
- */
+
 public class ForestBizException extends ForestAbstractException {
     private static final long serialVersionUID = -3491276058323309898L;
 

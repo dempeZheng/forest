@@ -2,9 +2,14 @@ package com.dempe.forest.core;
 
 import com.dempe.forest.core.annotation.Action;
 import com.dempe.forest.core.annotation.Export;
+import com.dempe.forest.core.annotation.Interceptor;
+import com.dempe.forest.core.annotation.Rate;
+import com.dempe.forest.core.interceptor.InvokerInterceptor;
 import com.dempe.forest.core.invoker.ActionMethod;
 import com.dempe.forest.core.invoker.MethodParam;
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.RateLimiter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +66,26 @@ public class AnnotationRouterMapping {
                         String[] parameterNames = MethodParam.getParameterNames(method);
                         actionMethod.setArgsName(parameterNames);
                         LOGGER.info("Register router mapping : {}, uri : {}", actionBeanName, uri);
+
+                        // Interceptor
+                        Interceptor interceptor = method.getAnnotation(Interceptor.class);
+                        String id = interceptor.id();
+                        if (Strings.isNullOrEmpty(id)) {
+                            LOGGER.warn("Interceptor id is empty !");
+                        }else {
+                            for (String beanId : id.split(",")) {
+                                InvokerInterceptor invokerInterceptor = (InvokerInterceptor) context.getBean(beanId);
+                                actionMethod.addInterceptorList(invokerInterceptor);
+                            }
+                        }
+                        // Rate
+                        Rate rate = method.getAnnotation(Rate.class);
+                        int value = rate.value();
+                        if(value>0){
+                            actionMethod.setRateLimiter(RateLimiter.create(value));
+                        }else {
+                            LOGGER.warn("Rate value < 0 !");
+                        }
                         mapping.put(uri, actionMethod);
                     }
                 }

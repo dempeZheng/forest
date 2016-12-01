@@ -16,11 +16,7 @@
 
 package com.dempe.forest.core.exception;
 
-/**
- * wrapper service exception.
- *
- * @author maijunsheng
- */
+
 public class ForestServiceException extends ForestAbstractException {
     private static final long serialVersionUID = -3491276058323309898L;
 

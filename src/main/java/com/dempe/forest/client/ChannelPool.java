@@ -16,7 +16,10 @@
 
 package com.dempe.forest.client;
 
+import com.dempe.forest.codec.Message;
+import com.dempe.forest.codec.Response;
 import com.dempe.forest.transport.NettyClient;
+import com.dempe.forest.transport.NettyResponseFuture;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -26,8 +29,8 @@ import java.util.logging.Logger;
 
 
 public class ChannelPool {
-    private static final Logger LOGGER = Logger.getLogger(ChannelPool.class.getName());
 
+    private static final Logger LOGGER = Logger.getLogger(ChannelPool.class.getName());
     private final PooledObjectFactory<Connection> objectFactory;
     private final GenericObjectPool<Connection> pool;
 
@@ -44,7 +47,15 @@ public class ChannelPool {
 
     public void returnChannel(Connection channel) {
         pool.returnObject(channel);
+    }
 
+    public NettyResponseFuture<Response> write(Message message, long timeOut) throws Exception {
+        Connection channel = getChannel();
+        try {
+            return channel.write(message, timeOut);
+        } finally {
+            returnChannel(channel);
+        }
     }
 
     public void stop() {

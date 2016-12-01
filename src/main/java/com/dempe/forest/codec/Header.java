@@ -33,6 +33,18 @@ public class Header {
     private String uri;// 协议路由uri
     private Integer size;// 消息payload长度
 
+    public Header() {
+    }
+
+    public Header(short magic, byte version, byte extend, Long messageID, String uri, Integer size) {
+        this.magic = magic;
+        this.version = version;
+        this.extend = extend;
+        this.messageID = messageID;
+        this.uri = uri;
+        this.size = size;
+    }
+
     public short getMagic() {
         return magic;
     }

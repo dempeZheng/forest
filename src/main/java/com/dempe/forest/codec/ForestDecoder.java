@@ -19,19 +19,15 @@ public class ForestDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
-
         if (byteBuf.readableBytes() < Constants.HEADER_SIZE) {
             return;
         }
         byteBuf.markReaderIndex();
-
         short magic = byteBuf.readShort();
-
         if (magic != Constants.MAGIC) {
             byteBuf.resetReaderIndex();
             throw new ForestFrameworkException("ForestDecoder transport header not support, type: " + magic);
         }
-
         byte version = byteBuf.readByte();
         byte extend = byteBuf.readByte();
         long messageID = byteBuf.readLong();
@@ -39,9 +35,7 @@ public class ForestDecoder extends ByteToMessageDecoder {
         byte[] uriArr = new byte[uriLen];
         byteBuf.readBytes(uriArr);
         String uri = new String(uriArr);
-
         int size = byteBuf.readInt();
-
         if (byteBuf.readableBytes() < size) {
             byteBuf.resetReaderIndex();
             return;
@@ -49,19 +43,10 @@ public class ForestDecoder extends ByteToMessageDecoder {
         // TODO 限制最大包长
         byte[] payload = new byte[size];
         byteBuf.readBytes(payload);
-
-        Header header = new Header();
-        header.setMagic(magic);
-        header.setVersion(version);
-        header.setExtend(extend);
-        header.setMessageID(messageID);
-        header.setUri(uri);
-        header.setSize(size);
+        Header header = new Header(magic, version, extend, messageID, uri, size);
         Message message = new Message();
         message.setHeader(header);
         message.setPayload(payload);
         list.add(message);
-
-
     }
 }

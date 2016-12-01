@@ -79,7 +79,6 @@ class InvokerRunnable implements Runnable {
         } finally {
             ForestContext.removeForestContext();
         }
-
         Byte extend = message.getHeader().getExtend();
         Serialization serialization = SerializeType.getSerializationByExtend(extend);
         try {
@@ -87,14 +86,10 @@ class InvokerRunnable implements Runnable {
             byte[] payload = serialization.serialize(response);
             Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
             message.setPayload(compress.compress(payload));
-
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
-
         }
         ctx.writeAndFlush(message);
-
-
     }
 
 }

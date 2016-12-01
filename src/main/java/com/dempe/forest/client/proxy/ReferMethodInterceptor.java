@@ -2,7 +2,6 @@ package com.dempe.forest.client.proxy;
 
 import com.dempe.forest.Constants;
 import com.dempe.forest.client.ChannelPool;
-import com.dempe.forest.client.Connection;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
@@ -48,16 +47,13 @@ public class ReferMethodInterceptor implements MethodInterceptor {
         this.clz = clz;
     }
 
-
     public long nextMessageId() {
         return id.incrementAndGet();
     }
 
-
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
         Export export = method.getAnnotation(Export.class);
-
         Action action = (Action) clz.getAnnotation(Action.class);
         if (export == null || action == null) {
             new ForestFrameworkException("method annotation Export or Action is null ");
@@ -73,17 +69,14 @@ public class ReferMethodInterceptor implements MethodInterceptor {
         header.setMessageID(nextMessageId());
         header.setUri(headerURI);
         header.setExtend(extend);
-
         Message message = new Message();
         message.setHeader(header);
-
         Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
         Serialization serialization = SerializeType.getSerializationByExtend(extend);
         byte[] serialize = serialization.serialize(objects);
         message.setPayload(compress.compress(serialize));
-        Connection channel = channelPool.getChannel();
-        NettyResponseFuture<Response> responseFuture = channel.write(message, timeOut);
-        channelPool.returnChannel(channel);
+        NettyResponseFuture<Response> responseFuture = channelPool.write(message, timeOut);
         return responseFuture.getPromise().await().getResult();
     }
+
 }

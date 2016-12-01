@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,8 +43,8 @@ public class NettyClient {
         this.host = host;
         this.port = port;
         init();
-//        scheduledExecutor.scheduleWithFixedDelay(
-//                new TimeoutMonitor("timeout_monitor_" + host + "_" + port), 100, 100, TimeUnit.MILLISECONDS);
+        scheduledExecutor.scheduleWithFixedDelay(
+                new TimeoutMonitor("timeout_monitor_" + host + "_" + port), 100, 100, TimeUnit.MILLISECONDS);
     }
 
     private void init() throws InterruptedException {

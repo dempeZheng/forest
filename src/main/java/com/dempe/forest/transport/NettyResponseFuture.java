@@ -26,7 +26,6 @@ public class NettyResponseFuture<T> {
         this.promise = promise;
     }
 
-
     public long getTimeOut() {
         return timeOut;
     }
@@ -58,7 +57,6 @@ public class NettyResponseFuture<T> {
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
-
 
     public Promise<T> getPromise() {
         return promise;

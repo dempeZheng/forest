@@ -32,19 +32,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Connection {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Connection.class);
-    /**
-     * max request default count
-     */
     private ChannelFuture future;
     private AtomicBoolean isConnected = new AtomicBoolean();
-
     public final static Map<Long, NettyResponseFuture<Response>> callbackMap = Maps.newConcurrentMap();
-
 
     public Connection() {
         this.isConnected.set(false);
         this.future = null;
-
     }
 
     public ChannelFuture getFuture() {
@@ -62,7 +56,6 @@ public class Connection {
     public void setIsConnected(boolean isConnected) {
         this.isConnected.set(isConnected);
     }
-
 
     public NettyResponseFuture<Response> write(Message message, long timeOut) throws Exception {
         if (!isConnected()) {

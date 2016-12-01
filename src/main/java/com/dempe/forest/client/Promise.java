@@ -26,7 +26,6 @@ public class Promise<T> implements Callback<T>, Future<T> {
 
     }
 
-
     public T await(long amount, TimeUnit unit) throws Exception {
         if (latch.await(amount, unit)) {
             return get();
@@ -56,6 +55,5 @@ public class Promise<T> implements Callback<T>, Future<T> {
         }
         return message;
     }
-
 
 }

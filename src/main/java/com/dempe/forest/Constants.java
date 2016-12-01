@@ -8,6 +8,7 @@ package com.dempe.forest;
  * To change this template use File | Settings | File Templates.
  */
 public class Constants {
+
     public static final short MAGIC = (short) 0xF0F0;
 
     public static final int HEADER_SIZE = 16;
