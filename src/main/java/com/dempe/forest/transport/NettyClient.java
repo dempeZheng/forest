@@ -4,10 +4,6 @@ import com.dempe.forest.codec.ForestDecoder;
 import com.dempe.forest.codec.ForestEncoder;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
-import com.dempe.forest.codec.compress.Compress;
-import com.dempe.forest.codec.serialize.Serialization;
-import com.dempe.forest.core.CompressType;
-import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.handler.ClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -32,10 +28,12 @@ public class NettyClient {
     protected Channel channel;
     private String host;
     private int port;
+    private ClientHandler handler;
 
     public NettyClient(String host, int port) throws InterruptedException {
         this.host = host;
         this.port = port;
+        handler = new ClientHandler();
         init();
     }
 
@@ -58,7 +56,7 @@ public class NettyClient {
     public void initClientChannel(SocketChannel ch) {
         ch.pipeline().addLast("encode", new ForestEncoder());
         ch.pipeline().addLast("decode", new ForestDecoder());
-        ch.pipeline().addLast("handler", new ClientHandler());
+        ch.pipeline().addLast("handler", handler);
 
     }
 
@@ -70,10 +68,11 @@ public class NettyClient {
     }
 
 
-    public void write(Object object) {
-        System.out.println(channel.isActive());
-        System.out.println(channel.isOpen());
-        channel.writeAndFlush(object);
+    public NettyResponseFuture<Response> write(Message message) {
+        channel.writeAndFlush(message);
+        NettyResponseFuture<Response> responseFuture = new NettyResponseFuture<>(System.currentTimeMillis(), message, channel);
+        handler.registerCallbackMap(message.getHeader().getMessageID(), responseFuture);
+        return responseFuture;
     }
 
 

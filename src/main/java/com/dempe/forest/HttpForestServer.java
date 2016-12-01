@@ -37,7 +37,6 @@ public class HttpForestServer {
     private final static Logger LOGGER = LoggerFactory.getLogger(HttpForestServer.class);
 
     public static void main(String[] args) {
-
         HttpServerProvider provider = HttpServerProvider.provider();
         HttpServer httpServer = null;
         ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
@@ -66,14 +65,11 @@ public class HttpForestServer {
                 Map<String, List<String>> params = null;
                 // TODO handler POST
                 if (StringUtils.equals(httpExchange.getRequestMethod(), HttpMethod.POST.toString())) {
-
                     return;
 
                 } else if (StringUtils.equals(httpExchange.getRequestMethod(), HttpMethod.GET.toString())) {
                     params = decoder.parameters();
                 }
-
-
                 ActionMethod actionMethod = mapping.getInvokerWrapperByURI(path);
                 String[] parameterNames = MethodParam.getParameterNames(actionMethod.getMethod());
                 Object[] paramValues = MethodParam.getParameterValuesByMap(parameterNames, actionMethod.getMethod(), params);
@@ -85,8 +81,6 @@ public class HttpForestServer {
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
-
-
                 ret = StringUtils.defaultIfEmpty(ret, "null");
                 byte[] bytes = ret.getBytes();
                 Headers responseHeaders = httpExchange.getResponseHeaders();

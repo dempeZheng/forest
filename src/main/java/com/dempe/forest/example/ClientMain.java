@@ -53,7 +53,7 @@ public class ClientMain {
         client.connect();
         CglibProxy proxy = new CglibProxy();
         SampleAction sampleAction = proxy.getProxy(SampleAction.class, client);
-        String hello = sampleAction.hello("hello >>>>");
+        String hello = sampleAction.hello("hello====");
         System.out.println(hello);
 
     }

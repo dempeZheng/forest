@@ -3,6 +3,7 @@ package com.dempe.forest.client.proxy;
 import com.dempe.forest.Constants;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
+import com.dempe.forest.codec.Response;
 import com.dempe.forest.codec.RpcProtocolVersion;
 import com.dempe.forest.codec.compress.Compress;
 import com.dempe.forest.codec.serialize.Serialization;
@@ -14,6 +15,7 @@ import com.dempe.forest.core.annotation.Action;
 import com.dempe.forest.core.annotation.Export;
 import com.dempe.forest.core.exception.ForestFrameworkException;
 import com.dempe.forest.transport.NettyClient;
+import com.dempe.forest.transport.NettyResponseFuture;
 import com.google.common.base.Strings;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
@@ -77,11 +79,7 @@ public class ReferMethodInterceptor implements MethodInterceptor {
         Serialization serialization = SerializeType.getSerializationByExtend(extend);
         byte[] serialize = serialization.serialize(objects);
         message.setPayload(compress.compress(serialize));
-        client.write(message);
-
-        // todo 根据上下文对应request &response
-
-
-        return null;
+        NettyResponseFuture<Response> responseFuture = client.write(message);
+        return responseFuture.await().getResult();
     }
 }
