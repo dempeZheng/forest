@@ -15,6 +15,7 @@
  */
 package com.dempe.forest.client;
 
+import com.dempe.forest.transport.NettyClient;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import org.apache.commons.pool2.BasePooledObjectFactory;
@@ -24,19 +25,15 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Pool Object Factory for netty channel
- *
- * @author sunzhongyi, xuyuepeng
- * @author xiemalin
- */
+
 public class ChannelPoolObjectFactory extends BasePooledObjectFactory<Connection> {
+
     private static final Logger LOGGER = Logger.getLogger(ChannelPoolObjectFactory.class.getName());
 
-    private CommonClient rpcClient;
+    private NettyClient client;
 
-    public ChannelPoolObjectFactory(CommonClient rpcClient) {
-        this.rpcClient = rpcClient;
+    public ChannelPoolObjectFactory(NettyClient client) {
+        this.client = client;
 
     }
 
@@ -56,9 +53,8 @@ public class ChannelPoolObjectFactory extends BasePooledObjectFactory<Connection
      * @see org.apache.commons.pool2.BasePooledObjectFactory#wrap(java.lang.Object)
      */
     @Override
-    public PooledObject<Connection> wrap(Connection obj) {
-        Connection connection = fetchConnection();
-        ChannelFuture future = this.rpcClient.connect();
+    public PooledObject<Connection> wrap(Connection connection) {
+        ChannelFuture future = this.client.connect();
         // Wait until the connection is made successfully.
         future.awaitUninterruptibly();
         if (!future.isSuccess()) {
@@ -68,7 +64,7 @@ public class ChannelPoolObjectFactory extends BasePooledObjectFactory<Connection
         }
         connection.setFuture(future);
 
-        return new DefaultPooledObject<Connection>(connection);
+        return new DefaultPooledObject<>(connection);
     }
 
     public Connection fetchConnection() {
@@ -88,15 +84,6 @@ public class ChannelPoolObjectFactory extends BasePooledObjectFactory<Connection
         Channel channel = c.getFuture().channel();
         return channel.isOpen() && channel.isActive();
 
-    }
-
-    /**
-     * activateObject will invoke every time before it borrow from the pool
-     *
-     * @param p target pool object
-     * @throws Exception
-     */
-    public void activateObject(PooledObject<Connection> p) throws Exception {
     }
 
 

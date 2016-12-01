@@ -16,6 +16,7 @@
 
 package com.dempe.forest.client;
 
+import com.dempe.forest.transport.NettyClient;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -30,8 +31,8 @@ public class ChannelPool {
     private final PooledObjectFactory<Connection> objectFactory;
     private final GenericObjectPool<Connection> pool;
 
-    public ChannelPool(CommonClient rpcClient) {
-        objectFactory = new ChannelPoolObjectFactory(rpcClient);
+    public ChannelPool(NettyClient client) {
+        objectFactory = new ChannelPoolObjectFactory(client);
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         pool = new GenericObjectPool<Connection>(objectFactory, config);
     }

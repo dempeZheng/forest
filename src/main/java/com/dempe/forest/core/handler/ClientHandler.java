@@ -1,5 +1,6 @@
 package com.dempe.forest.core.handler;
 
+import com.dempe.forest.client.Connection;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
 import com.dempe.forest.codec.compress.Compress;
@@ -7,16 +8,11 @@ import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.transport.NettyResponseFuture;
-import com.google.common.collect.Maps;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
-
-import static com.dempe.forest.core.handler.ClientHandler.callbackMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,9 +25,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message> {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ChannelHandler.class);
 
-
-    public final static Map<Long, NettyResponseFuture<Response>> callbackMap = Maps.newConcurrentMap();
-
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
         byte[] payload = message.getPayload();
@@ -41,23 +34,13 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message> {
         payload = compress.unCompress(payload);
         Response response = serialization.deserialize(payload, Response.class);
         Long messageID = message.getHeader().getMessageID();
-        NettyResponseFuture responseFuture = callbackMap.remove(messageID);
+        NettyResponseFuture responseFuture = Connection.callbackMap.remove(messageID);
         responseFuture.getPromise().onReceive(response);
-
     }
-
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         super.exceptionCaught(ctx, cause);
-    }
-
-    public NettyResponseFuture registerCallbackMap(Long messageId, NettyResponseFuture<Response> responseFuture) {
-        return callbackMap.put(messageId, responseFuture);
-    }
-
-    public NettyResponseFuture removeCallbackMap(Long messageId) {
-        return callbackMap.remove(messageId);
     }
 
 

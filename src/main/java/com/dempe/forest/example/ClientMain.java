@@ -1,6 +1,7 @@
 package com.dempe.forest.example;
 
 import com.dempe.forest.Constants;
+import com.dempe.forest.client.ChannelPool;
 import com.dempe.forest.client.proxy.CglibProxy;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
@@ -27,7 +28,7 @@ public class ClientMain {
         cglibProxyTest();
     }
 
-    public static void simpleTest() throws InterruptedException, IOException {
+    public static void simpleTest() throws Exception {
         NettyClient client = new NettyClient("127.0.0.1", 9999);
         client.connect();
         Message message = new Message();
@@ -43,14 +44,14 @@ public class ClientMain {
         Object[] params = new Object[]{"test"};
         byte[] tests = serialization.serialize(params);
         message.setPayload(tests);
-        client.write(message, 5000);
+        new ChannelPool(client).getChannel().write(message, 5000L);
     }
 
     public static void cglibProxyTest() throws InterruptedException {
         NettyClient client = new NettyClient("127.0.0.1", 9999);
         client.connect();
         CglibProxy proxy = new CglibProxy();
-        SampleAction sampleAction = proxy.getProxy(SampleAction.class, client);
+        SampleAction sampleAction = proxy.getProxy(SampleAction.class, new ChannelPool(client));
         String hello = sampleAction.hello("hello====");
         System.out.println(hello);
 

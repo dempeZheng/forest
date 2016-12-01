@@ -1,6 +1,6 @@
 package com.dempe.forest.client.proxy;
 
-import com.dempe.forest.transport.NettyClient;
+import com.dempe.forest.client.ChannelPool;
 import org.springframework.cglib.proxy.Enhancer;
 
 /**
@@ -12,10 +12,10 @@ import org.springframework.cglib.proxy.Enhancer;
  */
 public class CglibProxy {
 
-    public <T> T getProxy(Class<T> clz, NettyClient client) throws InterruptedException {
+    public <T> T getProxy(Class<T> clz, ChannelPool channelPool) throws InterruptedException {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clz);
-        enhancer.setCallback(new ReferMethodInterceptor(clz, client));
+        enhancer.setCallback(new ReferMethodInterceptor(clz, channelPool));
         return (T) enhancer.create();
     }
 }

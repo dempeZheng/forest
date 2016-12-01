@@ -1,7 +1,5 @@
 package com.dempe.forest.codec;
 
-import com.dempe.forest.Constants;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe

@@ -16,22 +16,25 @@
 
 package com.dempe.forest.client;
 
+import com.dempe.forest.codec.Message;
+import com.dempe.forest.codec.Response;
+import com.dempe.forest.core.exception.ForestFrameworkException;
+import com.dempe.forest.transport.NettyResponseFuture;
+import com.google.common.collect.Maps;
 import io.netty.channel.ChannelFuture;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * RPC client connection
- *
- * @author xiemalin
- * @since 1.0
- */
+
 public class Connection {
     /**
      * max request default count
      */
     private ChannelFuture future;
     private AtomicBoolean isConnected = new AtomicBoolean();
+
+    public final static Map<Long, NettyResponseFuture<Response>> callbackMap = Maps.newConcurrentMap();
 
     public Connection() {
         this.isConnected.set(false);
@@ -54,9 +57,32 @@ public class Connection {
         this.isConnected.set(isConnected);
     }
 
-    public void doTransport(Object obj) {
-        if (isConnected()) {
-            future.channel().writeAndFlush(obj);
+
+    public NettyResponseFuture<Response> write(Message message, long timeOut) {
+        if (!isConnected()) {
+            throw new ForestFrameworkException("client is not connected");
         }
+        NettyResponseFuture responseFuture = new NettyResponseFuture(System.currentTimeMillis(), timeOut, message, future.channel(), new Promise<Response>());
+        future.channel().writeAndFlush(message);
+        registerCallbackMap(message.getHeader().getMessageID(), responseFuture);
+        return responseFuture;
+    }
+
+    public void callback(Message message, long timeOut, Promise<Response> promise) {
+        if (!isConnected()) {
+            throw new ForestFrameworkException("client is not connected");
+        }
+        future.channel().writeAndFlush(message);
+        NettyResponseFuture responseFuture = new NettyResponseFuture(System.currentTimeMillis(), timeOut, message, future.channel(), promise);
+        registerCallbackMap(message.getHeader().getMessageID(), responseFuture);
+
+    }
+
+    public NettyResponseFuture registerCallbackMap(Long messageId, NettyResponseFuture<Response> responseFuture) {
+        return callbackMap.put(messageId, responseFuture);
+    }
+
+    public NettyResponseFuture removeCallbackMap(Long messageId) {
+        return callbackMap.remove(messageId);
     }
 }

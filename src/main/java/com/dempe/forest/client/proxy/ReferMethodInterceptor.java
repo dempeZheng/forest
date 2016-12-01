@@ -1,6 +1,7 @@
 package com.dempe.forest.client.proxy;
 
 import com.dempe.forest.Constants;
+import com.dempe.forest.client.ChannelPool;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
@@ -14,7 +15,6 @@ import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.annotation.Action;
 import com.dempe.forest.core.annotation.Export;
 import com.dempe.forest.core.exception.ForestFrameworkException;
-import com.dempe.forest.transport.NettyClient;
 import com.dempe.forest.transport.NettyResponseFuture;
 import com.google.common.base.Strings;
 import org.springframework.cglib.proxy.MethodInterceptor;
@@ -34,16 +34,16 @@ public class ReferMethodInterceptor implements MethodInterceptor {
 
     private final static AtomicLong id = new AtomicLong(0);
 
-    private NettyClient client;
+    private ChannelPool channelPool;
     private Class clz;
 
     // TODO 容灾&负载均衡的支持
-    public ReferMethodInterceptor(NettyClient client) {
-        this.client = client;
+    public ReferMethodInterceptor(ChannelPool channelPool) {
+        this.channelPool = channelPool;
     }
 
-    public ReferMethodInterceptor(Class clz, NettyClient client) {
-        this.client = client;
+    public ReferMethodInterceptor(Class clz, ChannelPool channelPool) {
+        this.channelPool = channelPool;
         this.clz = clz;
     }
 
@@ -80,7 +80,7 @@ public class ReferMethodInterceptor implements MethodInterceptor {
         Serialization serialization = SerializeType.getSerializationByExtend(extend);
         byte[] serialize = serialization.serialize(objects);
         message.setPayload(compress.compress(serialize));
-        NettyResponseFuture<Response> responseFuture = client.write(message, timeOut);
+        NettyResponseFuture<Response> responseFuture = channelPool.getChannel().write(message, timeOut);
         return responseFuture.getPromise().await().getResult();
     }
 }

@@ -1,7 +1,5 @@
 package com.dempe.forest.core.interceptor;
 
-import java.lang.reflect.Method;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
