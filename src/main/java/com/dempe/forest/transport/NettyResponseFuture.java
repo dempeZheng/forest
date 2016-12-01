@@ -11,7 +11,7 @@ import io.netty.channel.Channel;
  * Time: 11:21
  * To change this template use File | Settings | File Templates.
  */
-public class NettyResponseFuture<T>  {
+public class NettyResponseFuture<T> {
     private long createTime;
     private long timeOut;
     private Message request;
@@ -25,7 +25,6 @@ public class NettyResponseFuture<T>  {
         this.channel = channel;
         this.promise = promise;
     }
-
 
 
     public long getTimeOut() {

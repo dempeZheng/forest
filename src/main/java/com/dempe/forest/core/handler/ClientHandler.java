@@ -29,7 +29,8 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message> {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ChannelHandler.class);
 
-    protected final static Map<Long, NettyResponseFuture<Response>> callbackMap = Maps.newConcurrentMap();
+
+    public final static Map<Long, NettyResponseFuture<Response>> callbackMap = Maps.newConcurrentMap();
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
@@ -59,33 +60,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message> {
         return callbackMap.remove(messageId);
     }
 
-    class TimeoutMonitor implements Runnable {
 
-        private String name;
-
-        public TimeoutMonitor(String name) {
-            this.name = name;
-        }
-
-        public void run() {
-
-            long currentTime = System.currentTimeMillis();
-
-            for (Map.Entry<Long, NettyResponseFuture<Response>> entry : callbackMap.entrySet()) {
-                try {
-                    NettyResponseFuture future = entry.getValue();
-
-                    if (future.getCreateTime() + future.getTimeOut() < currentTime) {
-                        // timeout: remove from callback list, and then cancel
-                        removeCallbackMap(entry.getKey());
-                    }
-                } catch (Exception e) {
-                    LOGGER.error(
-                            name + " clear timeout future Error: uri=" + entry.getValue().getRequest().getHeader().getUri() + " requestId=" + entry.getKey(),
-                            e);
-                }
-            }
-        }
-    }
 }
 
