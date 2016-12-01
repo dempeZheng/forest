@@ -20,7 +20,7 @@ public class SampleAction {
     @Autowired
     private SampleService sampleService;
 
-    @Export(uri = "hello", compressType = CompressType.gizp, serializeType = SerializeType.kyro)
+    @Export(uri = "hello", compressType = CompressType.gizp, serializeType = SerializeType.fastjson)
     public String hello(@HttpParam String word) {
         return sampleService.hello(word);
     }

@@ -12,7 +12,7 @@ import org.springframework.cglib.proxy.Enhancer;
  */
 public class CglibProxy {
 
-    public <T> T getProxy(Class<T> clz, ChannelPool channelPool) throws InterruptedException {
+    public static <T> T getProxy(Class<T> clz, ChannelPool channelPool) throws InterruptedException {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clz);
         enhancer.setCallback(new ReferMethodInterceptor(clz, channelPool));

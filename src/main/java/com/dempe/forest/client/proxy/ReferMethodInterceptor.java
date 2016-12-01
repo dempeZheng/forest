@@ -2,6 +2,7 @@ package com.dempe.forest.client.proxy;
 
 import com.dempe.forest.Constants;
 import com.dempe.forest.client.ChannelPool;
+import com.dempe.forest.client.Connection;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
@@ -80,7 +81,9 @@ public class ReferMethodInterceptor implements MethodInterceptor {
         Serialization serialization = SerializeType.getSerializationByExtend(extend);
         byte[] serialize = serialization.serialize(objects);
         message.setPayload(compress.compress(serialize));
-        NettyResponseFuture<Response> responseFuture = channelPool.getChannel().write(message, timeOut);
+        Connection channel = channelPool.getChannel();
+        NettyResponseFuture<Response> responseFuture = channel.write(message, timeOut);
+        channelPool.returnChannel(channel);
         return responseFuture.getPromise().await().getResult();
     }
 }

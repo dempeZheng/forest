@@ -22,12 +22,16 @@ import com.dempe.forest.core.exception.ForestFrameworkException;
 import com.dempe.forest.transport.NettyResponseFuture;
 import com.google.common.collect.Maps;
 import io.netty.channel.ChannelFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class Connection {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(Connection.class);
     /**
      * max request default count
      */
@@ -36,9 +40,11 @@ public class Connection {
 
     public final static Map<Long, NettyResponseFuture<Response>> callbackMap = Maps.newConcurrentMap();
 
+
     public Connection() {
         this.isConnected.set(false);
         this.future = null;
+
     }
 
     public ChannelFuture getFuture() {
@@ -58,13 +64,18 @@ public class Connection {
     }
 
 
-    public NettyResponseFuture<Response> write(Message message, long timeOut) {
+    public NettyResponseFuture<Response> write(Message message, long timeOut) throws Exception {
         if (!isConnected()) {
             throw new ForestFrameworkException("client is not connected");
         }
-        NettyResponseFuture responseFuture = new NettyResponseFuture(System.currentTimeMillis(), timeOut, message, future.channel(), new Promise<Response>());
-        future.channel().writeAndFlush(message);
+        NettyResponseFuture responseFuture = new NettyResponseFuture(System.currentTimeMillis(), timeOut, message, future.channel(), new Promise());
         registerCallbackMap(message.getHeader().getMessageID(), responseFuture);
+        try {
+            future.channel().writeAndFlush(message);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            removeCallbackMap(message.getHeader().getMessageID());
+        }
         return responseFuture;
     }
 
@@ -72,9 +83,14 @@ public class Connection {
         if (!isConnected()) {
             throw new ForestFrameworkException("client is not connected");
         }
-        future.channel().writeAndFlush(message);
         NettyResponseFuture responseFuture = new NettyResponseFuture(System.currentTimeMillis(), timeOut, message, future.channel(), promise);
         registerCallbackMap(message.getHeader().getMessageID(), responseFuture);
+        try {
+            future.channel().writeAndFlush(message);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            removeCallbackMap(message.getHeader().getMessageID());
+        }
 
     }
 

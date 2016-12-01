@@ -6,14 +6,17 @@ import com.dempe.forest.client.proxy.CglibProxy;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.RpcProtocolVersion;
-import com.dempe.forest.codec.serialize.Hessian2Serialization;
+import com.dempe.forest.codec.compress.Compress;
+import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.ForestUtil;
 import com.dempe.forest.core.MessageType;
 import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.transport.NettyClient;
+import com.google.common.base.Stopwatch;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,20 +43,28 @@ public class ClientMain {
         header.setExtend(extend);
         header.setUri("/sample/hello");
         message.setHeader(header);
-        Hessian2Serialization serialization = new Hessian2Serialization();
+        Serialization serialization = SerializeType.getSerializationByExtend(extend);
         Object[] params = new Object[]{"test"};
         byte[] tests = serialization.serialize(params);
-        message.setPayload(tests);
+        Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
+        message.setPayload(compress.compress(tests));
         new ChannelPool(client).getChannel().write(message, 5000L);
     }
 
     public static void cglibProxyTest() throws InterruptedException {
         NettyClient client = new NettyClient("127.0.0.1", 9999);
         client.connect();
-        CglibProxy proxy = new CglibProxy();
-        SampleAction sampleAction = proxy.getProxy(SampleAction.class, new ChannelPool(client));
-        String hello = sampleAction.hello("hello====");
-        System.out.println(hello);
+        SampleAction sampleAction = CglibProxy.getProxy(SampleAction.class, new ChannelPool(client));
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        for (int i = 0; i < 1000000; i++) {
+            String hello = sampleAction.hello("hello====");
+            if (i % 1000 == 0) {
+                System.out.println(hello);
+            }
+//            System.out.println(hello);
+        }
+        System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+
 
     }
 }
