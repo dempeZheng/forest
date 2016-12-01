@@ -4,7 +4,7 @@ import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.annotation.Action;
 import com.dempe.forest.core.annotation.Export;
-import com.dempe.forest.core.annotation.Param;
+import com.dempe.forest.core.annotation.HttpParam;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -21,7 +21,7 @@ public class SampleAction {
     private SampleService sampleService;
 
     @Export(uri = "hello", compressType = CompressType.gizp, serializeType = SerializeType.kyro)
-    public String hello(@Param String word) {
+    public String hello(@HttpParam String word) {
         return sampleService.hello(word);
     }
 

@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * action 方法参数，可以根据value名自动注入
+ * 用户http协议参数对应
  * User: Dempe
  * Date: 2015/7/17
  * Time: 18:56
@@ -14,6 +14,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-public @interface Param {
+public @interface HttpParam {
     String value() default "";
 }

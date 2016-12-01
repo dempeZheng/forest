@@ -3,6 +3,7 @@ package com.dempe.forest.core;
 import com.dempe.forest.core.annotation.Action;
 import com.dempe.forest.core.annotation.Export;
 import com.dempe.forest.core.invoker.ActionMethod;
+import com.dempe.forest.core.invoker.MethodParam;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -57,6 +58,8 @@ public class AnnotationRouterMapping {
                         }
                         makeAccessible(method);
                         ActionMethod actionMethod = new ActionMethod(actionBean, method);
+                        String[] parameterNames = MethodParam.getParameterNames(method);
+                        actionMethod.setArgsName(parameterNames);
                         LOGGER.info("Register router mapping : {}, uri : {}", actionBeanName, uri);
                         mapping.put(uri, actionMethod);
                     }

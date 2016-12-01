@@ -19,6 +19,7 @@ import java.util.List;
 public class ActionMethod {
 
     private Object target;
+    private String[] argsName;
     private Method method;
     private RateLimiter rateLimiter;
     private List<InvokerInterceptor> interceptorList;
@@ -121,5 +122,13 @@ public class ActionMethod {
             interceptorList = Lists.newArrayList();
         }
         return interceptorList.add(invokerInterceptor);
+    }
+
+    public String[] getArgsName() {
+        return argsName;
+    }
+
+    public void setArgsName(String[] argsName) {
+        this.argsName = argsName;
     }
 }
