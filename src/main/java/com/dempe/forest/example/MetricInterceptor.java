@@ -81,7 +81,9 @@ public class MetricInterceptor implements InvokerInterceptor {
             return tps.incrementAndGet();
         }
 
+
         public long getAndSet() {
+            totalTime = 0;
             return tps.getAndSet(0);
         }
 
@@ -101,6 +103,10 @@ public class MetricInterceptor implements InvokerInterceptor {
 
         public void setGroup(String group) {
             this.group = group;
+        }
+
+        public void setTotalTime(int totalTime) {
+            this.totalTime = totalTime;
         }
     }
 

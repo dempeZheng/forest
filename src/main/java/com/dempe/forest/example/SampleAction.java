@@ -22,8 +22,18 @@ public class SampleAction {
     @Autowired
     private SampleService sampleService;
 
-    @Interceptor(id = "printInterceptor,metricInterceptor")
-    @Rate(value = 1000000)
+    /**
+     * uri:服务路由uri
+     * compressType：压缩类型，目前支持:ompressNo, gizp, snappy;
+     * serializeType:序列化类型，目前支持kyro, fastjson, hession2;
+     * timeOut:客户端请求超时间
+     * group：服务线程组，通过group实现线程隔离
+     *
+     * @param word
+     * @return
+     */
+    @Interceptor(id = "printInterceptor,metricInterceptor")//拦截器，多个拦截器用逗号分隔
+    @Rate(value = 1000000)//服务限速
     @Export(uri = "hello", compressType = CompressType.compressNo, serializeType = SerializeType.fastjson, timeOut = 1000, group = "sample")
     public String hello(@HttpParam String word) {
         return sampleService.hello(word);
