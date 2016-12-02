@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,14 +35,12 @@ public class NettyClient {
     protected EventLoopGroup group;
     private String host;
     private int port;
-    // 回收过期任务
-    private static ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(4);
 
-    public NettyClient(String host, int port) throws InterruptedException {
-        this.host = host;
-        this.port = port;
+    public NettyClient(ClientConfig config) throws InterruptedException {
+        this.host = config.host();
+        this.port = config.port();
         init();
-        scheduledExecutor.scheduleWithFixedDelay(
+        Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(
                 new TimeoutMonitor("timeout_monitor_" + host + "_" + port), 100, 100, TimeUnit.MILLISECONDS);
     }
 
@@ -74,9 +71,7 @@ public class NettyClient {
         ChannelFuture connect = b.connect(host, port);
         connect.awaitUninterruptibly();
         return connect;
-
     }
-
 
     class TimeoutMonitor implements Runnable {
         private String name;

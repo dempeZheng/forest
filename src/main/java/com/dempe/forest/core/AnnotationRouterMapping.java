@@ -68,23 +68,29 @@ public class AnnotationRouterMapping {
 
                         // Interceptor
                         Interceptor interceptor = method.getAnnotation(Interceptor.class);
-                        String id = interceptor.id();
-                        if (Strings.isNullOrEmpty(id)) {
-                            LOGGER.warn("Interceptor id is empty !");
-                        }else {
-                            for (String beanId : id.split(",")) {
-                                InvokerInterceptor invokerInterceptor = (InvokerInterceptor) context.getBean(beanId);
-                                actionMethod.addInterceptorList(invokerInterceptor);
+                        if (interceptor != null) {
+                            String id = interceptor.id();
+                            if (Strings.isNullOrEmpty(id)) {
+                                LOGGER.warn("Interceptor id is empty !");
+                            } else {
+                                for (String beanId : id.split(",")) {
+                                    InvokerInterceptor invokerInterceptor = (InvokerInterceptor) context.getBean(beanId);
+                                    actionMethod.addInterceptorList(invokerInterceptor);
+                                }
                             }
                         }
+
                         // Rate
                         Rate rate = method.getAnnotation(Rate.class);
-                        int value = rate.value();
-                        if(value>0){
-                            actionMethod.setRateLimiter(RateLimiter.create(value));
-                        }else {
-                            LOGGER.warn("Rate value < 0 !");
+                        if (rate != null) {
+                            int value = rate.value();
+                            if (value > 0) {
+                                actionMethod.setRateLimiter(RateLimiter.create(value));
+                            } else {
+                                LOGGER.warn("Rate value < 0 !");
+                            }
                         }
+
                         mapping.put(uri, actionMethod);
                     }
                 }

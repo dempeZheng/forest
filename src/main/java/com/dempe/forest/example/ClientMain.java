@@ -11,8 +11,10 @@ import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.ForestUtil;
 import com.dempe.forest.core.SerializeType;
+import com.dempe.forest.transport.ClientConfig;
 import com.dempe.forest.transport.NettyClient;
 import com.google.common.base.Stopwatch;
+import org.aeonbits.owner.ConfigFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -28,12 +30,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class ClientMain {
 
+    public final static ClientConfig config = ConfigFactory.create(ClientConfig.class);
+
     public static void main(String[] args) throws InterruptedException, IOException {
         cglibProxyTest();
     }
 
     public static void simpleTest() throws Exception {
-        NettyClient client = new NettyClient("127.0.0.1", 9999);
+        NettyClient client = new NettyClient(config);
         client.connect();
         Message message = new Message();
         Header header = new Header();
@@ -53,7 +57,7 @@ public class ClientMain {
     }
 
     public static void cglibProxyTest() throws InterruptedException {
-        NettyClient client = new NettyClient("127.0.0.1", 9999);
+        NettyClient client = new NettyClient(config);
         client.connect();
         final SampleAction sampleAction = CglibProxy.getProxy(SampleAction.class, new ChannelPool(client));
         Stopwatch stopwatch = Stopwatch.createStarted();

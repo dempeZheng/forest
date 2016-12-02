@@ -1,6 +1,7 @@
 package com.dempe.forest.example;
 
 
+import com.dempe.forest.core.ForestContext;
 import com.dempe.forest.core.ForestUtil;
 import com.dempe.forest.core.interceptor.InvokerInterceptor;
 import com.google.common.collect.Maps;
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Created with IntelliJ IDEA.
+ * 性能统计拦截器
  * User: Dempe
  * Date: 2016/12/1
  * Time: 18:25
@@ -28,23 +29,30 @@ public class MetricInterceptor implements InvokerInterceptor {
     private final static Logger LOGGER = LoggerFactory.getLogger(MetricInterceptor.class);
 
     private final static Map<String, Metric> metricsMap = Maps.newConcurrentMap();
+    private final static String BEG_TIME = "begTime";
 
     ScheduledFuture<?> scheduledFuture = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
         @Override
         public void run() {
             for (Map.Entry<String, Metric> stringMetricEntry : metricsMap.entrySet()) {
-                LOGGER.info("uri:{}, current tps:{} ", stringMetricEntry.getKey(), stringMetricEntry.getValue().getAndSet());
+                Metric value = stringMetricEntry.getValue();
+                LOGGER.info("uri:{}, current tps:{}, avgTime:{}, maxTime:{}, minTime:{} ",
+                        stringMetricEntry.getKey(), value.getAndSet(), value.totalTime / 60, value.maxTime, value.minTime);
             }
         }
     }, 0, 1, TimeUnit.SECONDS);
 
     @Override
     public boolean before(Object target, Method method, Object... args) {
+        ForestContext.putAttr(BEG_TIME, String.valueOf(System.currentTimeMillis()));
         return true;
     }
 
+
     @Override
     public boolean after(Object target, Method method, Object result) {
+        Long beginTime = Long.valueOf(ForestContext.getAttr(BEG_TIME));
+        long exeTime = System.currentTimeMillis() - beginTime;
         String key = ForestUtil.buildUri(target, method);
         Metric metric = metricsMap.get(key);
         if (metric == null) {
@@ -57,11 +65,15 @@ public class MetricInterceptor implements InvokerInterceptor {
             }
         }
         metric.incrementAndGetTPS();
+        metric.exeTime(exeTime);
         return true;
     }
 
     class Metric {
 
+        private int minTime;
+        private int maxTime;
+        private int totalTime;
         private AtomicLong tps = new AtomicLong(0);
 
         public long incrementAndGetTPS() {
@@ -70,6 +82,16 @@ public class MetricInterceptor implements InvokerInterceptor {
 
         public long getAndSet() {
             return tps.getAndSet(0);
+        }
+
+        public synchronized void exeTime(long currentTime) {
+            if (currentTime < minTime || minTime == 0) {
+                minTime = (int) currentTime;
+            }
+            if (currentTime > maxTime) {
+                maxTime = (int) currentTime;
+            }
+            totalTime += currentTime;
         }
     }
 

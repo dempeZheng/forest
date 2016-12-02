@@ -34,30 +34,27 @@ public class NettyServer {
     private Channel channel;
     private Executor executor;
     private AnnotationRouterMapping uriMapping;
+    private ServerConfig config;
 
 
-    public NettyServer(Executor executor, AnnotationRouterMapping mapping) throws InterruptedException {
-        this.executor = executor;
+
+    public NettyServer(AnnotationRouterMapping mapping, ServerConfig config) throws InterruptedException {
         this.uriMapping = mapping;
-        doBind();
-    }
-
-    public NettyServer(AnnotationRouterMapping mapping) throws InterruptedException {
-        this.uriMapping = mapping;
-        doBind();
+        this.config = config;
     }
 
 
-    protected void doBind() throws InterruptedException {
+    public void doBind() throws InterruptedException {
         boss = new NioEventLoopGroup();
         worker = new NioEventLoopGroup();
         bootstrap = new ServerBootstrap();
         if (executor == null) {
-            executor = new StandardThreadExecutor();
+            executor = new StandardThreadExecutor(config.coreThread(), config.maxThreads());
         }
         bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
-//                .option(ChannelOption.SO_BACKLOG, getServerConf().getAccepts())
-                .option(ChannelOption.SO_KEEPALIVE, true)
+                .option(ChannelOption.SO_BACKLOG, config.soBacklog())
+                .option(ChannelOption.SO_KEEPALIVE, config.soKeepAlive())
+                .option(ChannelOption.TCP_NODELAY, config.tcpNoDelay())
                 .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
@@ -67,7 +64,7 @@ public class NettyServer {
             }
         });
 
-        ChannelFuture channelFuture = bootstrap.bind(9999).sync();
+        ChannelFuture channelFuture = bootstrap.bind(config.port()).sync();
         channel = channelFuture.channel();
         channel.closeFuture().sync();
     }

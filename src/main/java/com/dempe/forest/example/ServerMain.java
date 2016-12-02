@@ -2,6 +2,8 @@ package com.dempe.forest.example;
 
 import com.dempe.forest.core.AnnotationRouterMapping;
 import com.dempe.forest.transport.NettyServer;
+import com.dempe.forest.transport.ServerConfig;
+import org.aeonbits.owner.ConfigFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -16,9 +18,6 @@ public class ServerMain {
 
     public static void main(String[] args) throws InterruptedException {
         ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
-        AnnotationRouterMapping mapping = new AnnotationRouterMapping(context);
-
-        NettyServer server = new NettyServer(mapping);
-
+        new NettyServer(new AnnotationRouterMapping(context), ConfigFactory.create(ServerConfig.class)).doBind();
     }
 }
