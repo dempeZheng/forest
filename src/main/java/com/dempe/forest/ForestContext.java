@@ -1,4 +1,4 @@
-package com.dempe.forest.core;
+package com.dempe.forest;
 
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.core.exception.ForestFrameworkException;

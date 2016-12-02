@@ -37,6 +37,7 @@ public class Header implements Cloneable {
 
     public Header() {
     }
+
     public Header(short magic, byte version, byte extend, String uri, long timeOut) {
         this.magic = magic;
         this.version = version;

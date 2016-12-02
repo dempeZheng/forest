@@ -24,14 +24,15 @@ public class ForestUtil {
     private final static Logger LOGGER = LoggerFactory.getLogger(ForestUtil.class);
 
 
-    public static byte getExtend(SerializeType serializeType, CompressType invokeType ) {
-        return (byte) (serializeType.getValue() | invokeType.getValue() );
+    public static byte getExtend(SerializeType serializeType, CompressType invokeType) {
+        return (byte) (serializeType.getValue() | invokeType.getValue());
     }
 
     public static String buildUri(String actionBeanName, String uri) {
         return "/" + actionBeanName + "/" + uri;
     }
-    public static String buildUri(Object target,Method method){
+
+    public static String buildUri(Object target, Method method) {
         Action action = target.getClass().getAnnotation(Action.class);
         String actionValue = action.value();
         Export export = method.getAnnotation(Export.class);

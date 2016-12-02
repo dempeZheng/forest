@@ -2,7 +2,7 @@ package com.dempe.forest.example;
 
 import com.dempe.forest.Constants;
 import com.dempe.forest.client.ChannelPool;
-import com.dempe.forest.client.proxy.CglibProxy;
+import com.dempe.forest.client.proxy.Proxy;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.RpcProtocolVersion;
@@ -60,7 +60,7 @@ public class ClientMain {
     public static void benchMarkTest() throws InterruptedException {
         NettyClient client = new NettyClient(config);
         client.connect();
-        final SampleAction sampleAction = CglibProxy.getProxy(SampleAction.class, new ChannelPool(client));
+        final SampleAction sampleAction = Proxy.getCglibProxy(SampleAction.class, new ChannelPool(client));
         Stopwatch stopwatch = Stopwatch.createStarted();
         ExecutorService executorService = Executors.newCachedThreadPool();
         for (int i = 0; i < 10; i++) {

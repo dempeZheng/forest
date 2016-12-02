@@ -10,12 +10,13 @@ import org.springframework.cglib.proxy.Enhancer;
  * Time: 9:45
  * To change this template use File | Settings | File Templates.
  */
-public class CglibProxy {
+public class Proxy {
 
-    public static <T> T getProxy(Class<T> clz, ChannelPool channelPool) throws InterruptedException {
+    public static <T> T getCglibProxy(Class<T> clz, ChannelPool channelPool) throws InterruptedException {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clz);
         enhancer.setCallback(new ReferMethodInterceptor(clz, channelPool));
         return (T) enhancer.create();
     }
+
 }

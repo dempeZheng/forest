@@ -1,4 +1,4 @@
-package com.dempe.forest.core.invoker;
+package com.dempe.forest.core;
 
 import com.dempe.forest.core.annotation.HttpParam;
 import org.apache.commons.lang3.StringUtils;
