@@ -8,7 +8,7 @@ package com.dempe.forest.codec;
  * <p>
  * body包长
  * 保留	event( 可支持4种event，
- * 如normal, exception等)	0 is request , 1 is response
+ * 如normal, exception等)
  * <p>
  * User: Dempe
  * Date: 2016/11/25
@@ -26,7 +26,7 @@ public class Header implements Cloneable {
      */
     /**
      * 扩展字段[0-2=>序列化方式，3-4=>压缩方式，0 不压缩,1 gzip，2使用Snappy 1.0.5
-     * 5-6=>(event( 可支持4种event， 如normal, exception等)),7=>0:request,1:response]
+     * 5-6=>(event( 可支持4种event， 如normal, exception等)),7=>]
      */
     private byte extend;
     private Long messageID;// 消息id

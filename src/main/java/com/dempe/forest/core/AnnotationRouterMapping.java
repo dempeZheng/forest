@@ -56,7 +56,7 @@ public class AnnotationRouterMapping {
                         if (StringUtils.isBlank(pathVal)) {
                             pathVal = method.getName();
                         }
-                        String uri = ForestUtil.buildURI(actionBeanName, pathVal);
+                        String uri = ForestUtil.buildUri(actionBeanName, pathVal);
                         if (mapping.containsKey(uri)) {
                             LOGGER.warn("Method:{} declares duplicated uri:{}, previous one will be overwritten", method, uri);
                         }

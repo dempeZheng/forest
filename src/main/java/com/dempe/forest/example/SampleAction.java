@@ -18,11 +18,17 @@ public class SampleAction {
     @Autowired
     private SampleService sampleService;
 
-    @Interceptor(id = "printInterceptor,metricInterceptor")
+     @Interceptor(id = "printInterceptor,metricInterceptor")
     @Rate(value = 1000000)
     @Export(uri = "hello", compressType = CompressType.compressNo, serializeType = SerializeType.fastjson, timeOut = 1000)
     public String hello(@HttpParam String word) {
         return sampleService.hello(word);
+    }
+
+    @Export
+    public void noReplyMethod() {
+        // do service
+
     }
 
 }

@@ -10,7 +10,6 @@ import com.dempe.forest.codec.compress.Compress;
 import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.ForestUtil;
-import com.dempe.forest.core.MessageType;
 import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.transport.NettyClient;
 import com.google.common.base.Stopwatch;
@@ -41,7 +40,7 @@ public class ClientMain {
         header.setMessageID(1L);
         header.setMagic(Constants.MAGIC);
         header.setVersion(RpcProtocolVersion.VERSION_1.getVersion());
-        byte extend = ForestUtil.getExtend(SerializeType.hession2, CompressType.gizp, MessageType.request);
+        byte extend = ForestUtil.getExtend(SerializeType.hession2, CompressType.gizp);
         header.setExtend(extend);
         header.setUri("/sample/hello");
         message.setHeader(header);

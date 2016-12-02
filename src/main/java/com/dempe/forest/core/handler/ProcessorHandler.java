@@ -65,7 +65,6 @@ class InvokerRunnable implements Runnable {
 
     @Override
     public void run() {
-        // todo exception handle
         Message message = invokerWrapper.getMessage();
         Response response = new Response();
         ForestContext.setForestContext(ctx.channel(), message.getHeader());

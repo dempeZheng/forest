@@ -10,7 +10,6 @@ import com.dempe.forest.codec.compress.Compress;
 import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.ForestUtil;
-import com.dempe.forest.core.MessageType;
 import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.annotation.Action;
 import com.dempe.forest.core.annotation.Export;
@@ -53,8 +52,8 @@ public class ReferMethodInterceptor implements MethodInterceptor {
                     String value = Strings.isNullOrEmpty(action.value()) ? method.getClass().getSimpleName() : action.value();
                     String uri = Strings.isNullOrEmpty(export.uri()) ? method.getName() : export.uri();
                     long timeOut = export.timeOut() <= 0 ? 5000 : export.timeOut();
-                    String headerURI = ForestUtil.buildURI(value, uri);
-                    byte extend = ForestUtil.getExtend(export.serializeType(), export.compressType(), MessageType.request);
+                    String headerURI = ForestUtil.buildUri(value, uri);
+                    byte extend = ForestUtil.getExtend(export.serializeType(), export.compressType());
                     return new Header(Constants.MAGIC, RpcProtocolVersion.VERSION_1.getVersion(), extend, headerURI, timeOut);
                 }
             });

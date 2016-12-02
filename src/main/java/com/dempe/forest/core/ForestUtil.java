@@ -1,11 +1,14 @@
 package com.dempe.forest.core;
 
 
+import com.dempe.forest.core.annotation.Action;
+import com.dempe.forest.core.annotation.Export;
 import com.dempe.forest.core.exception.ForestErrorMsgConstant;
 import com.dempe.forest.core.exception.ForestFrameworkException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -21,12 +24,19 @@ public class ForestUtil {
     private final static Logger LOGGER = LoggerFactory.getLogger(ForestUtil.class);
 
 
-    public static byte getExtend(SerializeType serializeType, CompressType invokeType, MessageType messageType) {
-        return (byte) (serializeType.getValue() | invokeType.getValue() | messageType.getValue());
+    public static byte getExtend(SerializeType serializeType, CompressType invokeType ) {
+        return (byte) (serializeType.getValue() | invokeType.getValue() );
     }
 
-    public static String buildURI(String actionBeanName, String uri) {
+    public static String buildUri(String actionBeanName, String uri) {
         return "/" + actionBeanName + "/" + uri;
+    }
+    public static String buildUri(Object target,Method method){
+        Action action = target.getClass().getAnnotation(Action.class);
+        String actionValue = action.value();
+        Export export = method.getAnnotation(Export.class);
+        String uri = export.uri();
+        return ForestUtil.buildUri(actionValue, uri);
     }
 
 

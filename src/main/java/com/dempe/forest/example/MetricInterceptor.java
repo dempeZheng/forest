@@ -2,8 +2,6 @@ package com.dempe.forest.example;
 
 
 import com.dempe.forest.core.ForestUtil;
-import com.dempe.forest.core.annotation.Action;
-import com.dempe.forest.core.annotation.Export;
 import com.dempe.forest.core.interceptor.InvokerInterceptor;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
@@ -47,16 +45,12 @@ public class MetricInterceptor implements InvokerInterceptor {
 
     @Override
     public boolean after(Object target, Method method, Object result) {
-        Action action = target.getClass().getAnnotation(Action.class);
-        String actionValue = action.value();
-        Export export = method.getAnnotation(Export.class);
-        String uri = export.uri();
-        String key = ForestUtil.buildURI(actionValue, uri);
+        String key = ForestUtil.buildUri(target, method);
         Metric metric = metricsMap.get(key);
         if (metric == null) {
-            synchronized (this){
+            synchronized (this) {
                 metric = metricsMap.get(key);
-                if(metric==null){
+                if (metric == null) {
                     metric = new Metric();
                     metricsMap.put(key, metric);
                 }
@@ -73,6 +67,7 @@ public class MetricInterceptor implements InvokerInterceptor {
         public long incrementAndGetTPS() {
             return tps.incrementAndGet();
         }
+
         public long getAndSet() {
             return tps.getAndSet(0);
         }
