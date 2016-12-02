@@ -6,10 +6,10 @@ import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
 import com.dempe.forest.codec.compress.Compress;
 import com.dempe.forest.codec.serialize.Serialization;
+import com.dempe.forest.core.ActionMethod;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
-import com.dempe.forest.core.invoker.ActionMethod;
-import com.dempe.forest.core.invoker.InvokerWrapper;
+import com.dempe.forest.core.exception.ForestErrorMsgConstant;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
@@ -31,6 +31,7 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
 
     private AnnotationRouterMapping mapping;
 
+    // 业务线程池
     private static Executor executor;
 
     public ProcessorHandler(AnnotationRouterMapping mapping, Executor executor) {
@@ -42,7 +43,11 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
     protected void channelRead0(final ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
         String uri = message.getHeader().getUri();
         final ActionMethod actionMethod = mapping.getInvokerWrapperByURI(uri);
-        executor.execute(new InvokerRunnable(new InvokerWrapper(actionMethod, message), channelHandlerContext));
+        if (actionMethod == null) {
+            LOGGER.warn("no mapping uri:{}", uri);
+            return;
+        }
+        executor.execute(new InvokerRunnable(actionMethod, message, channelHandlerContext));
     }
 
 
@@ -55,38 +60,52 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
 class InvokerRunnable implements Runnable {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(InvokerRunnable.class);
-    private InvokerWrapper invokerWrapper;
-    private ChannelHandlerContext ctx;
 
-    public InvokerRunnable(InvokerWrapper invokerWrapper, ChannelHandlerContext ctx) {
-        this.invokerWrapper = invokerWrapper;
+    private ChannelHandlerContext ctx;
+    private ActionMethod actionMethod;
+    private Message message;
+
+    public InvokerRunnable(ActionMethod actionMethod, Message message, ChannelHandlerContext ctx) {
+        this.actionMethod = actionMethod;
+        this.message = message;
         this.ctx = ctx;
     }
 
     @Override
     public void run() {
-        Message message = invokerWrapper.getMessage();
         Response response = new Response();
-        ForestContext.setForestContext(ctx.channel(), message.getHeader());
         Object result = null;
+        Byte extend = message.getHeader().getExtend();
+        Serialization serialization = SerializeType.getSerializationByExtend(extend);
+        Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
+
+        ForestContext.setForestContext(ctx.channel(), message.getHeader());
+        byte[] payload = message.getPayload();
+        Object[] args = null;
+        // req
         try {
-            result = invokerWrapper.invoke();
+            payload = compress.unCompress(payload);
+            args = serialization.deserialize(payload, Object[].class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-            response.setErrMsg(e.getMessage());
-            response.setResCode((short) -1);
+            response.setForestErrorMsg(ForestErrorMsgConstant.FRAMEWORK_DECODE_ERROR);
+        }
+        try {
+            result = actionMethod.rateLimiterInvoker(args);
+        } catch (Exception e) {
+            response.setForestErrorMsg(ForestErrorMsgConstant.FRAMEWORK_DEFAULT_ERROR);
         } finally {
             ForestContext.removeForestContext();
         }
-        Byte extend = message.getHeader().getExtend();
-        Serialization serialization = SerializeType.getSerializationByExtend(extend);
+        // rsp
         try {
             response.setResult(result);
-            byte[] payload = serialization.serialize(response);
-            Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
-            message.setPayload(compress.compress(payload));
+            byte[] rspPayload = serialization.serialize(response);
+            message.setPayload(compress.compress(rspPayload));
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
+            response.setForestErrorMsg(ForestErrorMsgConstant.FRAMEWORK_ENCODE_ERROR);
+
         }
         ctx.writeAndFlush(message);
     }

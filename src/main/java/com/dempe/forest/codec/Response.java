@@ -1,5 +1,7 @@
 package com.dempe.forest.codec;
 
+import com.dempe.forest.core.exception.ForestErrorMsg;
+
 import java.io.Serializable;
 
 /**
@@ -11,7 +13,7 @@ import java.io.Serializable;
  */
 public class Response implements Serializable {
 
-    private short resCode = 0;
+    private int code = 0;
 
     private String errMsg = "";
 
@@ -26,13 +28,6 @@ public class Response implements Serializable {
         this.result = result;
     }
 
-    public short getResCode() {
-        return resCode;
-    }
-
-    public void setResCode(short resCode) {
-        this.resCode = resCode;
-    }
 
     public String getErrMsg() {
         return errMsg;
@@ -42,10 +37,23 @@ public class Response implements Serializable {
         this.errMsg = errMsg;
     }
 
+    public void setForestErrorMsg(ForestErrorMsg forestErrorMsg) {
+        this.errMsg = forestErrorMsg.getMessage();
+        this.code = forestErrorMsg.getErrorCode();
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
     @Override
     public String toString() {
         return "Response{" +
-                "resCode=" + resCode +
+                "code=" + code +
                 ", errMsg='" + errMsg + '\'' +
                 ", result=" + result +
                 '}';

@@ -1,6 +1,8 @@
-package com.dempe.forest.core;
+package com.dempe.forest;
 
 
+import com.dempe.forest.core.CompressType;
+import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.annotation.Action;
 import com.dempe.forest.core.annotation.Export;
 import com.dempe.forest.core.exception.ForestErrorMsgConstant;

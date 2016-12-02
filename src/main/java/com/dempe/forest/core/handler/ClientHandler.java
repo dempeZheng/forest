@@ -7,6 +7,7 @@ import com.dempe.forest.codec.compress.Compress;
 import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
+import com.dempe.forest.core.exception.ForestErrorMsgConstant;
 import com.dempe.forest.transport.NettyResponseFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -27,18 +28,24 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
+        NettyResponseFuture responseFuture = Connection.callbackMap.remove(message.getHeader().getMessageID());
+        Response response = null;
         byte[] payload = message.getPayload();
         Byte extend = message.getHeader().getExtend();
         Serialization serialization = SerializeType.getSerializationByExtend(extend);
         Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
-        payload = compress.unCompress(payload);
-        Response response = serialization.deserialize(payload, Response.class);
-        long messageID = message.getHeader().getMessageID();
-        NettyResponseFuture responseFuture = Connection.callbackMap.remove(messageID);
-        if (responseFuture == null) {
-            System.out.println(">>>>>>>>>>>>" + messageID + "," + responseFuture);
+        try {
+            payload = compress.unCompress(payload);
+            response = serialization.deserialize(payload, Response.class);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            response = new Response();
+            response.setForestErrorMsg(ForestErrorMsgConstant.FRAMEWORK_DECODE_ERROR);
+        } finally {
+            responseFuture.getPromise().onReceive(response);
         }
-        responseFuture.getPromise().onReceive(response);
+
+
     }
 
     @Override

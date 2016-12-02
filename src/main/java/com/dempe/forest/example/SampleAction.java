@@ -3,6 +3,8 @@ package com.dempe.forest.example;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Action("sample")
 public class SampleAction {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(SampleAction.class);
 
     @Autowired
     private SampleService sampleService;
@@ -28,6 +32,8 @@ public class SampleAction {
     @Export
     public void noReplyMethod() {
         // do service
+        LOGGER.info("----noReplyMethod---");
+
 
     }
 

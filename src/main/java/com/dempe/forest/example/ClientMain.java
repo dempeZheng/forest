@@ -1,15 +1,15 @@
 package com.dempe.forest.example;
 
 import com.dempe.forest.Constants;
+import com.dempe.forest.ForestUtil;
 import com.dempe.forest.client.ChannelPool;
 import com.dempe.forest.client.proxy.Proxy;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
-import com.dempe.forest.codec.RpcProtocolVersion;
 import com.dempe.forest.codec.compress.Compress;
 import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.CompressType;
-import com.dempe.forest.core.ForestUtil;
+import com.dempe.forest.core.ProtoVersion;
 import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.transport.ClientConfig;
 import com.dempe.forest.transport.NettyClient;
@@ -33,8 +33,10 @@ public class ClientMain {
     public final static ClientConfig config = ConfigFactory.create(ClientConfig.class);
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        benchMarkTest();
+//        benchMarkTest();
+        test();
     }
+
 
     public static void simpleTest() throws Exception {
         NettyClient client = new NettyClient(config);
@@ -43,7 +45,7 @@ public class ClientMain {
         Header header = new Header();
         header.setMessageID(1L);
         header.setMagic(Constants.MAGIC);
-        header.setVersion(RpcProtocolVersion.VERSION_1.getVersion());
+        header.setVersion(ProtoVersion.VERSION_1.getVersion());
         byte extend = ForestUtil.getExtend(SerializeType.hession2, CompressType.gizp);
         header.setExtend(extend);
         header.setUri("/sample/hello");
@@ -54,6 +56,15 @@ public class ClientMain {
         Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
         message.setPayload(compress.compress(tests));
         new ChannelPool(client).write(message, 5000L);
+    }
+
+    public static void test() throws InterruptedException {
+        NettyClient client = new NettyClient(config);
+        client.connect();
+        final SampleAction sampleAction = Proxy.getCglibProxy(SampleAction.class, new ChannelPool(client));
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        sampleAction.noReplyMethod();
+        System.out.println("exeTime : " + stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
     }
 
 
@@ -76,6 +87,6 @@ public class ClientMain {
                 }
             });
         }
-        System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+        System.out.println("exeTime : " + stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
     }
 }

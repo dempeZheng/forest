@@ -1,15 +1,15 @@
 package com.dempe.forest.client.proxy;
 
 import com.dempe.forest.Constants;
+import com.dempe.forest.ForestUtil;
 import com.dempe.forest.client.ChannelPool;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
-import com.dempe.forest.codec.RpcProtocolVersion;
 import com.dempe.forest.codec.compress.Compress;
 import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.CompressType;
-import com.dempe.forest.core.ForestUtil;
+import com.dempe.forest.core.ProtoVersion;
 import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.annotation.Action;
 import com.dempe.forest.core.annotation.Export;
@@ -54,7 +54,7 @@ public class ReferMethodInterceptor implements MethodInterceptor {
                     long timeOut = export.timeOut() <= 0 ? 5000 : export.timeOut();
                     String headerURI = ForestUtil.buildUri(value, uri);
                     byte extend = ForestUtil.getExtend(export.serializeType(), export.compressType());
-                    return new Header(Constants.MAGIC, RpcProtocolVersion.VERSION_1.getVersion(), extend, headerURI, timeOut);
+                    return new Header(Constants.MAGIC, ProtoVersion.VERSION_1.getVersion(), extend, headerURI, timeOut);
                 }
             });
 
