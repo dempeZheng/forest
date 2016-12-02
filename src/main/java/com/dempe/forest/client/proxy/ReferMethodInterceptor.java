@@ -18,6 +18,8 @@ import com.dempe.forest.core.exception.ForestFrameworkException;
 import com.dempe.forest.transport.NettyResponseFuture;
 import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
@@ -38,7 +40,24 @@ public class ReferMethodInterceptor implements MethodInterceptor {
     private ChannelPool channelPool;
     private Class clz;
 
-//    CacheBuilder<String,>
+    LoadingCache<Method, Header> headerCache = CacheBuilder.newBuilder()
+            .maximumSize(100000)
+            .build(new CacheLoader<Method, Header>() {
+                @Override
+                public Header load(Method method) throws Exception {
+                    Export export = method.getAnnotation(Export.class);
+                    Action action = (Action) clz.getAnnotation(Action.class);
+                    if (export == null || action == null) {
+                        new ForestFrameworkException("method annotation Export or Action is null ");
+                    }
+                    String value = Strings.isNullOrEmpty(action.value()) ? method.getClass().getSimpleName() : action.value();
+                    String uri = Strings.isNullOrEmpty(export.uri()) ? method.getName() : export.uri();
+                    long timeOut = export.timeOut() <= 0 ? 5000 : export.timeOut();
+                    String headerURI = ForestUtil.buildURI(value, uri);
+                    byte extend = ForestUtil.getExtend(export.serializeType(), export.compressType(), MessageType.request);
+                    return new Header(Constants.MAGIC, RpcProtocolVersion.VERSION_1.getVersion(), extend, headerURI, timeOut);
+                }
+            });
 
     // TODO 容灾&负载均衡的支持
     public ReferMethodInterceptor(ChannelPool channelPool) {
@@ -56,25 +75,16 @@ public class ReferMethodInterceptor implements MethodInterceptor {
 
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-        Export export = method.getAnnotation(Export.class);
-        Action action = (Action) clz.getAnnotation(Action.class);
-        if (export == null || action == null) {
-            new ForestFrameworkException("method annotation Export or Action is null ");
-        }
-        String value = Strings.isNullOrEmpty(action.value()) ? method.getClass().getSimpleName() : action.value();
-        String uri = Strings.isNullOrEmpty(export.uri()) ? method.getName() : export.uri();
-        long timeOut = export.timeOut() <= 0 ? 5000 : export.timeOut();
-        String headerURI = ForestUtil.buildURI(value, uri);
-        byte extend = ForestUtil.getExtend(export.serializeType(), export.compressType(), MessageType.request);
         long messageID = nextMessageId();
-        Header header = new Header(Constants.MAGIC,RpcProtocolVersion.VERSION_1.getVersion(),extend, messageID,headerURI);
+        Header header = headerCache.get(method).clone();
+        header.setMessageID(messageID);
         Message message = new Message();
         message.setHeader(header);
-        Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
-        Serialization serialization = SerializeType.getSerializationByExtend(extend);
+        Compress compress = CompressType.getCompressTypeByValueByExtend(header.getExtend());
+        Serialization serialization = SerializeType.getSerializationByExtend(header.getExtend());
         byte[] serialize = serialization.serialize(objects);
         message.setPayload(compress.compress(serialize));
-        NettyResponseFuture<Response> responseFuture = channelPool.write(message, timeOut);
+        NettyResponseFuture<Response> responseFuture = channelPool.write(message, header.getTimeOut());
         return responseFuture.getPromise().await().getResult();
     }
 

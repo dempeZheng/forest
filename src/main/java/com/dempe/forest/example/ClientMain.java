@@ -59,7 +59,7 @@ public class ClientMain {
         final SampleAction sampleAction = CglibProxy.getProxy(SampleAction.class, new ChannelPool(client));
         Stopwatch stopwatch = Stopwatch.createStarted();
         ExecutorService executorService = Executors.newCachedThreadPool();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {

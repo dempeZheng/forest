@@ -15,7 +15,7 @@ package com.dempe.forest.codec;
  * Time: 16:23
  * To change this template use File | Settings | File Templates.
  */
-public class Header {
+public class Header implements Cloneable {
 
     private short magic;// 魔数
     private byte version; // 协议版本
@@ -33,7 +33,26 @@ public class Header {
     private String uri;// 协议路由uri
     private Integer size;// 消息payload长度
 
+    private transient long timeOut;
+
     public Header() {
+    }
+
+    public Header(short magic, byte version, byte extend, String uri, long timeOut) {
+        this.magic = magic;
+        this.version = version;
+        this.extend = extend;
+        this.uri = uri;
+        this.timeOut = timeOut;
+    }
+
+    public Header(short magic, byte version, byte extend, Long messageID, String uri, long timeOut) {
+        this.magic = magic;
+        this.version = version;
+        this.extend = extend;
+        this.messageID = messageID;
+        this.uri = uri;
+        this.timeOut = timeOut;
     }
 
     public Header(short magic, byte version, byte extend, Long messageID, String uri) {
@@ -106,5 +125,21 @@ public class Header {
     }
 
 
+    public long getTimeOut() {
+        return timeOut;
+    }
+
+    public void setTimeOut(long timeOut) {
+        this.timeOut = timeOut;
+    }
+
+    public void setVersion(byte version) {
+        this.version = version;
+    }
+
+    @Override
+    public Header clone() throws CloneNotSupportedException {
+        return (Header) super.clone();
+    }
 }
 
