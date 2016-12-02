@@ -45,5 +45,13 @@ public interface ServerConfig extends Config {
     @DefaultValue("50")
     int httpBacklog();
 
+    @Key("zookeeper.connectString")
+    @DefaultValue("")
+    String zkConnectStr();
+
+    @Key("zookeeper.basePath")
+    @DefaultValue("forest")
+    String zkBasePath();
+
 
 }
