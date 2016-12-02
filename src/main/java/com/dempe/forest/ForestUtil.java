@@ -42,6 +42,11 @@ public class ForestUtil {
         return ForestUtil.buildUri(actionValue, uri);
     }
 
+    public static String getGroup(Method method) {
+        Export export = method.getAnnotation(Export.class);
+        return export.group();
+    }
+
 
     public static String getMethodSign(String methodName, String paramtersDesc) {
         try {

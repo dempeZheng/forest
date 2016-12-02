@@ -1,8 +1,8 @@
 package com.dempe.forest.transport;
 
 import com.dempe.forest.AnnotationRouterMapping;
+import com.dempe.forest.ExecutorGroup;
 import com.dempe.forest.ServerConfig;
-import com.dempe.forest.StandardThreadExecutor;
 import com.dempe.forest.codec.ForestDecoder;
 import com.dempe.forest.codec.ForestEncoder;
 import com.dempe.forest.core.handler.ProcessorHandler;
@@ -15,8 +15,6 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.Executor;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,10 +31,8 @@ public class NettyServer {
     private EventLoopGroup worker;
     private ServerBootstrap bootstrap;
     private Channel channel;
-    private Executor executor;
     private AnnotationRouterMapping uriMapping;
     private ServerConfig config;
-
 
     public NettyServer(AnnotationRouterMapping mapping, ServerConfig config) throws InterruptedException {
         this.uriMapping = mapping;
@@ -48,9 +44,7 @@ public class NettyServer {
         boss = new NioEventLoopGroup();
         worker = new NioEventLoopGroup();
         bootstrap = new ServerBootstrap();
-        if (executor == null) {
-            executor = new StandardThreadExecutor(config.coreThread(), config.maxThreads());
-        }
+
         bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG, config.soBacklog())
                 .option(ChannelOption.SO_KEEPALIVE, config.soKeepAlive())
@@ -60,7 +54,7 @@ public class NettyServer {
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast("decoder", new ForestDecoder());
                 ch.pipeline().addLast("encoder", new ForestEncoder());
-                ch.pipeline().addLast("processor", new ProcessorHandler(uriMapping, executor));
+                ch.pipeline().addLast("processor", new ProcessorHandler(uriMapping, new ExecutorGroup(config, uriMapping.listGroup())));
             }
         });
 

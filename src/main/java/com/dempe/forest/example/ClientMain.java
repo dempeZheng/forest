@@ -1,5 +1,6 @@
 package com.dempe.forest.example;
 
+import com.dempe.forest.ClientConfig;
 import com.dempe.forest.Constants;
 import com.dempe.forest.ForestUtil;
 import com.dempe.forest.client.ChannelPool;
@@ -11,7 +12,6 @@ import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.ProtoVersion;
 import com.dempe.forest.core.SerializeType;
-import com.dempe.forest.ClientConfig;
 import com.dempe.forest.transport.NettyClient;
 import com.google.common.base.Stopwatch;
 import org.aeonbits.owner.ConfigFactory;
@@ -33,8 +33,8 @@ public class ClientMain {
     public final static ClientConfig config = ConfigFactory.create(ClientConfig.class);
 
     public static void main(String[] args) throws InterruptedException, IOException {
-//        benchMarkTest();
-        test();
+        benchMarkTest();
+//        test();
     }
 
 

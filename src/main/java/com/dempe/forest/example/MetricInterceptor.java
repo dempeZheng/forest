@@ -36,8 +36,8 @@ public class MetricInterceptor implements InvokerInterceptor {
         public void run() {
             for (Map.Entry<String, Metric> stringMetricEntry : metricsMap.entrySet()) {
                 Metric value = stringMetricEntry.getValue();
-                LOGGER.info("uri:{}, current tps:{}, avgTime:{}, maxTime:{}, minTime:{} ",
-                        stringMetricEntry.getKey(), value.getAndSet(), value.totalTime / 60, value.maxTime, value.minTime);
+                LOGGER.info("group:{}, uri:{}, current tps:{}, avgTime:{}, maxTime:{}, minTime:{} ",
+                        value.getGroup(), stringMetricEntry.getKey(), value.getAndSet(), value.totalTime / 60, value.maxTime, value.minTime);
             }
         }
     }, 0, 1, TimeUnit.SECONDS);
@@ -64,16 +64,17 @@ public class MetricInterceptor implements InvokerInterceptor {
                 }
             }
         }
+        metric.setGroup(ForestUtil.getGroup(method));
         metric.incrementAndGetTPS();
         metric.exeTime(exeTime);
         return true;
     }
 
     class Metric {
-
         private int minTime;
         private int maxTime;
         private int totalTime;
+        private String group;
         private AtomicLong tps = new AtomicLong(0);
 
         public long incrementAndGetTPS() {
@@ -92,6 +93,14 @@ public class MetricInterceptor implements InvokerInterceptor {
                 maxTime = (int) currentTime;
             }
             totalTime += currentTime;
+        }
+
+        public String getGroup() {
+            return group;
+        }
+
+        public void setGroup(String group) {
+            this.group = group;
         }
     }
 

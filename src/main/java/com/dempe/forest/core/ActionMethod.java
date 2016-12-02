@@ -22,6 +22,7 @@ public class ActionMethod {
     private String[] argsName;
     private Method method;
     private RateLimiter rateLimiter;
+    private String group;
     private List<InvokerInterceptor> interceptorList;
 
     public ActionMethod(Object target, Method method) {
@@ -130,5 +131,13 @@ public class ActionMethod {
 
     public void setArgsName(String[] argsName) {
         this.argsName = argsName;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 }

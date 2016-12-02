@@ -16,4 +16,7 @@ public class Constants {
     public static final int HEADER_SIZE_NEW = 18;
 
     public static final byte RSP_TYPE = (byte) (1 << 7);
+
+
+    public static final String DEF_GROUP = "def_group";
 }

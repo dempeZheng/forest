@@ -9,6 +9,7 @@ import com.dempe.forest.core.annotation.Rate;
 import com.dempe.forest.core.interceptor.InvokerInterceptor;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.RateLimiter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.context.ApplicationContext;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,6 +68,9 @@ public class AnnotationRouterMapping {
                         actionMethod.setArgsName(parameterNames);
                         LOGGER.info("Register router mapping : {}, uri : {}", actionBeanName, uri);
 
+                        // group
+                        actionMethod.setGroup(refs.group());
+
                         // Interceptor
                         Interceptor interceptor = method.getAnnotation(Interceptor.class);
                         if (interceptor != null) {
@@ -91,12 +96,21 @@ public class AnnotationRouterMapping {
                             }
                         }
 
+
                         mapping.put(uri, actionMethod);
                     }
                 }
             }
         }
 
+    }
+
+    public Set<String> listGroup() {
+        Set<String> groupSet = Sets.newHashSet();
+        for (Map.Entry<String, ActionMethod> actionMethodEntry : mapping.entrySet()) {
+            groupSet.add(actionMethodEntry.getValue().getGroup());
+        }
+        return groupSet;
     }
 
 

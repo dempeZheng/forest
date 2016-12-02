@@ -1,6 +1,7 @@
 package com.dempe.forest.core.handler;
 
 import com.dempe.forest.AnnotationRouterMapping;
+import com.dempe.forest.ExecutorGroup;
 import com.dempe.forest.ForestContext;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
@@ -16,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.concurrent.Executor;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,11 +32,11 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
     private AnnotationRouterMapping mapping;
 
     // 业务线程池
-    private static Executor executor;
+    private static ExecutorGroup executorGroup;
 
-    public ProcessorHandler(AnnotationRouterMapping mapping, Executor executor) {
+    public ProcessorHandler(AnnotationRouterMapping mapping, ExecutorGroup executorGroup) {
         this.mapping = mapping;
-        this.executor = executor;
+        this.executorGroup = executorGroup;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
             LOGGER.warn("no mapping uri:{}", uri);
             return;
         }
-        executor.execute(new InvokerRunnable(actionMethod, message, channelHandlerContext));
+        executorGroup.execute(actionMethod.getGroup(), new InvokerRunnable(actionMethod, message, channelHandlerContext));
     }
 
 

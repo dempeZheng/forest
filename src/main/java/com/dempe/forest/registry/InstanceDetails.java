@@ -3,8 +3,8 @@ package com.dempe.forest.registry;
 import org.codehaus.jackson.map.annotate.JsonRootName;
 
 @JsonRootName("details")
-public class InstanceDetails { 
-    private String        description;
+public class InstanceDetails {
+    private String description;
 
     public InstanceDetails() {
         this("");

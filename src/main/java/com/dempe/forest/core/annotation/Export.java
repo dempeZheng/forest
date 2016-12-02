@@ -1,5 +1,6 @@
 package com.dempe.forest.core.annotation;
 
+import com.dempe.forest.Constants;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
 
@@ -19,12 +20,14 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Export {
 
-    String uri() default "";
-
-    long timeOut() default 5000;
+    String uri() default ""; // 路由uri
 
     SerializeType serializeType() default SerializeType.kyro;
 
     CompressType compressType() default CompressType.compressNo;
+
+    long timeOut() default 5000; // 客户端超时时间
+
+    String group() default Constants.DEF_GROUP; // 业务组别，不同的group在不同的线程池
 }
 
