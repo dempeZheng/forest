@@ -17,7 +17,7 @@ The quick start gives very basic example of running client and server on the sam
 
 > The minimum requirements to run the quick start are:
 >  * JDK 1.7 or above
->  * A java-based project management software like [Maven][maven] or [Gradle][gradle]
+
 
 
 1. Write Action.
@@ -25,7 +25,7 @@ The quick start gives very basic example of running client and server on the sam
     `src/main/java/com/dempe/forest/example/SampleAction.java`
 
     ```java
-	   @Action("sample")
+    @Action("sample")
 	public class SampleAction {
 
 	    private final static Logger LOGGER = LoggerFactory.getLogger(SampleAction.class);
@@ -55,13 +55,12 @@ The quick start gives very basic example of running client and server on the sam
 	        // do service
 	        LOGGER.info("----noReplyMethod---");
 	    }
-
 	}
 
-    ```
-2.config server use owner & start Server
 
-config :
+    ```
+
+2.config server use owner & start Server
 
 ``` java
 @Config.Sources("classpath:server.properties")
@@ -112,7 +111,6 @@ public interface ServerConfig extends Config {
 }
 ```
 
-start Server
    `src/main/java/com/dempe/forest/example/ServerMain.java`
 
 ``` java
@@ -136,8 +134,7 @@ public class ServerMain {
 
 ```
 
-
-4. Create and start RPC Client.
+3. Create and start RPC Client.
 
 ``` java
 public class ClientMain {
@@ -173,9 +170,10 @@ public class ClientMain {
 
 ```
 
-    Execute main function in Client will invoke the remote service and print response.
+Execute main function in Client will invoke the remote service and print response.
 
-5.Console info log
+#Performance
+8G win64 1k String 3w+
 
 ```
 21:01:50.910 [pool-1-thread-1] INFO  c.d.forest.example.MetricInterceptor 39 - group:sample, uri:/sample/hello, current tps:31310, avgTime:0, maxTime:16, minTime:0
