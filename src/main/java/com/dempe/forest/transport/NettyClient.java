@@ -1,5 +1,6 @@
 package com.dempe.forest.transport;
 
+import com.dempe.forest.ClientConfig;
 import com.dempe.forest.client.Connection;
 import com.dempe.forest.codec.ForestDecoder;
 import com.dempe.forest.codec.ForestEncoder;

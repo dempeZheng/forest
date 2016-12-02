@@ -1,4 +1,4 @@
-package com.dempe.forest.transport;
+package com.dempe.forest;
 
 import org.aeonbits.owner.Config;
 

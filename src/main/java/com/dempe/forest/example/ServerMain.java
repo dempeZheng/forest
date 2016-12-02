@@ -3,7 +3,7 @@ package com.dempe.forest.example;
 import com.dempe.forest.AnnotationRouterMapping;
 import com.dempe.forest.transport.HttpForestServer;
 import com.dempe.forest.transport.NettyServer;
-import com.dempe.forest.transport.ServerConfig;
+import com.dempe.forest.ServerConfig;
 import org.aeonbits.owner.ConfigFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

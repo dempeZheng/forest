@@ -1,6 +1,6 @@
 package com.dempe.forest.registry;
 
-import com.dempe.forest.transport.ServerConfig;
+import com.dempe.forest.ServerConfig;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;

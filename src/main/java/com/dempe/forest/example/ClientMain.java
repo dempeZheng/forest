@@ -11,7 +11,7 @@ import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.ProtoVersion;
 import com.dempe.forest.core.SerializeType;
-import com.dempe.forest.transport.ClientConfig;
+import com.dempe.forest.ClientConfig;
 import com.dempe.forest.transport.NettyClient;
 import com.google.common.base.Stopwatch;
 import org.aeonbits.owner.ConfigFactory;
