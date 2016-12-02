@@ -47,7 +47,7 @@ public class ForestDecoder extends ByteToMessageDecoder {
         // TODO 限制最大包长
         byte[] payload = new byte[size];
         byteBuf.readBytes(payload);
-        Header header = new Header(magic, version, extend, messageID, uri, size);
+        Header header = new Header(magic,version,extend,messageID,uri,size);
         Message message = new Message();
         message.setHeader(header);
         message.setPayload(payload);

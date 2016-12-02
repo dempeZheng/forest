@@ -1,11 +1,17 @@
 package com.dempe.forest.example;
 
 
+import com.dempe.forest.core.ForestUtil;
+import com.dempe.forest.core.annotation.Action;
+import com.dempe.forest.core.annotation.Export;
 import com.dempe.forest.core.interceptor.InvokerInterceptor;
+import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -23,23 +29,54 @@ public class MetricInterceptor implements InvokerInterceptor {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(MetricInterceptor.class);
 
-    private final static AtomicLong count = new AtomicLong(0);
+    private final static Map<String, Metric> metricsMap = Maps.newConcurrentMap();
+
     ScheduledFuture<?> scheduledFuture = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
         @Override
         public void run() {
-            LOGGER.info("current count:{}", count.get());
-            count.set(0);
+            for (Map.Entry<String, Metric> stringMetricEntry : metricsMap.entrySet()) {
+                LOGGER.info("uri:{}, current tps:{} ", stringMetricEntry.getKey(), stringMetricEntry.getValue().getAndSet());
+            }
         }
     }, 0, 1, TimeUnit.SECONDS);
 
     @Override
-    public boolean before(Object... args) {
+    public boolean before(Object target, Method method, Object... args) {
         return true;
     }
 
     @Override
-    public boolean after(Object result) {
-        count.incrementAndGet();
+    public boolean after(Object target, Method method, Object result) {
+        Action action = target.getClass().getAnnotation(Action.class);
+        String actionValue = action.value();
+        Export export = method.getAnnotation(Export.class);
+        String uri = export.uri();
+        String key = ForestUtil.buildURI(actionValue, uri);
+        Metric metric = metricsMap.get(key);
+        if (metric == null) {
+            synchronized (this){
+                metric = metricsMap.get(key);
+                if(metric==null){
+                    metric = new Metric();
+                    metricsMap.put(key, metric);
+                }
+            }
+        }
+        metric.incrementAndGetTPS();
         return true;
     }
+
+    class Metric {
+
+        private AtomicLong tps = new AtomicLong(0);
+
+        public long incrementAndGetTPS() {
+            return tps.incrementAndGet();
+        }
+        public long getAndSet() {
+            return tps.getAndSet(0);
+        }
+    }
+
 }
+

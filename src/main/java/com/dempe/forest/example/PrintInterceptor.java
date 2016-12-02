@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Method;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -18,13 +20,13 @@ public class PrintInterceptor implements InvokerInterceptor {
     private final static Logger LOGGER = LoggerFactory.getLogger(PrintInterceptor.class);
 
     @Override
-    public boolean before(Object... args) {
+    public boolean before(Object target, Method method, Object... args) {
         LOGGER.debug("before args:{}", args);
         return true;
     }
 
     @Override
-    public boolean after(Object result) {
+    public boolean after(Object target, Method method, Object result) {
         LOGGER.debug("after result:{}", result);
         return true;
     }

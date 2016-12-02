@@ -57,23 +57,23 @@ public class ActionMethod {
      * @throws IllegalAccessException
      */
     public Object interceptorInvoker(Object... args) throws InvocationTargetException, IllegalAccessException {
-        boolean condition = interceptorList != null && interceptorList.size() > 0;
-        if (condition) {
+        boolean hasInterceptor = interceptorList != null && interceptorList.size() > 0;
+        if (hasInterceptor) {
             Iterator<InvokerInterceptor> iterator = interceptorList.iterator();
             boolean invokeBeforeReturn = true;
             while (iterator.hasNext() && invokeBeforeReturn) {
                 InvokerInterceptor next = iterator.next();
-                invokeBeforeReturn = next.before(args);
+                invokeBeforeReturn = next.before(target, method, args);
             }
         }
         Object result = call(args);
 
-        if (condition) {
+        if (hasInterceptor) {
             Iterator<InvokerInterceptor> iterator = interceptorList.iterator();
             boolean invokeAfterReturn = true;
             while (iterator.hasNext() && invokeAfterReturn) {
                 InvokerInterceptor next = iterator.next();
-                invokeAfterReturn = next.after(result);
+                invokeAfterReturn = next.after(target, method, result);
             }
         }
         return result;

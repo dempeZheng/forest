@@ -1,5 +1,7 @@
 package com.dempe.forest.core.interceptor;
 
+import java.lang.reflect.Method;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dempe
@@ -9,7 +11,7 @@ package com.dempe.forest.core.interceptor;
  */
 public interface InvokerInterceptor {
 
-    boolean before(Object... args);
+    boolean before(Object target, Method method, Object... args);
 
-    boolean after(Object result);
+    boolean after(Object target, Method method, Object result);
 }
