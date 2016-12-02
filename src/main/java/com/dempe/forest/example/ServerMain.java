@@ -1,6 +1,7 @@
 package com.dempe.forest.example;
 
 import com.dempe.forest.AnnotationRouterMapping;
+import com.dempe.forest.ForestExecutorGroup;
 import com.dempe.forest.ServerConfig;
 import com.dempe.forest.transport.HttpForestServer;
 import com.dempe.forest.transport.NettyServer;
@@ -21,11 +22,12 @@ public class ServerMain {
         ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
         AnnotationRouterMapping mapping = new AnnotationRouterMapping(context);
         ServerConfig config = ConfigFactory.create(ServerConfig.class);
+        ForestExecutorGroup executorGroup = new ForestExecutorGroup(config, mapping.listGroup(), context);
         /**
          * 对于同一业务接口，可以同时暴露两种协议
          */
         // 启动rpc服务
-        new NettyServer(mapping, config).doBind();
+        new NettyServer(mapping, config, executorGroup).doBind();
         // 启动http服务
         new HttpForestServer(mapping, config).start();
 

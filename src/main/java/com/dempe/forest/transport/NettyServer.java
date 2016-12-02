@@ -1,7 +1,7 @@
 package com.dempe.forest.transport;
 
 import com.dempe.forest.AnnotationRouterMapping;
-import com.dempe.forest.ExecutorGroup;
+import com.dempe.forest.ForestExecutorGroup;
 import com.dempe.forest.ServerConfig;
 import com.dempe.forest.codec.ForestDecoder;
 import com.dempe.forest.codec.ForestEncoder;
@@ -33,10 +33,12 @@ public class NettyServer {
     private Channel channel;
     private AnnotationRouterMapping uriMapping;
     private ServerConfig config;
+    private ForestExecutorGroup executorGroup;
 
-    public NettyServer(AnnotationRouterMapping mapping, ServerConfig config) throws InterruptedException {
+    public NettyServer(AnnotationRouterMapping mapping, ServerConfig config, ForestExecutorGroup executorGroup) throws InterruptedException {
         this.uriMapping = mapping;
         this.config = config;
+        this.executorGroup = executorGroup;
     }
 
 
@@ -54,7 +56,7 @@ public class NettyServer {
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast("decoder", new ForestDecoder());
                 ch.pipeline().addLast("encoder", new ForestEncoder());
-                ch.pipeline().addLast("processor", new ProcessorHandler(uriMapping, new ExecutorGroup(config, uriMapping.listGroup())));
+                ch.pipeline().addLast("processor", new ProcessorHandler(uriMapping, executorGroup));
             }
         });
 

@@ -1,7 +1,7 @@
 package com.dempe.forest.core.handler;
 
 import com.dempe.forest.AnnotationRouterMapping;
-import com.dempe.forest.ExecutorGroup;
+import com.dempe.forest.ForestExecutorGroup;
 import com.dempe.forest.ForestContext;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
@@ -32,9 +32,9 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
     private AnnotationRouterMapping mapping;
 
     // 业务线程池
-    private static ExecutorGroup executorGroup;
+    private static ForestExecutorGroup executorGroup;
 
-    public ProcessorHandler(AnnotationRouterMapping mapping, ExecutorGroup executorGroup) {
+    public ProcessorHandler(AnnotationRouterMapping mapping, ForestExecutorGroup executorGroup) {
         this.mapping = mapping;
         this.executorGroup = executorGroup;
     }
