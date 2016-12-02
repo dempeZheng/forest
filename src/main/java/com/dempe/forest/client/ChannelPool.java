@@ -37,7 +37,12 @@ public class ChannelPool {
     public ChannelPool(NettyClient client) {
         objectFactory = new ChannelPoolObjectFactory(client);
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
-        pool = new GenericObjectPool<Connection>(objectFactory, config);
+        pool = new GenericObjectPool<>(objectFactory, config);
+        pool.setMaxIdle(20);
+        pool.setMaxTotal(50);
+        pool.setMaxWaitMillis(1000);
+        pool.setMinIdle(10);
+
     }
 
     public Connection getChannel() throws Exception {

@@ -20,7 +20,7 @@ public class SampleAction {
 
     @Interceptor(id = "printInterceptor,metricInterceptor")
     @Rate(value = 1000000)
-    @Export(uri = "hello", compressType = CompressType.gizp, serializeType = SerializeType.fastjson, timeOut = 1000)
+    @Export(uri = "hello", compressType = CompressType.compressNo, serializeType = SerializeType.fastjson, timeOut = 1000)
     public String hello(@HttpParam String word) {
         return sampleService.hello(word);
     }

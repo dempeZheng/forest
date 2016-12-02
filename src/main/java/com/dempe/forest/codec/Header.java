@@ -36,6 +36,14 @@ public class Header {
     public Header() {
     }
 
+    public Header(short magic, byte version, byte extend, Long messageID, String uri) {
+        this.magic = magic;
+        this.version = version;
+        this.extend = extend;
+        this.messageID = messageID;
+        this.uri = uri;
+    }
+
     public Header(short magic, byte version, byte extend, Long messageID, String uri, Integer size) {
         this.magic = magic;
         this.version = version;

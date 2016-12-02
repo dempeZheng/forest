@@ -17,6 +17,7 @@ import com.dempe.forest.core.annotation.Export;
 import com.dempe.forest.core.exception.ForestFrameworkException;
 import com.dempe.forest.transport.NettyResponseFuture;
 import com.google.common.base.Strings;
+import com.google.common.cache.CacheBuilder;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
@@ -36,6 +37,8 @@ public class ReferMethodInterceptor implements MethodInterceptor {
 
     private ChannelPool channelPool;
     private Class clz;
+
+//    CacheBuilder<String,>
 
     // TODO 容灾&负载均衡的支持
     public ReferMethodInterceptor(ChannelPool channelPool) {
@@ -63,12 +66,8 @@ public class ReferMethodInterceptor implements MethodInterceptor {
         long timeOut = export.timeOut() <= 0 ? 5000 : export.timeOut();
         String headerURI = ForestUtil.buildURI(value, uri);
         byte extend = ForestUtil.getExtend(export.serializeType(), export.compressType(), MessageType.request);
-        Header header = new Header();
-        header.setMagic(Constants.MAGIC);
-        header.setVersion(RpcProtocolVersion.VERSION_1.getVersion());
-        header.setMessageID(nextMessageId());
-        header.setUri(headerURI);
-        header.setExtend(extend);
+        long messageID = nextMessageId();
+        Header header = new Header(Constants.MAGIC,RpcProtocolVersion.VERSION_1.getVersion(),extend, messageID,headerURI);
         Message message = new Message();
         message.setHeader(header);
         Compress compress = CompressType.getCompressTypeByValueByExtend(extend);

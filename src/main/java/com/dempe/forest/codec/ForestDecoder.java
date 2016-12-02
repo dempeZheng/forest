@@ -19,7 +19,7 @@ public class ForestDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
-        if (byteBuf.readableBytes() < Constants.HEADER_SIZE) {
+        if (byteBuf.readableBytes() < Constants.HEADER_SIZE_NEW) {
             return;
         }
         byteBuf.markReaderIndex();
@@ -32,6 +32,10 @@ public class ForestDecoder extends ByteToMessageDecoder {
         byte extend = byteBuf.readByte();
         long messageID = byteBuf.readLong();
         short uriLen = byteBuf.readShort();
+        if (byteBuf.readableBytes() < uriLen + 4) {
+            byteBuf.resetReaderIndex();
+            return;
+        }
         byte[] uriArr = new byte[uriLen];
         byteBuf.readBytes(uriArr);
         String uri = new String(uriArr);

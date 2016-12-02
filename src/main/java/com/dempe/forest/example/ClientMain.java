@@ -16,6 +16,8 @@ import com.dempe.forest.transport.NettyClient;
 import com.google.common.base.Stopwatch;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,15 +56,25 @@ public class ClientMain {
     public static void cglibProxyTest() throws InterruptedException {
         NettyClient client = new NettyClient("127.0.0.1", 9999);
         client.connect();
-        SampleAction sampleAction = CglibProxy.getProxy(SampleAction.class, new ChannelPool(client));
+        final SampleAction sampleAction = CglibProxy.getProxy(SampleAction.class, new ChannelPool(client));
         Stopwatch stopwatch = Stopwatch.createStarted();
-        for (int i = 0; i < 1000000; i++) {
-            String hello = sampleAction.hello("hello====");
-            if (i % 1000 == 0) {
-                System.out.println(hello);
-            }
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        for (int i = 0; i < 100; i++) {
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < 1000000; i++) {
+                        String hello = sampleAction.hello("hello====");
+                        if (i % 1000 == 0) {
+                            System.out.println(hello);
+                        }
 //            System.out.println(hello);
+                    }
+                }
+            });
         }
+
+
         System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
 
 

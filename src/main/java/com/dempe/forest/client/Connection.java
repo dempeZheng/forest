@@ -57,7 +57,7 @@ public class Connection {
         this.isConnected.set(isConnected);
     }
 
-    public NettyResponseFuture<Response> write(Message message, long timeOut) throws Exception {
+    public  NettyResponseFuture<Response> write(Message message, long timeOut) throws Exception {
         if (!isConnected()) {
             throw new ForestFrameworkException("client is not connected");
         }
