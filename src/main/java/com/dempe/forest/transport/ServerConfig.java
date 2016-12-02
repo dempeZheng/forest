@@ -14,7 +14,7 @@ public interface ServerConfig extends Config {
 
     // *********************system configuration*********************
 
-    @Key("server.port")
+    @Key("forest.port")
     @DefaultValue("9999")
     int port();
 
@@ -37,6 +37,13 @@ public interface ServerConfig extends Config {
     int maxThreads();
 
     //
+    @Key("http.port")
+    @DefaultValue("8080")
+    public int httpPort();
+
+    @Key("http.backlog")
+    @DefaultValue("50")
+    int httpBacklog();
 
 
 }

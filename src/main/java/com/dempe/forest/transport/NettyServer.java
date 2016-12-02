@@ -37,14 +37,13 @@ public class NettyServer {
     private ServerConfig config;
 
 
-
     public NettyServer(AnnotationRouterMapping mapping, ServerConfig config) throws InterruptedException {
         this.uriMapping = mapping;
         this.config = config;
     }
 
 
-    public void doBind() throws InterruptedException {
+    public ChannelFuture doBind() throws InterruptedException {
         boss = new NioEventLoopGroup();
         worker = new NioEventLoopGroup();
         bootstrap = new ServerBootstrap();
@@ -64,9 +63,12 @@ public class NettyServer {
             }
         });
 
-        ChannelFuture channelFuture = bootstrap.bind(config.port()).sync();
+        ChannelFuture channelFuture = bootstrap.bind(config.port());
+        LOGGER.info("NettyServer bind port:{}, soBacklog:{}, soKeepLive:{}, tcpNodDelay:{}", config.port(),
+                config.soBacklog(), config.soKeepAlive(), config.tcpNoDelay());
         channel = channelFuture.channel();
-        channel.closeFuture().sync();
+        channel.closeFuture();
+        return channelFuture;
     }
 
 

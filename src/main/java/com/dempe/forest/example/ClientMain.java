@@ -33,7 +33,7 @@ public class ClientMain {
     public final static ClientConfig config = ConfigFactory.create(ClientConfig.class);
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        cglibProxyTest();
+        benchMarkTest();
     }
 
     public static void simpleTest() throws Exception {
@@ -53,10 +53,11 @@ public class ClientMain {
         byte[] tests = serialization.serialize(params);
         Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
         message.setPayload(compress.compress(tests));
-        new ChannelPool(client).getChannel().write(message, 5000L);
+        new ChannelPool(client).write(message, 5000L);
     }
 
-    public static void cglibProxyTest() throws InterruptedException {
+
+    public static void benchMarkTest() throws InterruptedException {
         NettyClient client = new NettyClient(config);
         client.connect();
         final SampleAction sampleAction = CglibProxy.getProxy(SampleAction.class, new ChannelPool(client));
@@ -71,15 +72,10 @@ public class ClientMain {
                         if (i % 1000 == 0) {
                             System.out.println(hello);
                         }
-//            System.out.println(hello);
                     }
                 }
             });
         }
-
-
         System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
-
-
     }
 }

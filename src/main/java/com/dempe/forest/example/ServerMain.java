@@ -1,5 +1,6 @@
 package com.dempe.forest.example;
 
+import com.dempe.forest.HttpForestServer;
 import com.dempe.forest.core.AnnotationRouterMapping;
 import com.dempe.forest.transport.NettyServer;
 import com.dempe.forest.transport.ServerConfig;
@@ -18,6 +19,15 @@ public class ServerMain {
 
     public static void main(String[] args) throws InterruptedException {
         ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
-        new NettyServer(new AnnotationRouterMapping(context), ConfigFactory.create(ServerConfig.class)).doBind();
+        AnnotationRouterMapping mapping = new AnnotationRouterMapping(context);
+        ServerConfig config = ConfigFactory.create(ServerConfig.class);
+        /**
+         * 对于同一业务接口，可以同时暴露两种协议
+         */
+        // 启动rpc服务
+        new NettyServer(mapping, config).doBind();
+        // 启动http服务
+        new HttpForestServer(mapping, config).start();
+
     }
 }
