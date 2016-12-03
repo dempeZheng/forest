@@ -1,9 +1,9 @@
-package com.dempe.forest.example;
+package quickstart.server;
 
 
 import com.dempe.forest.ForestContext;
 import com.dempe.forest.ForestUtil;
-import com.dempe.forest.core.interceptor.InvokerInterceptor;
+import com.dempe.forest.core.interceptor.AbstractInvokerInterceptor;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class MetricInterceptor implements InvokerInterceptor {
+public class MetricInterceptor extends AbstractInvokerInterceptor {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(MetricInterceptor.class);
 
@@ -36,24 +36,24 @@ public class MetricInterceptor implements InvokerInterceptor {
         public void run() {
             for (Map.Entry<String, Metric> stringMetricEntry : metricsMap.entrySet()) {
                 Metric value = stringMetricEntry.getValue();
-                LOGGER.info("group:{}, uri:{}, current tps:{}, avgTime:{}, maxTime:{}, minTime:{} ",
+                LOGGER.info("group:{}, methodName:{}, current tps:{}, avgTime:{}, maxTime:{}, minTime:{} ",
                         value.getGroup(), stringMetricEntry.getKey(), value.getAndSet(), value.totalTime / 60, value.maxTime, value.minTime);
             }
         }
     }, 0, 1, TimeUnit.SECONDS);
 
     @Override
-    public boolean before(Object target, Method method, Object... args) {
+    public boolean beforeInvoke(Object target, Method method, Object... args) {
         ForestContext.putAttr(BEG_TIME, String.valueOf(System.currentTimeMillis()));
         return true;
     }
 
 
     @Override
-    public boolean after(Object target, Method method, Object result) {
+    public boolean afterInvoke(Object target, Method method, Object result) {
         Long beginTime = Long.valueOf(ForestContext.getAttr(BEG_TIME));
         long exeTime = System.currentTimeMillis() - beginTime;
-        String key = ForestUtil.buildUri(target, method);
+        String key = ForestContext.getHeader().getUri();
         Metric metric = metricsMap.get(key);
         if (metric == null) {
             synchronized (this) {

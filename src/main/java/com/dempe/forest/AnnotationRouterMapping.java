@@ -2,10 +2,7 @@ package com.dempe.forest;
 
 import com.dempe.forest.core.ActionMethod;
 import com.dempe.forest.core.MethodParam;
-import com.dempe.forest.core.annotation.Action;
-import com.dempe.forest.core.annotation.Export;
-import com.dempe.forest.core.annotation.Interceptor;
-import com.dempe.forest.core.annotation.Rate;
+import com.dempe.forest.core.annotation.*;
 import com.dempe.forest.core.interceptor.InvokerInterceptor;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
@@ -47,62 +44,108 @@ public class AnnotationRouterMapping {
 
     public void initMapping() {
         // 获取spring中Action注解的bean
-        String[] beanNamesForAnnotation = context.getBeanNamesForAnnotation(Action.class);
+        String[] beanNamesForAnnotation = context.getBeanNamesForAnnotation(ServiceExport.class);
         for (String actionBeanName : beanNamesForAnnotation) {
             Object actionBean = context.getBean(actionBeanName);
-            for (Method method : actionBean.getClass().getDeclaredMethods()) {
-                if (method.getModifiers() == Modifier.PUBLIC) {
-                    Export refs = method.getAnnotation(Export.class);
-                    if (refs != null) {
-                        String pathVal = String.valueOf(refs.uri());
-                        if (StringUtils.isBlank(pathVal)) {
-                            pathVal = method.getName();
-                        }
-                        String uri = ForestUtil.buildUri(actionBeanName, pathVal);
-                        if (mapping.containsKey(uri)) {
-                            LOGGER.warn("Method:{} declares duplicated uri:{}, previous one will be overwritten", method, uri);
-                        }
-                        makeAccessible(method);
-                        ActionMethod actionMethod = new ActionMethod(actionBean, method);
-                        String[] parameterNames = MethodParam.getParameterNames(method);
-                        actionMethod.setArgsName(parameterNames);
-                        LOGGER.info("Register router mapping : {}, uri : {}", actionBeanName, uri);
-
-                        // group
-                        actionMethod.setGroup(refs.group());
-
-                        // Interceptor
-                        Interceptor interceptor = method.getAnnotation(Interceptor.class);
-                        if (interceptor != null) {
-                            String id = interceptor.id();
-                            if (Strings.isNullOrEmpty(id)) {
-                                LOGGER.warn("Interceptor id is empty !");
-                            } else {
-                                for (String beanId : id.split(",")) {
-                                    InvokerInterceptor invokerInterceptor = (InvokerInterceptor) context.getBean(beanId);
-                                    actionMethod.addInterceptorList(invokerInterceptor);
-                                }
-                            }
-                        }
-
-                        // Rate
-                        Rate rate = method.getAnnotation(Rate.class);
-                        if (rate != null) {
-                            int value = rate.value();
-                            if (value > 0) {
-                                actionMethod.setRateLimiter(RateLimiter.create(value));
-                            } else {
-                                LOGGER.warn("Rate value < 0 !");
-                            }
-                        }
-
-
-                        mapping.put(uri, actionMethod);
-                    }
+            Class<?>[] interfaces = actionBean.getClass().getInterfaces();
+            for (Class<?> anInterface : interfaces) {
+                ServiceProvider serviceProvider = anInterface.getAnnotation(ServiceProvider.class);
+                if (serviceProvider == null) {
+                    continue;
                 }
+                String serviceName = Strings.isNullOrEmpty(serviceProvider.serviceName())
+                        ? anInterface.getSimpleName() : serviceProvider.serviceName();
+                int port = serviceProvider.port();
+
+                // todo 分离不同的服务
+                if (port == 0) {
+                    // 使用默认的服务
+                }
+                initMethodProvider(anInterface, actionBean, serviceName);
+
             }
+
         }
 
+    }
+
+    public void initMethodProvider(Class<?> anInterface, Object actionBean, String serviceName) {
+        for (Method method : anInterface.getDeclaredMethods()) {
+            MethodProvider refs = method.getAnnotation(MethodProvider.class);
+            if (refs != null) {
+                String methodName = String.valueOf(refs.methodName());
+                if (StringUtils.isBlank(methodName)) {
+                    methodName = method.getName();
+                }
+                String uri = ForestUtil.buildUri(serviceName, methodName);
+                if (mapping.containsKey(uri)) {
+                    LOGGER.warn("Method:{} declares duplicated methodName:{}, previous one will be overwritten", method, uri);
+                }
+
+
+                Method methodByInterfaceMethod = ForestUtil.findMethodByInterfaceMethod(method, actionBean.getClass());
+                if (methodByInterfaceMethod == null) {
+                    LOGGER.error("methodByInterfaceMethod is null");
+                    continue;
+                }
+                MethodExport methodExport = methodByInterfaceMethod.getAnnotation(MethodExport.class);
+                if (methodExport == null) {
+                    LOGGER.info("{} {} Impl {} {} not export", anInterface.getName(), method.getName(),
+                            actionBean.getClass().getName(), methodByInterfaceMethod.getName());
+                    continue;
+                }
+                makeAccessible(methodByInterfaceMethod);
+
+                ActionMethod actionMethod = new ActionMethod(actionBean, methodByInterfaceMethod);
+                String[] parameterNames = MethodParam.getParameterNames(methodByInterfaceMethod);
+                actionMethod.setArgsName(parameterNames);
+                LOGGER.info("Register router mapping : {}, methodName : {}", serviceName, uri);
+
+                // group
+
+                actionMethod.setGroup(methodExport.group());
+
+                // Interceptor
+                Interceptor interceptor = methodByInterfaceMethod.getAnnotation(Interceptor.class);
+                if (interceptor != null) {
+                    String id = interceptor.value();
+                    if (Strings.isNullOrEmpty(id)) {
+                        Class<?> clazz = interceptor.clazz();
+                        if (clazz == Object.class) {
+                            LOGGER.warn("Interceptor id is empty !");
+                        } else {
+                            Object bean = context.getBean(clazz);
+                            if (bean != null && bean instanceof InvokerInterceptor) {
+                                actionMethod.addInterceptorList((InvokerInterceptor) bean);
+                            }
+                        }
+
+                    } else {
+                        for (String beanId : id.split(",")) {
+                            InvokerInterceptor invokerInterceptor = (InvokerInterceptor) context.getBean(beanId);
+                            if (invokerInterceptor == null) {
+                                LOGGER.warn("interceptor for value:{} not exist in spring container", beanId);
+                            }
+                            actionMethod.addInterceptorList(invokerInterceptor);
+                        }
+                    }
+                }
+
+                // Rate
+                Rate rate = methodByInterfaceMethod.getAnnotation(Rate.class);
+                if (rate != null) {
+                    int value = rate.value();
+                    if (value > 0) {
+                        actionMethod.setRateLimiter(RateLimiter.create(value));
+                    } else {
+                        LOGGER.warn("Rate value < 0 !");
+                    }
+                }
+
+
+                mapping.put(uri, actionMethod);
+            }
+        }
     }
 
     public Set<String> listGroup() {

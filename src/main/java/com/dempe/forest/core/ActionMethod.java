@@ -1,13 +1,11 @@
 package com.dempe.forest.core;
 
+import com.dempe.forest.core.interceptor.ChainInvokerInterceptor;
 import com.dempe.forest.core.interceptor.InvokerInterceptor;
-import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.RateLimiter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,7 +21,7 @@ public class ActionMethod {
     private Method method;
     private RateLimiter rateLimiter;
     private String group;
-    private List<InvokerInterceptor> interceptorList;
+    private ChainInvokerInterceptor chainInvokerInterceptor;
 
     public ActionMethod(Object target, Method method) {
         this.target = target;
@@ -58,25 +56,15 @@ public class ActionMethod {
      * @throws IllegalAccessException
      */
     public Object interceptorInvoker(Object... args) throws InvocationTargetException, IllegalAccessException {
-        boolean hasInterceptor = interceptorList != null && interceptorList.size() > 0;
-        if (hasInterceptor) {
-            Iterator<InvokerInterceptor> iterator = interceptorList.iterator();
-            boolean invokeBeforeReturn = true;
-            while (iterator.hasNext() && invokeBeforeReturn) {
-                InvokerInterceptor next = iterator.next();
-                invokeBeforeReturn = next.before(target, method, args);
-            }
+        if(chainInvokerInterceptor==null){
+            return call(args);
         }
-        Object result = call(args);
-
-        if (hasInterceptor) {
-            Iterator<InvokerInterceptor> iterator = interceptorList.iterator();
-            boolean invokeAfterReturn = true;
-            while (iterator.hasNext() && invokeAfterReturn) {
-                InvokerInterceptor next = iterator.next();
-                invokeAfterReturn = next.after(target, method, result);
-            }
+        chainInvokerInterceptor.beforeInvoke(target, method, args);
+        Object result = chainInvokerInterceptor.processInvoke(target, method, args);
+        if (result == null) {
+            result = call(args);
         }
+        chainInvokerInterceptor.afterInvoke(target, method, result);
         return result;
     }
 
@@ -104,14 +92,6 @@ public class ActionMethod {
         this.rateLimiter = rateLimiter;
     }
 
-    public List<InvokerInterceptor> getInterceptorList() {
-        return interceptorList;
-    }
-
-    public void setInterceptorList(List<InvokerInterceptor> interceptorList) {
-        this.interceptorList = interceptorList;
-    }
-
     /**
      * 添加拦截器
      *
@@ -119,10 +99,10 @@ public class ActionMethod {
      * @return
      */
     public boolean addInterceptorList(InvokerInterceptor invokerInterceptor) {
-        if (interceptorList == null) {
-            interceptorList = Lists.newArrayList();
+        if (chainInvokerInterceptor == null) {
+            chainInvokerInterceptor = new ChainInvokerInterceptor();
         }
-        return interceptorList.add(invokerInterceptor);
+        return chainInvokerInterceptor.addInvokerInterceptor(invokerInterceptor);
     }
 
     public String[] getArgsName() {

@@ -3,10 +3,12 @@ package com.dempe.forest;
 
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
-import com.dempe.forest.core.annotation.Action;
-import com.dempe.forest.core.annotation.Export;
+import com.dempe.forest.core.annotation.MethodExport;
+import com.dempe.forest.core.annotation.MethodProvider;
+import com.dempe.forest.core.annotation.ServiceExport;
 import com.dempe.forest.core.exception.ForestErrorMsgConstant;
 import com.dempe.forest.core.exception.ForestFrameworkException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,16 +37,16 @@ public class ForestUtil {
     }
 
     public static String buildUri(Object target, Method method) {
-        Action action = target.getClass().getAnnotation(Action.class);
-        String actionValue = action.value();
-        Export export = method.getAnnotation(Export.class);
-        String uri = export.uri();
+        ServiceExport action = target.getClass().getAnnotation(ServiceExport.class);
+        String actionValue = null;//action.value();
+        MethodProvider methodProvider = method.getAnnotation(MethodProvider.class);
+        String uri = methodProvider.methodName();
         return ForestUtil.buildUri(actionValue, uri);
     }
 
     public static String getGroup(Method method) {
-        Export export = method.getAnnotation(Export.class);
-        return export.group();
+        MethodExport methodExport = method.getAnnotation(MethodExport.class);
+        return methodExport.group();
     }
 
 
@@ -59,6 +61,26 @@ public class ForestUtil {
         } catch (Exception e) {
             throw new ForestFrameworkException("gen method sign error! ", ForestErrorMsgConstant.FRAMEWORK_DECODE_ERROR);
         }
+
+    }
+
+    public static Method findMethodByInterfaceMethod(Method interfaceMethod, Class<?> targetClass) {
+        for (Method method : targetClass.getMethods()) {
+            if (StringUtils.equals(method.getName(), interfaceMethod.getName())) {
+                Class<?>[] parameterTypes = method.getParameterTypes();
+                Class<?>[] interfaceMethodParameterTypes = interfaceMethod.getParameterTypes();
+                if (parameterTypes.length != interfaceMethodParameterTypes.length) {
+                    continue;
+                }
+                for (int i = 0; i < parameterTypes.length; i++) {
+                    if (!StringUtils.equals(parameterTypes[i].getName(), interfaceMethodParameterTypes[i].getName())) {
+                        break;
+                    }
+                    return method;
+                }
+            }
+        }
+        return null;
 
     }
 

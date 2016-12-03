@@ -18,8 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,8 +39,8 @@ public class NettyClient {
         this.host = config.host();
         this.port = config.port();
         init();
-        Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(
-                new TimeoutMonitor("timeout_monitor_" + host + "_" + port), 100, 100, TimeUnit.MILLISECONDS);
+//        Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(
+//                new TimeoutMonitor("timeout_monitor_" + host + "_" + port), 100, 100, TimeUnit.MILLISECONDS);
     }
 
     private void init() throws InterruptedException {
@@ -91,7 +89,7 @@ public class NettyClient {
                         Connection.callbackMap.remove(entry.getKey());
                     }
                 } catch (Exception e) {
-                    LOGGER.error(name + " clear timeout future Error: uri="
+                    LOGGER.error(name + " clear timeout future Error: methodName="
                             + entry.getValue().getRequest().getHeader().getUri() + " requestId=" + entry.getKey(), e);
                 }
             }

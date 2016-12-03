@@ -29,6 +29,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
         NettyResponseFuture responseFuture = Connection.callbackMap.remove(message.getHeader().getMessageID());
+        if (responseFuture == null) {
+            // 服务端响应超时，NettyResponseFuture已经被回收，理论上应该将callbackMap的超时回收时间大于客户端设置的服务超时时间
+            return;
+        }
         Response response = null;
         byte[] payload = message.getPayload();
         Byte extend = message.getHeader().getExtend();

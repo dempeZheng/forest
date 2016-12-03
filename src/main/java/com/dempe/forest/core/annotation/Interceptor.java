@@ -16,6 +16,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Interceptor {
 
-    String id();
+    String value() default "";
+
+    Class<?> clazz() default Object.class;
 
 }

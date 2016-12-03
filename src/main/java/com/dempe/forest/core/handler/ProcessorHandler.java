@@ -1,8 +1,8 @@
 package com.dempe.forest.core.handler;
 
 import com.dempe.forest.AnnotationRouterMapping;
-import com.dempe.forest.ForestExecutorGroup;
 import com.dempe.forest.ForestContext;
+import com.dempe.forest.ForestExecutorGroup;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;
 import com.dempe.forest.codec.compress.Compress;
@@ -44,7 +44,7 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
         String uri = message.getHeader().getUri();
         final ActionMethod actionMethod = mapping.getInvokerWrapperByURI(uri);
         if (actionMethod == null) {
-            LOGGER.warn("no mapping uri:{}", uri);
+            LOGGER.warn("no mapping methodName:{}", uri);
             return;
         }
         executorGroup.execute(actionMethod.getGroup(), new InvokerRunnable(actionMethod, message, channelHandlerContext));
@@ -93,6 +93,7 @@ class InvokerRunnable implements Runnable {
         try {
             result = actionMethod.rateLimiterInvoker(args);
         } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
             response.setForestErrorMsg(ForestErrorMsgConstant.FRAMEWORK_DEFAULT_ERROR);
         } finally {
             ForestContext.removeForestContext();

@@ -11,8 +11,8 @@ import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.ProtoVersion;
 import com.dempe.forest.core.SerializeType;
-import com.dempe.forest.core.annotation.Action;
-import com.dempe.forest.core.annotation.Export;
+import com.dempe.forest.core.annotation.ServiceExport;
+import com.dempe.forest.core.annotation.MethodProvider;
 import com.dempe.forest.core.exception.ForestFrameworkException;
 import com.dempe.forest.transport.NettyResponseFuture;
 import com.google.common.base.Strings;
@@ -44,16 +44,16 @@ public class ReferMethodInterceptor implements MethodInterceptor {
             .build(new CacheLoader<Method, Header>() {
                 @Override
                 public Header load(Method method) throws Exception {
-                    Export export = method.getAnnotation(Export.class);
-                    Action action = (Action) clz.getAnnotation(Action.class);
-                    if (export == null || action == null) {
+                    MethodProvider methodProvider = method.getAnnotation(MethodProvider.class);
+                    ServiceExport action = (ServiceExport) clz.getAnnotation(ServiceExport.class);
+                    if (methodProvider == null || action == null) {
                         new ForestFrameworkException("method annotation Export or Action is null ");
                     }
-                    String value = Strings.isNullOrEmpty(action.value()) ? method.getClass().getSimpleName() : action.value();
-                    String uri = Strings.isNullOrEmpty(export.uri()) ? method.getName() : export.uri();
-                    long timeOut = export.timeOut() <= 0 ? 5000 : export.timeOut();
+                    String value = null;//Strings.isNullOrEmpty(action.value()) ? method.getClass().getSimpleName() : action.value();
+                    String uri = Strings.isNullOrEmpty(methodProvider.methodName()) ? method.getName() : methodProvider.methodName();
+                    long timeOut = methodProvider.timeout() <= 0 ? 5000 : methodProvider.timeout();
                     String headerURI = ForestUtil.buildUri(value, uri);
-                    byte extend = ForestUtil.getExtend(export.serializeType(), export.compressType());
+                    byte extend = ForestUtil.getExtend(methodProvider.serializeType(), methodProvider.compressType());
                     return new Header(Constants.MAGIC, ProtoVersion.VERSION_1.getVersion(), extend, headerURI, timeOut);
                 }
             });
