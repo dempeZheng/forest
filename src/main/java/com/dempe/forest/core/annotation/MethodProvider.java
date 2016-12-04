@@ -25,7 +25,7 @@ public @interface MethodProvider {
 
     CompressType compressType() default CompressType.compressNo;
 
-    long timeout() default 5000; // 客户端超时时间
+    int timeout() default 5000; // 客户端超时时间
 
 }
 

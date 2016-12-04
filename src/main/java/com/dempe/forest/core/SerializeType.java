@@ -22,14 +22,6 @@ public enum SerializeType {
         this.value = value;
     }
 
-    public byte getValue() {
-        return value;
-    }
-
-    public void setValue(byte value) {
-        this.value = value;
-    }
-
     public static Serialization getSerializationByExtend(byte value) {
         switch (value & 0x7) {
             case 0x0:
@@ -42,5 +34,13 @@ public enum SerializeType {
                 return new KryoSerialization();
         }
 
+    }
+
+    public byte getValue() {
+        return value;
+    }
+
+    public void setValue(byte value) {
+        this.value = value;
     }
 }

@@ -1,9 +1,10 @@
 package quickstart.client;
 
-import com.dempe.forest.ClientConfig;
-import com.dempe.forest.client.proxy.JdkProxy;
-import com.dempe.forest.transport.NettyClient;
-import org.aeonbits.owner.ConfigFactory;
+import com.dempe.forest.RefConfMapping;
+import com.dempe.forest.client.proxy.ReferConfig;
+import com.dempe.forest.client.proxy.RpcProxy;
+import com.dempe.forest.core.CompressType;
+import com.dempe.forest.core.SerializeType;
 import quickstart.api.SampleService;
 
 import java.util.concurrent.ExecutorService;
@@ -19,16 +20,27 @@ import java.util.concurrent.Executors;
 public class SampleClient {
 
     public static void main(String[] args) throws InterruptedException {
-        benchmarkTest();
+        test();
     }
 
     public static void test() throws InterruptedException {
-        String say = getProxy(SampleService.class).say("hello");
-        System.out.println(say);
+        SampleService sampleService = new RpcProxy()
+                .registerReferConfig(ReferConfig.makeReferConfig()
+                        .setServiceName("sampleService")
+                        .setMethodName("say")
+                        .setCompressType(CompressType.gizp)
+                        .setSerializeType(SerializeType.fastjson)
+                        .setTimeout(5000)
+                )
+                .getProxy(SampleService.class);
+        String world = sampleService.say("world");
+        System.out.println(world);
     }
 
     public static void benchmarkTest() throws InterruptedException {
-        final SampleService sampleService = getProxy(SampleService.class);
+        final SampleService sampleService = new RpcProxy()
+                .setRefConfMapping(new RefConfMapping())
+                .getProxy(SampleService.class);
         ExecutorService executorService = Executors.newCachedThreadPool();
         for (int i = 0; i < 20; i++) {
             executorService.submit(new Runnable() {
@@ -42,10 +54,5 @@ public class SampleClient {
         }
     }
 
-    public static <T> T getProxy(Class<T> clazz) throws InterruptedException {
-        ClientConfig config = ConfigFactory.create(ClientConfig.class);
-        NettyClient client = new NettyClient(config);
-        client.connect();
-        return new JdkProxy<>().getProxy(clazz, client);
-    }
+
 }

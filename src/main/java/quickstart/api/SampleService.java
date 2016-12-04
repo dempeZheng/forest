@@ -1,8 +1,10 @@
 package quickstart.api;
 
+import com.dempe.forest.core.CompressType;
+import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.annotation.HttpParam;
-import com.dempe.forest.core.annotation.ServiceProvider;
 import com.dempe.forest.core.annotation.MethodProvider;
+import com.dempe.forest.core.annotation.ServiceProvider;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +16,7 @@ import com.dempe.forest.core.annotation.MethodProvider;
 @ServiceProvider(serviceName = "sampleService", port = 8888)
 public interface SampleService {
 
-    @MethodProvider(methodName = "say")
+    @MethodProvider(methodName = "say", serializeType = SerializeType.fastjson, compressType = CompressType.gizp)
     String say(@HttpParam String str);
 
 }

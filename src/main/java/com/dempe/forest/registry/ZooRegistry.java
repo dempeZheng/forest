@@ -25,24 +25,14 @@ import java.util.regex.Pattern;
 
 public class ZooRegistry {
 
+    static ZooRegistry instance = null;
+    private static String basePath;
+    private static String innerHostIp = null;
+    private static Pattern ipPattern = Pattern.compile("^([0-9]{1,3}\\.){3}[0-9]{1,3}$");
+    private static Pattern privateIpPattern = Pattern.compile("(^127\\.0\\.0\\.1)|(^10(\\.[0-9]{1,3}){3}$)|(^172\\.1[6-9](\\.[0-9]{1,3}){2}$)|(^172\\.2[0-9](\\.[0-9]{1,3}){2}$)|(^172\\.3[0-1](\\.[0-9]{1,3}){2}$)|(^192\\.168(\\.[0-9]{1,3}){2}$)");
     private final Logger logger = LoggerFactory.getLogger(ZooRegistry.class);
-
     private CuratorFramework client = null;
     private ServiceDiscovery<InstanceDetails> serviceDiscovery = null;
-
-    private static String basePath;
-    static ZooRegistry instance = null;
-
-    public static ZooRegistry getInstance(ServerConfig config) {
-        if (instance == null) {
-            synchronized (ZooRegistry.class) {
-                if (instance == null) {
-                    instance = new ZooRegistry(config);
-                }
-            }
-        }
-        return instance;
-    }
 
     ZooRegistry(ServerConfig config) {
         basePath = config.zkBasePath();
@@ -56,6 +46,52 @@ public class ZooRegistry {
         } catch (Exception e) {
             logger.error("Failed to create ZooRegistry!msg=" + e.getMessage(), e);
         }
+    }
+
+    public static ZooRegistry getInstance(ServerConfig config) {
+        if (instance == null) {
+            synchronized (ZooRegistry.class) {
+                if (instance == null) {
+                    instance = new ZooRegistry(config);
+                }
+            }
+        }
+        return instance;
+    }
+
+    private static String getInnerHostIp() {
+        if (innerHostIp == null) {
+            synchronized (ZooRegistry.class) {
+                if (innerHostIp == null) {
+                    String ip = null;
+                    try {
+                        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+                        while (interfaces.hasMoreElements()) {
+                            NetworkInterface iface = interfaces.nextElement();
+                            // filters out 127.0.0.1 and inactive if
+                            if (iface.isLoopback() || !iface.isUp())
+                                continue;
+
+                            Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                            while (addresses.hasMoreElements()) {
+                                InetAddress addr = addresses.nextElement();
+                                String _tempIp = addr.getHostAddress();
+                                // find private ip.
+                                if (ZooRegistry.ipPattern.matcher(_tempIp).matches()
+                                        && ZooRegistry.privateIpPattern.matcher(_tempIp).matches()) {
+                                    ip = _tempIp;
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (SocketException e) {
+                        throw new RuntimeException(e);
+                    }
+                    innerHostIp = ip;
+                }
+            }
+        }
+        return innerHostIp;
     }
 
     public void registerService(String serviceName, int port) throws Exception {
@@ -105,7 +141,7 @@ public class ZooRegistry {
         return serviceDiscovery.queryForInstances(serviceName);
     }
 
-    //todo..... 
+    //todo.....
     public void addWatcher(String path, Watcher watcher) {
         try {
             client.getChildren().usingWatcher(watcher).forPath(path);
@@ -124,46 +160,6 @@ public class ZooRegistry {
     public void close() {
         CloseableUtils.closeQuietly(serviceDiscovery);
         CloseableUtils.closeQuietly(client);
-    }
-
-
-    private static String innerHostIp = null;
-    private static Pattern ipPattern = Pattern.compile("^([0-9]{1,3}\\.){3}[0-9]{1,3}$");
-    private static Pattern privateIpPattern = Pattern.compile("(^127\\.0\\.0\\.1)|(^10(\\.[0-9]{1,3}){3}$)|(^172\\.1[6-9](\\.[0-9]{1,3}){2}$)|(^172\\.2[0-9](\\.[0-9]{1,3}){2}$)|(^172\\.3[0-1](\\.[0-9]{1,3}){2}$)|(^192\\.168(\\.[0-9]{1,3}){2}$)");
-
-    private static String getInnerHostIp() {
-        if (innerHostIp == null) {
-            synchronized (ZooRegistry.class) {
-                if (innerHostIp == null) {
-                    String ip = null;
-                    try {
-                        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-                        while (interfaces.hasMoreElements()) {
-                            NetworkInterface iface = interfaces.nextElement();
-                            // filters out 127.0.0.1 and inactive if
-                            if (iface.isLoopback() || !iface.isUp())
-                                continue;
-
-                            Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                            while (addresses.hasMoreElements()) {
-                                InetAddress addr = addresses.nextElement();
-                                String _tempIp = addr.getHostAddress();
-                                // find private ip.
-                                if (ZooRegistry.ipPattern.matcher(_tempIp).matches()
-                                        && ZooRegistry.privateIpPattern.matcher(_tempIp).matches()) {
-                                    ip = _tempIp;
-                                    break;
-                                }
-                            }
-                        }
-                    } catch (SocketException e) {
-                        throw new RuntimeException(e);
-                    }
-                    innerHostIp = ip;
-                }
-            }
-        }
-        return innerHostIp;
     }
 
 }

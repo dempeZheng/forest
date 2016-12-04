@@ -5,11 +5,11 @@ package com.dempe.forest.codec;
  * magic	version	extend flag	request id	body content length
  * 魔数	协议版本	24-28	29-30	31
  * 消息id
- * <p>
+ * <p/>
  * body包长
  * 保留	event( 可支持4种event，
  * 如normal, exception等)
- * <p>
+ * <p/>
  * User: Dempe
  * Date: 2016/11/25
  * Time: 16:23
@@ -67,12 +67,20 @@ public class Header implements Cloneable {
         return version;
     }
 
+    public void setVersion(byte version) {
+        this.version = version;
+    }
+
     public void setVersion(Byte version) {
         this.version = version;
     }
 
     public Byte getExtend() {
         return extend;
+    }
+
+    public void setExtend(byte extend) {
+        this.extend = extend;
     }
 
     public void setExtend(Byte extend) {
@@ -103,21 +111,12 @@ public class Header implements Cloneable {
         this.uri = uri;
     }
 
-    public void setExtend(byte extend) {
-        this.extend = extend;
-    }
-
-
     public long getTimeOut() {
         return timeOut;
     }
 
     public void setTimeOut(long timeOut) {
         this.timeOut = timeOut;
-    }
-
-    public void setVersion(byte version) {
-        this.version = version;
     }
 
     @Override

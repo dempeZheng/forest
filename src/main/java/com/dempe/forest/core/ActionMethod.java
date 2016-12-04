@@ -56,7 +56,7 @@ public class ActionMethod {
      * @throws IllegalAccessException
      */
     public Object interceptorInvoker(Object... args) throws InvocationTargetException, IllegalAccessException {
-        if(chainInvokerInterceptor==null){
+        if (chainInvokerInterceptor == null) {
             return call(args);
         }
         chainInvokerInterceptor.beforeInvoke(target, method, args);

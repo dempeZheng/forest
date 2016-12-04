@@ -33,13 +33,13 @@ public class AnnotationRouterMapping {
 
     private Map<String, ActionMethod> mapping = Maps.newConcurrentMap();
 
-    public ActionMethod getInvokerWrapperByURI(String uri) {
-        return mapping.get(uri);
-    }
-
     public AnnotationRouterMapping(ApplicationContext context) {
         this.context = context;
         initMapping();
+    }
+
+    public ActionMethod getInvokerWrapperByURI(String uri) {
+        return mapping.get(uri);
     }
 
     public void initMapping() {

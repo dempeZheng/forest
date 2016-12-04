@@ -126,7 +126,7 @@ public class StandardThreadExecutor extends ThreadPoolExecutor {
 
 /**
  * LinkedTransferQueue 能保证更高性能，相比与LinkedBlockingQueue有明显提升
- * <p>
+ * <p/>
  * <pre>
  * 		1) 不过LinkedTransferQueue的缺点是没有队列长度控制，需要在外层协助控制
  * </pre>

@@ -34,11 +34,10 @@ import java.util.Map;
 public class HttpForestServer {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(HttpForestServer.class);
-
-    private AnnotationRouterMapping mapping;
-    private ServerConfig config;
     HttpServerProvider provider = null;
     HttpServer httpServer = null;
+    private AnnotationRouterMapping mapping;
+    private ServerConfig config;
 
     public HttpForestServer(AnnotationRouterMapping mapping, ServerConfig config) {
         this.mapping = mapping;

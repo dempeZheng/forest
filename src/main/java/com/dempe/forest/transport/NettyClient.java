@@ -72,6 +72,14 @@ public class NettyClient {
         return connect;
     }
 
+    public boolean close() {
+        return false;
+    }
+
+    public boolean isConnected() {
+        return true;
+    }
+
     class TimeoutMonitor implements Runnable {
         private String name;
 
@@ -94,14 +102,6 @@ public class NettyClient {
                 }
             }
         }
-    }
-
-    public boolean close() {
-        return false;
-    }
-
-    public boolean isConnected() {
-        return true;
     }
 
 }

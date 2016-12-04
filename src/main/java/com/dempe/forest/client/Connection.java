@@ -31,10 +31,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Connection {
 
+    public final static Map<Long, NettyResponseFuture<Response>> callbackMap = Maps.newConcurrentMap();
     private final static Logger LOGGER = LoggerFactory.getLogger(Connection.class);
     private ChannelFuture future;
     private AtomicBoolean isConnected = new AtomicBoolean();
-    public final static Map<Long, NettyResponseFuture<Response>> callbackMap = Maps.newConcurrentMap();
 
     public Connection() {
         this.isConnected.set(false);

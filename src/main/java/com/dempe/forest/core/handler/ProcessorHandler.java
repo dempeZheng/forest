@@ -28,11 +28,9 @@ import java.io.IOException;
 public class ProcessorHandler extends SimpleChannelInboundHandler<Message> {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ProcessorHandler.class);
-
-    private AnnotationRouterMapping mapping;
-
     // 业务线程池
     private static ForestExecutorGroup executorGroup;
+    private AnnotationRouterMapping mapping;
 
     public ProcessorHandler(AnnotationRouterMapping mapping, ForestExecutorGroup executorGroup) {
         this.mapping = mapping;
