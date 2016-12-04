@@ -1,6 +1,7 @@
 package com.dempe.forest.client.proxy;
 
 import com.dempe.forest.RefConfMapping;
+import com.dempe.forest.ReferConfig;
 import com.dempe.forest.core.annotation.ServiceProvider;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -44,8 +45,6 @@ public class RpcProxy {
             referConfig.setServiceName(serviceName);
             refConfMapping.registerRefConfMap(referConfig);
         }
-
-
         return (T) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{clazz}, new ReferInvocationHandler(refConfMapping, serviceName));
     }
 

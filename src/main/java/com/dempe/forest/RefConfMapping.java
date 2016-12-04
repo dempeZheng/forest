@@ -1,6 +1,5 @@
 package com.dempe.forest;
 
-import com.dempe.forest.client.proxy.ReferConfig;
 import com.dempe.forest.core.annotation.MethodProvider;
 import com.dempe.forest.core.annotation.ServiceProvider;
 import com.google.common.base.Strings;

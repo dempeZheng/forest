@@ -1,8 +1,5 @@
-package com.dempe.forest.client.proxy;
+package com.dempe.forest;
 
-import com.dempe.forest.ClientConfig;
-import com.dempe.forest.Constants;
-import com.dempe.forest.ForestUtil;
 import com.dempe.forest.client.ChannelPool;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.core.CompressType;

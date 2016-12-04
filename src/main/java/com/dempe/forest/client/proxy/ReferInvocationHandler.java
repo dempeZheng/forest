@@ -1,6 +1,7 @@
 package com.dempe.forest.client.proxy;
 
 import com.dempe.forest.RefConfMapping;
+import com.dempe.forest.ReferConfig;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
 import com.dempe.forest.codec.Response;

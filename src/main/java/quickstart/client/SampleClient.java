@@ -1,7 +1,7 @@
 package quickstart.client;
 
 import com.dempe.forest.RefConfMapping;
-import com.dempe.forest.client.proxy.ReferConfig;
+import com.dempe.forest.ReferConfig;
 import com.dempe.forest.client.proxy.RpcProxy;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
