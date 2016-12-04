@@ -19,4 +19,7 @@ public interface SampleService {
     @MethodProvider(methodName = "say", serializeType = SerializeType.fastjson, compressType = CompressType.gizp)
     String say(@HttpParam String str);
 
+    @MethodProvider(methodName = "echo")
+    String echo(@HttpParam String msg);
+
 }

@@ -3,10 +3,12 @@ package com.dempe.forest.client.proxy;
 import com.dempe.forest.RefConfMapping;
 import com.dempe.forest.core.annotation.ServiceProvider;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Proxy;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,11 +23,13 @@ public class RpcProxy {
 
     private RefConfMapping refConfMapping;
 
+    private List<ReferConfig> referConfigList = Lists.newArrayList();
+
     public RpcProxy(RefConfMapping refConfMapping) {
         this.refConfMapping = refConfMapping;
     }
-    public RpcProxy(){
 
+    public RpcProxy() {
         refConfMapping = new RefConfMapping();
     }
 
@@ -36,6 +40,12 @@ public class RpcProxy {
             return null;
         }
         String serviceName = Strings.isNullOrEmpty(serviceProvider.serviceName()) ? clazz.getSimpleName() : serviceProvider.serviceName();
+        for (ReferConfig referConfig : referConfigList) {
+            referConfig.setServiceName(serviceName);
+            refConfMapping.registerRefConfMap(referConfig);
+        }
+
+
         return (T) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{clazz}, new ReferInvocationHandler(refConfMapping, serviceName));
     }
 
@@ -48,8 +58,9 @@ public class RpcProxy {
         this.refConfMapping = refConfMapping;
         return this;
     }
-    public RpcProxy registerReferConfig(ReferConfig referConfig){
-        refConfMapping.registerRefConfMap(referConfig);
+
+    public RpcProxy registerReferConfig(ReferConfig referConfig) {
+        this.referConfigList.add(referConfig);
         return this;
 
 

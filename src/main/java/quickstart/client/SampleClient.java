@@ -26,15 +26,20 @@ public class SampleClient {
     public static void test() throws InterruptedException {
         SampleService sampleService = new RpcProxy()
                 .registerReferConfig(ReferConfig.makeReferConfig()
-                        .setServiceName("sampleService")
                         .setMethodName("say")
                         .setCompressType(CompressType.gizp)
                         .setSerializeType(SerializeType.fastjson)
-                        .setTimeout(5000)
-                )
+                        .setTimeout(5000))
+                .registerReferConfig(ReferConfig.makeReferConfig()
+                        .setMethodName("echo")
+                        .setCompressType(CompressType.compressNo)
+                        .setSerializeType(SerializeType.hession2)
+                        .setTimeout(2000))
                 .getProxy(SampleService.class);
         String world = sampleService.say("world");
-        System.out.println(world);
+        System.out.println("say:" + world);
+        String echo = sampleService.echo("echo hello");
+        System.out.println("echo:" + echo);
     }
 
     public static void benchmarkTest() throws InterruptedException {

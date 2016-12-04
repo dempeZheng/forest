@@ -23,4 +23,10 @@ public class SampleServiceImpl implements SampleService {
     public String say(String str) {
         return "hello " + str;
     }
+
+    @MethodExport
+    @Override
+    public String echo(String msg) {
+        return msg;
+    }
 }
