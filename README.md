@@ -9,6 +9,7 @@
 - 服务端支持多种序列化方式：fastjson，hession，kryo
 - 服务端支持多种压缩方式：gzip，snappy
 - 服务端可根据group进行线程隔离
+- 支持基于spring对不同的group配置不同的业务线程池
 - 支持spring容器
 - 支持服务发现服务注册
 - 支持多种负载均衡策略
