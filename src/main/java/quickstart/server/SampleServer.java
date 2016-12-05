@@ -1,14 +1,15 @@
 package quickstart.server;
 
-import com.dempe.forest.AnnotationRouterMapping;
-import com.dempe.forest.ForestExecutorGroup;
-import com.dempe.forest.ServerConfig;
-import com.dempe.forest.transport.NettyServer;
-import org.aeonbits.owner.ConfigFactory;
-import org.springframework.context.ApplicationContext;
+import com.dempe.forest.register.RegisterInfo;
+import com.dempe.forest.register.redis.RedisRegistryService;
+import com.google.common.collect.Sets;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,13 +22,25 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 @ComponentScan
 public class SampleServer {
 
-    public static void main(String[] args) throws InterruptedException {
-        ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
-        AnnotationRouterMapping mapping = new AnnotationRouterMapping(context);
-        ServerConfig config = ConfigFactory.create(ServerConfig.class);
-        ForestExecutorGroup executorGroup = new ForestExecutorGroup(config, mapping.listGroup(), context);
-        new NettyServer(mapping, config, executorGroup).doBind();
+    public static void main(String[] args) throws Exception {
+
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
+        RedisRegistryService namingService = (RedisRegistryService) context.getBean("namingService");
+
+        Set<String> serviceNameSet = Sets.newHashSet();
+        serviceNameSet.add("sampleService");
+        Map<String, List<RegisterInfo>> map = namingService.list(serviceNameSet);
+        for (Map.Entry<String, List<RegisterInfo>> stringListEntry : map.entrySet()) {
+            for (RegisterInfo registerInfo : stringListEntry.getValue()) {
+                System.out.println(registerInfo);
+            }
+        }
+
+
+
     }
+
+
 
 
 }

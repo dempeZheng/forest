@@ -1,15 +1,21 @@
 package com.dempe.forest.support.spring;
 
 import com.dempe.forest.AnnotationRouterMapping;
+import com.dempe.forest.Constants;
 import com.dempe.forest.ForestExecutorGroup;
 import com.dempe.forest.ServerConfig;
+import com.dempe.forest.register.RegisterInfo;
+import com.dempe.forest.register.redis.RedisRegistryService;
 import com.dempe.forest.transport.NettyServer;
+import com.google.common.collect.Lists;
 import org.aeonbits.owner.ConfigFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,9 +34,22 @@ public class ForestServerBean implements InitializingBean, DisposableBean, Appli
 
     private ForestExecutorGroup executorGroup;
 
+    private RedisRegistryService registryCenterService;
+
+    private List<RegisterInfo> cachedRisterInfoList;
+
+    private ServerConfig config;
 
     @Override
     public void destroy() throws Exception {
+        if (nettyServer != null) {
+            nettyServer.close();
+        }
+        if (registryCenterService != null && cachedRisterInfoList != null) {
+            for (RegisterInfo registerInfo : cachedRisterInfoList) {
+                registryCenterService.unregister(registerInfo);
+            }
+        }
 
     }
 
@@ -39,11 +58,24 @@ public class ForestServerBean implements InitializingBean, DisposableBean, Appli
         if (mapping == null) {
             mapping = new AnnotationRouterMapping(applicationContext);
         }
-        ServerConfig config = ConfigFactory.create(ServerConfig.class);
+        this.config = ConfigFactory.create(ServerConfig.class);
         if (executorGroup == null) {
             executorGroup = new ForestExecutorGroup(config, mapping.listGroup(), applicationContext);
         }
         nettyServer = new NettyServer(mapping, config, executorGroup);
+        if (registryCenterService != null) {
+            cachedRisterInfoList = Lists.newArrayList();
+            for (String serviceName : mapping.getServiceNameSet()) {
+                RegisterInfo registerInfo = new RegisterInfo();
+                registerInfo.setHost("");
+                registerInfo.setPort(config.port());
+                registerInfo.setProtocol(Constants.PBRPC_SCHEME);
+                registerInfo.setService(serviceName);
+                registryCenterService.register(registerInfo);
+
+                cachedRisterInfoList.add(registerInfo);
+            }
+        }
         nettyServer.doBind();
     }
 
@@ -60,5 +92,9 @@ public class ForestServerBean implements InitializingBean, DisposableBean, Appli
 
     public void setExecutorGroup(ForestExecutorGroup executorGroup) {
         this.executorGroup = executorGroup;
+    }
+
+    public void setRegistryCenterService(RedisRegistryService registryCenterService) {
+        this.registryCenterService = registryCenterService;
     }
 }

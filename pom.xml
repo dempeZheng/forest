@@ -16,6 +16,9 @@
         <java.source.jdk>1.7</java.source.jdk>
         <spring.version>4.2.5.RELEASE</spring.version>
         <snappy-java.version>1.1.1.6</snappy-java.version>
+        <org.slf4j.version>1.7.5</org.slf4j.version>
+
+
     </properties>
 
     <dependencies>
@@ -73,12 +76,17 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.5</version>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.0.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${org.slf4j.version}</version>
         </dependency>
 
         <dependency>
@@ -125,6 +133,12 @@
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-x-discovery</artifactId>
             <version>2.7.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.4.2</version>
         </dependency>
 
     </dependencies>

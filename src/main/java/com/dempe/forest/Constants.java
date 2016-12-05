@@ -21,4 +21,8 @@ public class Constants {
     public static final String DEF_GROUP = "def_group";
 
     public final static int DEFAULT_TIMEOUT = 5000;
+
+    public static final String SERVICE_KEY_PREIFX = "forest-rpc:";
+
+    public static final String PBRPC_SCHEME = "rpc";
 }

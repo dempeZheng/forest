@@ -11,6 +11,25 @@
 
     <bean id="metricInterceptor" class="com.dempe.forest.core.interceptor.MetricInterceptor"/>
 
-    <bean id="forestServer" class="com.dempe.forest.support.spring.ForestServerBean"/>
+    <!--服务注册-->
+    <bean id="namingService" class="com.dempe.forest.register.redis.RedisRegistryService">
+        <constructor-arg>
+            <bean class="com.dempe.forest.register.redis.RedisClient">
+                <property name="redisServer" value="116.31.122.26"></property>
+                <property name="port" value="6379"></property>
+                <property name="testOnBorrow" value="true"></property>
+                <property name="maxWait" value="2000"></property>
+            </bean>
+        </constructor-arg>
+        <property name="administrator" value="true"></property>
+        <property name="group" value="default/"></property>
+        <property name="expirePeriod" value="3000"></property>
+    </bean>
+
+
+    <!--<bean id="forestServer" class="com.dempe.forest.support.spring.ForestServerBean">-->
+        <!--<property name="registryCenterService" ref="namingService"></property>-->
+    <!--</bean>-->
+
 
 </beans>

@@ -4,6 +4,7 @@ import com.dempe.forest.core.ActionMethod;
 import com.dempe.forest.core.MethodParam;
 import com.dempe.forest.core.annotation.*;
 import com.dempe.forest.core.interceptor.InvokerInterceptor;
+import com.dempe.forest.support.ForestUtil;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -34,6 +35,8 @@ public class AnnotationRouterMapping {
 
     private Map<String, ActionMethod> mapping = Maps.newConcurrentMap();
 
+    private static Set<String> serviceNameSet = Sets.newHashSet();
+
     public AnnotationRouterMapping(ApplicationContext context) {
         this.context = context;
         initMapping();
@@ -56,6 +59,7 @@ public class AnnotationRouterMapping {
                 }
                 String serviceName = Strings.isNullOrEmpty(serviceProvider.serviceName())
                         ? anInterface.getSimpleName() : serviceProvider.serviceName();
+                serviceNameSet.add(serviceName);
                 int port = serviceProvider.port();
 
                 // todo 分离不同的服务
@@ -163,5 +167,9 @@ public class AnnotationRouterMapping {
                 && !method.isAccessible()) {
             method.setAccessible(true);
         }
+    }
+
+    public  Set<String> getServiceNameSet() {
+        return serviceNameSet;
     }
 }

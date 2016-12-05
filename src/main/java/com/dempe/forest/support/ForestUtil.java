@@ -1,4 +1,4 @@
-package com.dempe.forest;
+package com.dempe.forest.support;
 
 
 import com.dempe.forest.core.CompressType;

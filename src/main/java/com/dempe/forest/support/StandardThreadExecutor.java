@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.dempe.forest;
+package com.dempe.forest.support;
 
 
 import java.util.concurrent.*;

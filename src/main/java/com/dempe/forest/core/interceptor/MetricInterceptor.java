@@ -2,7 +2,7 @@ package com.dempe.forest.core.interceptor;
 
 
 import com.dempe.forest.ForestContext;
-import com.dempe.forest.ForestUtil;
+import com.dempe.forest.support.ForestUtil;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
