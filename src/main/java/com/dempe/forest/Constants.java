@@ -19,4 +19,6 @@ public class Constants {
 
 
     public static final String DEF_GROUP = "def_group";
+
+    public final static int DEFAULT_TIMEOUT = 5000;
 }

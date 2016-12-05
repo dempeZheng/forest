@@ -1,10 +1,12 @@
 package quickstart.client;
 
-import com.dempe.forest.RefConfMapping;
-import com.dempe.forest.ReferConfig;
+import com.dempe.forest.Constants;
+import com.dempe.forest.MethodProviderConf;
 import com.dempe.forest.client.proxy.RpcProxy;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import quickstart.api.SampleService;
 
 import java.util.concurrent.ExecutorService;
@@ -21,20 +23,22 @@ public class SampleClient {
 
     public static void main(String[] args) throws InterruptedException {
         test();
+//        benchmarkTest();
+        sampleTestBySpring();
     }
 
+
     public static void test() throws InterruptedException {
+        MethodProviderConf methodProviderConf = MethodProviderConf.makeMethodProviderConf()
+                .setCompressType(CompressType.gizp)
+                .setSerializeType(SerializeType.fastjson)
+                .setTimeout(Constants.DEFAULT_TIMEOUT);
         SampleService sampleService = new RpcProxy()
-                .registerReferConfig(ReferConfig.makeReferConfig()
-                        .setMethodName("say")
-                        .setCompressType(CompressType.gizp)
-                        .setSerializeType(SerializeType.fastjson)
-                        .setTimeout(5000))
-                .registerReferConfig(ReferConfig.makeReferConfig()
-                        .setMethodName("echo")
-                        .setCompressType(CompressType.compressNo)
-                        .setSerializeType(SerializeType.hession2)
-                        .setTimeout(2000))
+                // set proxy say 方法配置(如果不配置，则默认使用接口注解的配置,如果都没有配置，则使用默认配置)
+                .setMethodProviderConfig("say", methodProviderConf)
+                .setMethodProviderConfig("say2", methodProviderConf)
+                .setMethodProviderConfig("echo", MethodProviderConf.makeMethodProviderConf()
+                        .setSerializeType(SerializeType.hession2))
                 .getProxy(SampleService.class);
         String world = sampleService.say("world");
         System.out.println("say:" + world);
@@ -43,20 +47,29 @@ public class SampleClient {
     }
 
     public static void benchmarkTest() throws InterruptedException {
-        final SampleService sampleService = new RpcProxy()
-                .setRefConfMapping(new RefConfMapping())
-                .getProxy(SampleService.class);
+        final SampleService sampleService = new RpcProxy().getProxy(SampleService.class);
         ExecutorService executorService = Executors.newCachedThreadPool();
         for (int i = 0; i < 20; i++) {
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
                     for (int i = 0; i < 1000000; i++) {
-                        String say = sampleService.say("hello");
+                        String say = sampleService.echo("hello");
+                        if (i % 10000 == 0) {
+                            System.out.println(say);
+                        }
                     }
                 }
             });
         }
+    }
+
+    public static void sampleTestBySpring() {
+        ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-client.xml"});
+        SampleService sampleServiceProxy = (SampleService) context.getBean("sampleServiceProxy");
+        String hello = sampleServiceProxy.say("hello");
+        System.out.println(">>>>" + hello);
+
     }
 
 

@@ -24,7 +24,6 @@ public class ForestExecutorGroup {
 
     private ServerConfig config;
 
-
     public ForestExecutorGroup(ServerConfig config, Set<String> groupSet, ApplicationContext context) {
         this.config = config;
         for (String group : groupSet) {

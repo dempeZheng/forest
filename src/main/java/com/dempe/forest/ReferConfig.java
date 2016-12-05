@@ -23,11 +23,7 @@ import java.lang.reflect.Method;
  */
 public class ReferConfig {
 
-    private SerializeType serializeType;
-
-    private CompressType compressType;
-
-    private int timeout;
+    private MethodProviderConf methodProviderConf;
 
     private String serviceName;
 
@@ -38,6 +34,7 @@ public class ReferConfig {
     public ReferConfig() {
         try {
             pool = new ChannelPool(new NettyClient(ConfigFactory.create(ClientConfig.class)));
+            methodProviderConf = new MethodProviderConf();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -45,6 +42,11 @@ public class ReferConfig {
 
     public static ReferConfig makeReferConfig() {
         return new ReferConfig();
+    }
+
+    public ReferConfig setMethodProviderConf(MethodProviderConf methodProviderConf) {
+        this.methodProviderConf = methodProviderConf;
+        return this;
     }
 
     public static ReferConfig makeReferConfigByAnnotation(Class<?> target, Method method) {
@@ -56,7 +58,7 @@ public class ReferConfig {
         }
         String serviceName = Strings.isNullOrEmpty(serviceProvider.serviceName()) ? method.getClass().getSimpleName() : serviceProvider.serviceName();
         String methodName = Strings.isNullOrEmpty(methodProvider.methodName()) ? method.getName() : methodProvider.methodName();
-        int timeout = methodProvider.timeout() <= 0 ? 5000 : methodProvider.timeout();
+        int timeout = methodProvider.timeout() <= 0 ? Constants.DEFAULT_TIMEOUT : methodProvider.timeout();
         return makeReferConfig()
                 .setServiceName(serviceName)
                 .setMethodName(methodName)
@@ -67,29 +69,42 @@ public class ReferConfig {
     }
 
     public SerializeType getSerializeType() {
-        return serializeType;
+        return methodProviderConf.getSerializeType();
+    }
+
+    public SerializeType getSerializeType(SerializeType defaultSerializeType) {
+        return getSerializeType() == null ? defaultSerializeType : getSerializeType();
     }
 
     public ReferConfig setSerializeType(SerializeType serializeType) {
-        this.serializeType = serializeType;
+        this.methodProviderConf.setSerializeType(serializeType);
         return this;
     }
 
     public CompressType getCompressType() {
-        return compressType;
+        return methodProviderConf.getCompressType();
     }
 
+    public CompressType getCompressType(CompressType defaultCompressType) {
+        return getCompressType() == null ? defaultCompressType : getCompressType();
+    }
+
+
     public ReferConfig setCompressType(CompressType compressType) {
-        this.compressType = compressType;
+        this.methodProviderConf.setCompressType(compressType);
         return this;
     }
 
     public int getTimeout() {
-        return timeout;
+        return methodProviderConf.getTimeout();
+    }
+
+    public int getTimeout(int defaultTimeout) {
+        return getTimeout() <= 0 ? defaultTimeout : getTimeout();
     }
 
     public ReferConfig setTimeout(int timeout) {
-        this.timeout = timeout;
+        this.methodProviderConf.setTimeout(timeout);
         return this;
     }
 
@@ -112,18 +127,18 @@ public class ReferConfig {
     }
 
     public Header makeHeader() {
-        byte extend = ForestUtil.getExtend(serializeType, compressType);
+        byte extend = ForestUtil.getExtend(getSerializeType(SerializeType.DEFAULT_SERIALIZE_TYPE), getCompressType(CompressType.DEFAULT_COMPRESS_TYPE));
         return new Header(Constants.MAGIC, ProtoVersion.VERSION_1.getVersion(), extend,
-                ForestUtil.buildUri(serviceName, methodName), timeout);
+                ForestUtil.buildUri(serviceName, methodName), getTimeout(Constants.DEFAULT_TIMEOUT));
     }
 
 
     public boolean isInit() {
-        return Strings.isNullOrEmpty(serviceName)
-                && Strings.isNullOrEmpty(methodName)
-                && timeout == 0
-                && serializeType == null
-                && compressType == null;
+        return !(Strings.isNullOrEmpty(serviceName)
+                || Strings.isNullOrEmpty(methodName)
+                || getTimeout() < 0
+                || getSerializeType() == null
+                || getCompressType() == null);
 
     }
 
@@ -138,3 +153,4 @@ public class ReferConfig {
 
 
 }
+

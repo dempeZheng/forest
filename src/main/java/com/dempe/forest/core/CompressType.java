@@ -14,7 +14,7 @@ import com.dempe.forest.codec.compress.SnappyCompress;
  */
 public enum CompressType {
 
-    compressNo((byte) 0), gizp((byte) (1 << 4)), snappy((byte) (1<< 5));
+    compressNo((byte) 0), gizp((byte) (1 << 4)), snappy((byte) (1 << 5));
 
     private byte value;
 
@@ -43,5 +43,7 @@ public enum CompressType {
     public void setValue(byte value) {
         this.value = value;
     }
+
+    public final static CompressType DEFAULT_COMPRESS_TYPE = CompressType.compressNo;
 
 }

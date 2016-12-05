@@ -15,10 +15,16 @@ import com.dempe.forest.core.annotation.ServiceProvider;
 @ServiceProvider(serviceName = "sampleService", port = 8888)
 public interface SampleService {
 
-    @MethodProvider(methodName = "say", serializeType = SerializeType.fastjson, compressType = CompressType.gizp)
+    @MethodProvider(methodName = "say")
     String say(String str);
+
+    @MethodProvider(methodName = "say2")
+    String say2(String str);
 
     @MethodProvider(methodName = "echo")
     String echo(String msg);
+
+    @MethodProvider(methodName = "hi",serializeType = SerializeType.fastjson, compressType = CompressType.gizp)
+    String hi(String msg);
 
 }

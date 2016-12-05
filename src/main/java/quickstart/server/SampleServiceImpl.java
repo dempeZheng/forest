@@ -21,12 +21,24 @@ public class SampleServiceImpl implements SampleService {
     @Interceptor("metricInterceptor")
     @Override
     public String say(String str) {
-        return "hello " + str;
+        return "say " + str;
+    }
+
+    @Override
+    public String say2(String str) {
+        return "say2 " + str;
+    }
+
+    @Interceptor("metricInterceptor")
+    @MethodExport
+    @Override
+    public String echo(String msg) {
+        return "echo " + msg;
     }
 
     @MethodExport
     @Override
-    public String echo(String msg) {
-        return msg;
+    public String hi(String msg) {
+        return "hi " + msg;
     }
 }
