@@ -1,4 +1,4 @@
-package quickstart.server;
+package quickstart.impl;
 
 import com.dempe.forest.core.annotation.Interceptor;
 import com.dempe.forest.core.annotation.MethodExport;

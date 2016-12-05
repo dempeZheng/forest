@@ -5,8 +5,6 @@ import com.dempe.forest.MethodProviderConf;
 import com.dempe.forest.client.proxy.RpcProxy;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import quickstart.api.SampleService;
 
 import java.util.concurrent.ExecutorService;
@@ -22,13 +20,11 @@ import java.util.concurrent.Executors;
 public class SampleClient {
 
     public static void main(String[] args) throws InterruptedException {
-        test();
-//        benchmarkTest();
-        sampleTestBySpring();
+        sampleServiceTest();
+        benchmarkTest();
     }
 
-
-    public static void test() throws InterruptedException {
+    public static void sampleServiceTest() throws InterruptedException {
         MethodProviderConf methodProviderConf = MethodProviderConf.makeMethodProviderConf()
                 .setCompressType(CompressType.gizp)
                 .setSerializeType(SerializeType.fastjson)
@@ -62,14 +58,6 @@ public class SampleClient {
                 }
             });
         }
-    }
-
-    public static void sampleTestBySpring() {
-        ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-client.xml"});
-        SampleService sampleServiceProxy = (SampleService) context.getBean("sampleServiceProxy");
-        String hello = sampleServiceProxy.say("hello");
-        System.out.println(">>>>" + hello);
-
     }
 
 

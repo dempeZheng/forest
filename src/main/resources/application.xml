@@ -9,4 +9,8 @@
 
     <context:component-scan base-package="quickstart"/>
 
+    <bean id="metricInterceptor" class="com.dempe.forest.core.interceptor.MetricInterceptor"/>
+
+    <bean id="forestServer" class="com.dempe.forest.support.spring.ForestServerBean"/>
+
 </beans>

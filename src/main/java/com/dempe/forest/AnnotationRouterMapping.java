@@ -31,6 +31,7 @@ public class AnnotationRouterMapping {
 
     private ApplicationContext context;
 
+
     private Map<String, ActionMethod> mapping = Maps.newConcurrentMap();
 
     public AnnotationRouterMapping(ApplicationContext context) {

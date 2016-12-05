@@ -1,13 +1,11 @@
-package quickstart.server;
+package com.dempe.forest.core.interceptor;
 
 
 import com.dempe.forest.ForestContext;
 import com.dempe.forest.ForestUtil;
-import com.dempe.forest.core.interceptor.AbstractInvokerInterceptor;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -23,7 +21,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * Time: 18:25
  * To change this template use File | Settings | File Templates.
  */
-@Component
 public class MetricInterceptor extends AbstractInvokerInterceptor {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(MetricInterceptor.class);
