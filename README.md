@@ -92,7 +92,7 @@ public class SampleServiceImpl implements SampleService {
 
 `application.xml`
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -150,7 +150,7 @@ public class SampleServer {
 > 可以使用api注解暴露的默认配置，也可以通过spring为每个方法定义配置
 
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -216,7 +216,7 @@ public class SpringSampleClient {
 ```
 
 [更多示例](https://github.com/dempeZheng/forest/tree/master/src/main/java/quickstart)
- 
+
 
 # Documents
 
