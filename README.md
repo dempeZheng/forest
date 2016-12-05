@@ -1,189 +1,207 @@
 # Forest
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dempeZheng/forest/blob/master/LICENSE)
-[![Build Status](https://img.shields.io/travis/dempeZheng/forest/master.svg?label=Build)](https://travis-ci.org/dempeZheng/forest)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/weibocom/motan/blob/master/LICENSE)
+[![Build Status](https://img.shields.io/travis/weibocom/motan/master.svg?label=Build)](https://travis-ci.org/weibocom/motan)
 
 # Overview
-Forest is a remote procedure call(RPC) framework for rapid development of high performance distributed services.
+基于netty, spring,轻量的高性能分布式RPC服务框架。简单，易用，高效。
 
 # Features
-- Create distributed services without writing extra code.
-- Provides cluster support and integrate with popular service discovery services like [Zookeeper][zookeeper].
-- Supports advanced scheduling features like weighted load-balance, scheduling cross IDCs, etc.
-- Optimization for high load scenarios, provides high availability in production environment.
+- 服务端支持多种序列化方式：fastjson，hession，kryo
+- 服务端支持多种压缩方式：gzip，snappy
+- 服务端可根据group进行线程隔离
+- 支持spring容器
+- 支持服务发现服务注册
+- 支持多种负载均衡策略
+- 支持基于Hystrix的容灾策略
+- client内置连接池
+- 基于netty实现，高性能，单机5w+
+- 基于spring容器，简单易用
+
+# Protocol
 
 # Quick Start
 
-The quick start gives very basic example of running client and server on the same machine. For the detailed information about using and developing Motan, please jump to [Documents](#documents).
 
-> The minimum requirements to run the quick start are:
->  * JDK 1.7 or above
+## 1.定义接口
 
-
-
-1. Write Action.
-
-    `src/main/java/com/dempe/forest/example/SampleAction.java`
+>通过注解`@ServiceProvider`暴露服务，通过`@MethodProvide`暴露方法默认配置，如：`压缩方式，序列化方式，客户端超时时间`
 
     ```java
-    @Action("sample")
-	public class SampleAction {
+	@ServiceProvider(serviceName = "sampleService", port = 8888)
+	public interface SampleService {
 
-	    private final static Logger LOGGER = LoggerFactory.getLogger(SampleAction.class);
+	    @MethodProvider(methodName = "say")
+	    String say(String str);
 
-	    @Autowired
-	    private SampleService sampleService;
+	    @MethodProvider(methodName = "say2")
+	    String say2(String str);
 
-	    /**
-	     * uri:服务路由uri
-	     * compressType：压缩类型，目前支持:ompressNo, gizp, snappy;
-	     * serializeType:序列化类型，目前支持kyro, fastjson, hession2;
-	     * timeOut:客户端请求超时间
-	     * group：服务线程组，通过group实现线程隔离
-	     *
-	     * @param word
-	     * @return
-	     */
-	    @Interceptor(id = "printInterceptor,metricInterceptor")//拦截器，多个拦截器用逗号分隔
-	    @Rate(value = 1000000)//服务限速
-	    @Export(uri = "hello", compressType = CompressType.compressNo, serializeType = SerializeType.fastjson, timeOut = 1000, group = "sample")
-	    public String hello(@HttpParam String word) {
-	        return sampleService.hello(word);
-	    }
+	    @MethodProvider(methodName = "echo")
+	    String echo(String msg);
 
-	    @Export
-	    public void noReplyMethod() {
-	        // do service
-	        LOGGER.info("----noReplyMethod---");
-	    }
+	    @MethodProvider(methodName = "hi",serializeType = SerializeType.fastjson, compressType = CompressType.gizp)
+	    String hi(String msg);
+
 	}
-
-
     ```
 
-2.config server use owner & start Server
+## 2.实现接口
+>基于注解`@ServiceExport`发布服务，基于注解 `@MethodExport`发布方法，
 
 ``` java
-@Config.Sources("classpath:server.properties")
-public interface ServerConfig extends Config {
+@ServiceExport
+public class SampleServiceImpl implements SampleService {
 
-    // *********************system configuration*********************
+    @MethodExport
+    @Rate(2)// 服务限流，每秒2个请求 可选
+    @Interceptor("metricInterceptor")//添加统计拦截器，可选
+    @Override
+    public String say(String str) {
+        return "say " + str;
+    }
 
-    @Key("forest.port")
-    @DefaultValue("9999")
-    int port();
+    @MethodExport
+    @Override
+    public String say2(String str) {
+        return "say2 " + str;
+    }
 
-    @DefaultValue("true")
-    boolean tcpNoDelay();
+    @Interceptor("metricInterceptor")
+    @MethodExport
+    @Override
+    public String echo(String msg) {
+        return "echo " + msg;
+    }
 
-    @DefaultValue("true")
-    boolean soKeepAlive();
-
-    @DefaultValue("65535")
-    int soBacklog();
-
-
-    // StandardThreadExecutor 业务线程池配置
-
-    @DefaultValue("20")
-    int coreThread();
-
-    @DefaultValue("200")
-    int maxThreads();
-
-    //
-    @Key("http.port")
-    @DefaultValue("8080")
-    public int httpPort();
-
-    @Key("http.backlog")
-    @DefaultValue("50")
-    int httpBacklog();
-
-    @Key("zookeeper.connectString")
-    @DefaultValue("")
-    String zkConnectStr();
-
-    @Key("zookeeper.basePath")
-    @DefaultValue("forest")
-    String zkBasePath();
-
-
-}
-```
-
-   `src/main/java/com/dempe/forest/example/ServerMain.java`
-
-``` java
-public class ServerMain {
-
-    public static void main(String[] args) throws InterruptedException {
-        ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
-        AnnotationRouterMapping mapping = new AnnotationRouterMapping(context);
-        ServerConfig config = ConfigFactory.create(ServerConfig.class);
-        ForestExecutorGroup executorGroup = new ForestExecutorGroup(config, mapping.listGroup(), context);
-        /**
-         * 对于同一业务接口，可以同时暴露两种协议
-         */
-        // 启动rpc服务
-        new NettyServer(mapping, config, executorGroup).doBind();
-        // 启动http服务
-        new HttpForestServer(mapping, config).start();
-
+    @MethodExport
+    @Override
+    public String hi(String msg) {
+        return "hi " + msg;
     }
 }
 
 ```
+## 3.服务端开发
 
-3. Create and start RPC Client.
+### spring context 配置：
+`application.xml`
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="quickstart"/>
+
+    <bean id="metricInterceptor" class="com.dempe.forest.core.interceptor.MetricInterceptor"/>
+
+    <!--服务注册-->
+    <bean id="namingService" class="com.dempe.forest.register.redis.RedisRegistryService">
+        <constructor-arg>
+            <bean class="com.dempe.forest.register.redis.RedisClient">
+                <property name="redisServer" value="116.31.122.26"></property>
+                <property name="port" value="6379"></property>
+                <property name="testOnBorrow" value="true"></property>
+                <property name="maxWait" value="2000"></property>
+            </bean>
+        </constructor-arg>
+        <property name="administrator" value="true"></property>
+        <property name="group" value="default/"></property>
+        <property name="expirePeriod" value="3000"></property>
+    </bean>
+
+
+    <bean id="forestServer" class="com.dempe.forest.support.spring.ForestServerBean">
+        <property name="registryCenterService" ref="namingService"></property>
+    </bean>
+
+</beans>
+```
+### Server开发
 
 ``` java
-public class ClientMain {
+public class SampleServer {
 
-    public final static ClientConfig config = ConfigFactory.create(ClientConfig.class);
+    public static void main(String[] args) throws Exception {
 
-    public static void main(String[] args) throws InterruptedException, IOException {
-        benchMarkTest();
+        new ClassPathXmlApplicationContext(new String[]{"application.xml"});
+    }
+}
+```
+
+## 4.客户端开发
+### spring配置
+`application-client.xml`
+> 可以使用api注解暴露的默认配置，也可以通过spring为每个方法定义配置
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:component-scan base-package="quickstart"/>
+
+    <bean id="methodConf" class="com.dempe.forest.MethodProviderConf">
+        <property name="compressType">
+            <util:constant static-field="com.dempe.forest.core.CompressType.compressNo"/>
+        </property>
+        <property name="serializeType">
+            <util:constant static-field="com.dempe.forest.core.SerializeType.fastjson"/>
+        </property>
+        <property name="timeout" value="5000"></property>
+    </bean>
+
+    <bean id="sampleServiceProxy" class="com.dempe.forest.support.spring.ProxyFactoryBean">
+        <property name="serviceInterface" value="quickstart.api.SampleService"></property>
+        <!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
+        <property name="methodConfMap">
+            <map>
+                <entry key="echo" value-ref="methodConf"></entry>
+                <entry key="say" value-ref="methodConf"></entry>
+            </map>
+        </property>
+    </bean>
+
+</beans>
+```
+### 客户端开发
+
+``` java
+public class SpringSampleClient {
+
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-client.xml"});
+        SampleService sampleServiceProxy = (SampleService) context.getBean("sampleServiceProxy");
+        String hello = sampleServiceProxy.say("hello");
+        System.out.println(hello);
     }
 
-    public static void benchMarkTest() throws InterruptedException {
-        NettyClient client = new NettyClient(config);
-        client.connect();
-        final SampleAction sampleAction = Proxy.getCglibProxy(SampleAction.class, new ChannelPool(client));
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        ExecutorService executorService = Executors.newCachedThreadPool();
-        for (int i = 0; i < 20; i++) {
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < 1000000; i++) {
-                        String hello = sampleAction.hello("hello====");
-                        if (i % 1000 == 0) {
-                            System.out.println(hello);
-                        }
-                    }
-                }
-            });
-        }
-        System.out.println("exeTime : " + stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
-    }
 }
 
 ```
 
-Execute main function in Client will invoke the remote service and print response.
-
-#Performance
-8G win64 1k String 3w+
+### Console输出
 
 ```
-21:01:50.910 [pool-1-thread-1] INFO  c.d.forest.example.MetricInterceptor 39 - group:sample, uri:/sample/hello, current tps:31310, avgTime:0, maxTime:16, minTime:0
-21:01:51.910 [pool-1-thread-1] INFO  c.d.forest.example.MetricInterceptor 39 - group:sample, uri:/sample/hello, current tps:32524, avgTime:0, maxTime:16, minTime:0
-21:01:52.910 [pool-1-thread-1] INFO  c.d.forest.example.MetricInterceptor 39 - group:sample, uri:/sample/hello, current tps:32375, avgTime:0, maxTime:16, minTime:0
-21:01:53.910 [pool-1-thread-1] INFO  c.d.forest.example.MetricInterceptor 39 - group:sample, uri:/sample/hello, current tps:32284, avgTime:0, maxTime:16, minTime:0
-21:01:54.909 [pool-1-thread-1] INFO  c.d.forest.example.MetricInterceptor 39 - group:sample, uri:/sample/hello, current tps:32291, avgTime:0, maxTime:16, minTime:0
-21:01:55.910 [pool-1-thread-1] INFO  c.d.forest.example.MetricInterceptor 39 - group:sample, uri:/sample/hello, current tps:31521, avgTime:0, maxTime:16, minTime:0
-21:01:56.910 [pool-1-thread-1] INFO  c.d.forest.example.MetricInterceptor 39 - group:sample, uri:/sample/hello, current tps:31588, avgTime:0, maxTime:16, minTime:0
+21:19:50.924 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:57904, avgTime:0, maxTime:5, minTime:0
+21:19:51.924 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:60205, avgTime:0, maxTime:5, minTime:0
+21:19:52.924 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:61398, avgTime:0, maxTime:5, minTime:0
+21:19:53.925 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:59617, avgTime:0, maxTime:5, minTime:0
+21:19:54.925 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:59147, avgTime:0, maxTime:5, minTime:0
+21:19:55.926 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:56509, avgTime:0, maxTime:5, minTime:0
+21:19:56.925 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:56032, avgTime:0, maxTime:5, minTime:0
 ```
+
+[更多示例](https://github.com/dempeZheng/forest/tree/master/src/main/java/quickstart)
 
 
 # Documents
@@ -191,13 +209,11 @@ Execute main function in Client will invoke the remote service and print respons
 * [Wiki](https://github.com/dempeZheng/forest/wiki)
 * [Wiki(中文)](https://github.comdempeZheng/forest/wiki/zh_overview)
 
-# Contributors
-
-
 
 # License
 
 Forest is released under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
 
 
 
