@@ -26,7 +26,8 @@
 
 >通过注解`@ServiceProvider`暴露服务，通过`@MethodProvide`暴露方法默认配置，如：`压缩方式，序列化方式，客户端超时时间`
 
-    ```java
+``` java
+
 	@ServiceProvider(serviceName = "sampleService", port = 8888)
 	public interface SampleService {
 
@@ -43,9 +44,12 @@
 	    String hi(String msg);
 
 	}
-    ```
+
+
+   ```
 
 ## 2.实现接口
+
 >基于注解`@ServiceExport`发布服务，基于注解 `@MethodExport`发布方法，
 
 ``` java
@@ -81,9 +85,11 @@ public class SampleServiceImpl implements SampleService {
 }
 
 ```
+
 ## 3.服务端开发
 
 ### spring context 配置：
+
 `application.xml`
 
 ```
@@ -122,6 +128,7 @@ public class SampleServiceImpl implements SampleService {
 
 </beans>
 ```
+
 ### Server开发
 
 ``` java
@@ -135,9 +142,14 @@ public class SampleServer {
 ```
 
 ## 4.客户端开发
+
 ### spring配置
+
 `application-client.xml`
+
 > 可以使用api注解暴露的默认配置，也可以通过spring为每个方法定义配置
+
+
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -173,9 +185,11 @@ public class SampleServer {
 
 </beans>
 ```
+
 ### 客户端开发
 
 ``` java
+
 public class SpringSampleClient {
 
     public static void main(String[] args) {
@@ -202,7 +216,7 @@ public class SpringSampleClient {
 ```
 
 [更多示例](https://github.com/dempeZheng/forest/tree/master/src/main/java/quickstart)
-
+ 
 
 # Documents
 
