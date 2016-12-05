@@ -223,6 +223,12 @@ public class SpringSampleClient {
 * [Wiki](https://github.com/dempeZheng/forest/wiki)
 * [Wiki(中文)](https://github.comdempeZheng/forest/wiki/zh_overview)
 
+# TODO
+
+- 服务注册发现
+- 基于Hystrix的容灾策略
+- client高可用
+- 多语言协议支持
 
 # License
 
