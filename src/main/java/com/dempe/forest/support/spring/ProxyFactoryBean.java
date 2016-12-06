@@ -1,6 +1,6 @@
 package com.dempe.forest.support.spring;
 
-import com.dempe.forest.MethodProviderConf;
+import com.dempe.forest.ClientOptions;
 import com.dempe.forest.client.proxy.RpcProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class ProxyFactoryBean implements FactoryBean<Object>, InitializingBean, 
 
     private RpcProxy rpcProxy;
 
-    private Map<String, MethodProviderConf> methodConfMap;
+    private Map<String, ClientOptions> methodConfMap;
 
     private Object proxyBean;
 
@@ -45,11 +45,11 @@ public class ProxyFactoryBean implements FactoryBean<Object>, InitializingBean, 
         return serviceInterface;
     }
 
-    public Map<String, MethodProviderConf> getMethodConfMap() {
+    public Map<String, ClientOptions> getMethodConfMap() {
         return methodConfMap;
     }
 
-    public void setMethodConfMap(Map<String, MethodProviderConf> methodConfMap) {
+    public void setMethodConfMap(Map<String, ClientOptions> methodConfMap) {
         this.methodConfMap = methodConfMap;
     }
 
@@ -62,11 +62,11 @@ public class ProxyFactoryBean implements FactoryBean<Object>, InitializingBean, 
     public void afterPropertiesSet() throws Exception {
         rpcProxy = new RpcProxy();
         if (methodConfMap != null) {
-            for (Map.Entry<String, MethodProviderConf> stringMethodConfBeanEntry : methodConfMap.entrySet()) {
+            for (Map.Entry<String, ClientOptions> stringMethodConfBeanEntry : methodConfMap.entrySet()) {
                 if (stringMethodConfBeanEntry.getKey() == null) {
                     LOGGER.warn("methodName is null,methodConfBean:{}", stringMethodConfBeanEntry.getValue());
                 }
-                rpcProxy.setMethodProviderConfig(stringMethodConfBeanEntry.getKey(), stringMethodConfBeanEntry.getValue());
+                rpcProxy.setMethodOption(stringMethodConfBeanEntry.getKey(), stringMethodConfBeanEntry.getValue());
             }
         }
         proxyBean = new ProxyFactoryBean();

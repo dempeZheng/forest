@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
  */
 public class ReferConfig {
 
-    private MethodProviderConf methodProviderConf;
+    private ClientOptions methodProviderConf;
 
     private String serviceName;
 
@@ -35,7 +35,7 @@ public class ReferConfig {
     public ReferConfig() {
         try {
             pool = new ChannelPool(new NettyClient(ConfigFactory.create(ClientConfig.class)));
-            methodProviderConf = new MethodProviderConf();
+            methodProviderConf = new ClientOptions();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -45,7 +45,7 @@ public class ReferConfig {
         return new ReferConfig();
     }
 
-    public ReferConfig setMethodProviderConf(MethodProviderConf methodProviderConf) {
+    public ReferConfig setMethodProviderConf(ClientOptions methodProviderConf) {
         this.methodProviderConf = methodProviderConf;
         return this;
     }

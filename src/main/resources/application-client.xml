@@ -14,7 +14,7 @@
     <aop:aspectj-autoproxy/>
     <bean id="hystrixAspect" class="com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCommandAspect"></bean>
 
-    <bean id="methodConf" class="com.dempe.forest.MethodProviderConf">
+    <bean id="clientOptions" class="com.dempe.forest.ClientOptions">
         <property name="compressType">
             <util:constant static-field="com.dempe.forest.core.CompressType.compressNo"/>
         </property>
@@ -30,8 +30,8 @@
         <!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
         <property name="methodConfMap">
             <map>
-                <entry key="echo" value-ref="methodConf"></entry>
-                <entry key="say" value-ref="methodConf"></entry>
+                <entry key="echo" value-ref="clientOptions"></entry>
+                <entry key="say" value-ref="clientOptions"></entry>
             </map>
         </property>
     </bean>

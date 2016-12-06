@@ -1,6 +1,6 @@
 package com.dempe.forest.client.proxy;
 
-import com.dempe.forest.MethodProviderConf;
+import com.dempe.forest.ClientOptions;
 import com.dempe.forest.RefConfMapping;
 import com.dempe.forest.ReferConfig;
 import com.dempe.forest.codec.Header;
@@ -76,8 +76,8 @@ public class RpcProxy implements InvocationHandler {
         return this;
     }
 
-    public RpcProxy setMethodProviderConfig(String methodName, MethodProviderConf methodProviderConf) {
-        ReferConfig referConfig = ReferConfig.makeReferConfig().setMethodName(methodName).setMethodProviderConf(methodProviderConf);
+    public RpcProxy setMethodOption(String methodName, ClientOptions clientOptions) {
+        ReferConfig referConfig = ReferConfig.makeReferConfig().setMethodName(methodName).setMethodProviderConf(clientOptions);
         this.referConfigList.add(referConfig);
         return this;
 
@@ -86,9 +86,6 @@ public class RpcProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-//        ProceedingJoinPoint joinPoint = new MethodInvocationProceedingJoinPoint((ProxyMethodInvocation) invocation);
-//        HystrixCommandAspect hystrixCommandAspect = new HystrixCommandAspect();
-//        return hystrixCommandAspect.methodsAnnotatedWithHystrixCommand(joinPoint);
         MethodProvider methodProvider = method.getAnnotation(MethodProvider.class);
         if (methodProvider == null) {
             LOGGER.info("method:{} cannot find methodProvider.", method.getName());
@@ -109,7 +106,6 @@ public class RpcProxy implements InvocationHandler {
         byte[] serialize = serialization.serialize(args);
         message.setPayload(compress.compress(serialize));
         NettyResponseFuture<Response> responseFuture = refConf.getPool().write(message, header.getTimeOut());
-//        throw new ForestFrameworkException("test");
         return responseFuture.getPromise().await().getResult();
     }
 }

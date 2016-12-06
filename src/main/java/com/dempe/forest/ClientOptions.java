@@ -10,7 +10,7 @@ import com.dempe.forest.core.SerializeType;
  * Time: 9:53
  * To change this template use File | Settings | File Templates.
  */
-public class MethodProviderConf {
+public class ClientOptions {
 
     private SerializeType serializeType;
 
@@ -22,7 +22,7 @@ public class MethodProviderConf {
         return serializeType;
     }
 
-    public MethodProviderConf setSerializeType(SerializeType serializeType) {
+    public ClientOptions setSerializeType(SerializeType serializeType) {
         this.serializeType = serializeType;
         return this;
     }
@@ -31,7 +31,7 @@ public class MethodProviderConf {
         return compressType;
     }
 
-    public MethodProviderConf setCompressType(CompressType compressType) {
+    public ClientOptions setCompressType(CompressType compressType) {
         this.compressType = compressType;
         return this;
     }
@@ -40,12 +40,12 @@ public class MethodProviderConf {
         return timeout;
     }
 
-    public MethodProviderConf setTimeout(int timeout) {
+    public ClientOptions setTimeout(int timeout) {
         this.timeout = timeout;
         return this;
     }
 
-    public static MethodProviderConf makeMethodProviderConf() {
-        return new MethodProviderConf();
+    public static ClientOptions create() {
+        return new ClientOptions();
     }
 }

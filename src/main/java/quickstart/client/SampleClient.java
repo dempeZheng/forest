@@ -1,7 +1,7 @@
 package quickstart.client;
 
 import com.dempe.forest.Constants;
-import com.dempe.forest.MethodProviderConf;
+import com.dempe.forest.ClientOptions;
 import com.dempe.forest.client.proxy.RpcProxy;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
@@ -25,15 +25,15 @@ public class SampleClient {
     }
 
     public static void sampleServiceTest() throws InterruptedException {
-        MethodProviderConf methodProviderConf = MethodProviderConf.makeMethodProviderConf()
+        ClientOptions clientOptions = ClientOptions.create()
                 .setCompressType(CompressType.gizp)
                 .setSerializeType(SerializeType.fastjson)
                 .setTimeout(Constants.DEFAULT_TIMEOUT);
         SampleService sampleService = new RpcProxy()
                 // set proxy say 方法配置(如果不配置，则默认使用接口注解的配置,如果都没有配置，则使用默认配置)
-                .setMethodProviderConfig("say", methodProviderConf)
-                .setMethodProviderConfig("say2", methodProviderConf)
-                .setMethodProviderConfig("echo", MethodProviderConf.makeMethodProviderConf()
+                .setMethodOption("say", clientOptions)
+                .setMethodOption("say2", clientOptions)
+                .setMethodOption("echo", ClientOptions.create()
                         .setSerializeType(SerializeType.hession2))
                 .getProxy(SampleService.class);
         String world = sampleService.say("world");
