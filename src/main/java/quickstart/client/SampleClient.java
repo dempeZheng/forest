@@ -21,7 +21,7 @@ public class SampleClient {
 
     public static void main(String[] args) throws InterruptedException {
         sampleServiceTest();
-        benchmarkTest();
+//        benchmarkTest();
     }
 
     public static void sampleServiceTest() throws InterruptedException {

@@ -12,8 +12,10 @@ import com.dempe.forest.core.annotation.ServiceProvider;
  * Time: 下午 5:24
  * To change this template use File | Settings | File Templates.
  */
+//@Component
 @ServiceProvider(serviceName = "sampleService", port = 8888)
 public interface SampleService {
+
 
     @MethodProvider(methodName = "say")
     String say(String str);
@@ -24,7 +26,8 @@ public interface SampleService {
     @MethodProvider(methodName = "echo")
     String echo(String msg);
 
-    @MethodProvider(methodName = "hi",serializeType = SerializeType.fastjson, compressType = CompressType.gizp)
+    @MethodProvider(methodName = "hi", serializeType = SerializeType.fastjson, compressType = CompressType.gizp)
     String hi(String msg);
+
 
 }

@@ -2,8 +2,6 @@ package com.dempe.forest.support.spring;
 
 import com.dempe.forest.MethodProviderConf;
 import com.dempe.forest.client.proxy.RpcProxy;
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -19,7 +17,7 @@ import java.util.Map;
  * Time: 10:44
  * To change this template use File | Settings | File Templates.
  */
-public class ProxyFactoryBean implements FactoryBean<Object>, InitializingBean, MethodInterceptor, DisposableBean {
+public class ProxyFactoryBean implements FactoryBean<Object>, InitializingBean, DisposableBean {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ProxyFactoryBean.class);
 
@@ -31,11 +29,6 @@ public class ProxyFactoryBean implements FactoryBean<Object>, InitializingBean, 
 
     private Object proxyBean;
 
-
-    @Override
-    public Object invoke(MethodInvocation invocation) throws Throwable {
-        return rpcProxy.invoke(proxyBean, invocation.getMethod(), invocation.getArguments());
-    }
 
     @Override
     public void destroy() throws Exception {

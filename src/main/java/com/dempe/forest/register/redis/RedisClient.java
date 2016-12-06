@@ -8,12 +8,12 @@ import javax.annotation.PostConstruct;
 
 /**
  * redis客户端
- * 
+ *
  * @author xiemalin
  * @since 1.0
  */
 public class RedisClient {
-    
+
     /**
      * cache name
      */
@@ -33,7 +33,7 @@ public class RedisClient {
 
     /**
      * get the jedisPool
-     * 
+     *
      * @return the jedisPool
      */
     public JedisPool getJedisPool() {
@@ -42,9 +42,8 @@ public class RedisClient {
 
     /**
      * set jedisPool value to jedisPool
-     * 
-     * @param jedisPool
-     *            the jedisPool to set
+     *
+     * @param jedisPool the jedisPool to set
      */
     protected void setJedisPool(JedisPool jedisPool) {
         this.jedisPool = jedisPool;
@@ -147,9 +146,8 @@ public class RedisClient {
 
     /**
      * set time out value
-     * 
-     * @param timeout
-     *            time out value
+     *
+     * @param timeout time out value
      */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
@@ -162,7 +160,7 @@ public class RedisClient {
 
     /**
      * get the redisServer
-     * 
+     *
      * @return the redisServer
      */
     public String getRedisServer() {
@@ -171,9 +169,8 @@ public class RedisClient {
 
     /**
      * set the redisServer
-     * 
-     * @param redisServer
-     *            the redisServer
+     *
+     * @param redisServer the redisServer
      */
     public void setRedisServer(String redisServer) {
         this.redisServer = redisServer;
@@ -181,7 +178,7 @@ public class RedisClient {
 
     /**
      * get the cacheName
-     * 
+     *
      * @return the cacheName
      */
     public String getCacheName() {
@@ -190,9 +187,8 @@ public class RedisClient {
 
     /**
      * set cacheName value to cacheName
-     * 
-     * @param cacheName
-     *            the cacheName to set
+     *
+     * @param cacheName the cacheName to set
      */
     public void setCacheName(String cacheName) {
         this.cacheName = cacheName;
@@ -200,7 +196,7 @@ public class RedisClient {
 
     /**
      * get the redisAuthKey
-     * 
+     *
      * @return the redisAuthKey
      */
     public String getRedisAuthKey() {
@@ -209,9 +205,8 @@ public class RedisClient {
 
     /**
      * set redisAuthKey value to redisAuthKey
-     * 
-     * @param redisAuthKey
-     *            the redisAuthKey to set
+     *
+     * @param redisAuthKey the redisAuthKey to set
      */
     public void setRedisAuthKey(String redisAuthKey) {
         this.redisAuthKey = redisAuthKey;
@@ -219,7 +214,7 @@ public class RedisClient {
 
     /**
      * get the port
-     * 
+     *
      * @return the port
      */
     public int getPort() {
@@ -228,9 +223,8 @@ public class RedisClient {
 
     /**
      * set port value to port
-     * 
-     * @param port
-     *            the port to set
+     *
+     * @param port the port to set
      */
     public void setPort(int port) {
         this.port = port;
@@ -238,7 +232,7 @@ public class RedisClient {
 
     /**
      * get the maxIdle
-     * 
+     *
      * @return the maxIdle
      */
     public int getMaxIdle() {
@@ -247,9 +241,8 @@ public class RedisClient {
 
     /**
      * set maxIdle value to maxIdle
-     * 
-     * @param maxIdle
-     *            the maxIdle to set
+     *
+     * @param maxIdle the maxIdle to set
      */
     public void setMaxIdle(int maxIdle) {
         this.maxIdle = maxIdle;
@@ -257,7 +250,7 @@ public class RedisClient {
 
     /**
      * get the maxWait
-     * 
+     *
      * @return the maxWait
      */
     public long getMaxWait() {
@@ -266,9 +259,8 @@ public class RedisClient {
 
     /**
      * set maxWait value to maxWait
-     * 
-     * @param maxWait
-     *            the maxWait to set
+     *
+     * @param maxWait the maxWait to set
      */
     public void setMaxWait(long maxWait) {
         this.maxWait = maxWait;
@@ -276,7 +268,7 @@ public class RedisClient {
 
     /**
      * get the testOnBorrow
-     * 
+     *
      * @return the testOnBorrow
      */
     public boolean isTestOnBorrow() {
@@ -285,9 +277,8 @@ public class RedisClient {
 
     /**
      * set testOnBorrow value to testOnBorrow
-     * 
-     * @param testOnBorrow
-     *            the testOnBorrow to set
+     *
+     * @param testOnBorrow the testOnBorrow to set
      */
     public void setTestOnBorrow(boolean testOnBorrow) {
         this.testOnBorrow = testOnBorrow;
@@ -295,7 +286,7 @@ public class RedisClient {
 
     /**
      * get the minIdle
-     * 
+     *
      * @return the minIdle
      */
     public int getMinIdle() {
@@ -304,9 +295,8 @@ public class RedisClient {
 
     /**
      * set minIdle value to minIdle
-     * 
-     * @param minIdle
-     *            the minIdle to set
+     *
+     * @param minIdle the minIdle to set
      */
     public void setMinIdle(int minIdle) {
         this.minIdle = minIdle;
@@ -314,7 +304,7 @@ public class RedisClient {
 
     /**
      * get the maxActive
-     * 
+     *
      * @return the maxActive
      */
     public int getMaxActive() {
@@ -323,9 +313,8 @@ public class RedisClient {
 
     /**
      * set maxActive value to maxActive
-     * 
-     * @param maxActive
-     *            the maxActive to set
+     *
+     * @param maxActive the maxActive to set
      */
     public void setMaxActive(int maxActive) {
         this.maxActive = maxActive;
@@ -333,7 +322,7 @@ public class RedisClient {
 
     /**
      * get the testOnReturn
-     * 
+     *
      * @return the testOnReturn
      */
     public boolean isTestOnReturn() {
@@ -342,9 +331,8 @@ public class RedisClient {
 
     /**
      * set testOnReturn value to testOnReturn
-     * 
-     * @param testOnReturn
-     *            the testOnReturn to set
+     *
+     * @param testOnReturn the testOnReturn to set
      */
     public void setTestOnReturn(boolean testOnReturn) {
         this.testOnReturn = testOnReturn;
@@ -352,7 +340,7 @@ public class RedisClient {
 
     /**
      * get the testWhileIdle
-     * 
+     *
      * @return the testWhileIdle
      */
     public boolean isTestWhileIdle() {
@@ -361,9 +349,8 @@ public class RedisClient {
 
     /**
      * set testWhileIdle value to testWhileIdle
-     * 
-     * @param testWhileIdle
-     *            the testWhileIdle to set
+     *
+     * @param testWhileIdle the testWhileIdle to set
      */
     public void setTestWhileIdle(boolean testWhileIdle) {
         this.testWhileIdle = testWhileIdle;
@@ -371,7 +358,7 @@ public class RedisClient {
 
     /**
      * get the timeBetweenEvictionRunsMillis
-     * 
+     *
      * @return the timeBetweenEvictionRunsMillis
      */
     public long getTimeBetweenEvictionRunsMillis() {
@@ -380,18 +367,17 @@ public class RedisClient {
 
     /**
      * set timeBetweenEvictionRunsMillis value to timeBetweenEvictionRunsMillis
-     * 
-     * @param timeBetweenEvictionRunsMillis
-     *            the timeBetweenEvictionRunsMillis to set
+     *
+     * @param timeBetweenEvictionRunsMillis the timeBetweenEvictionRunsMillis to set
      */
     public void setTimeBetweenEvictionRunsMillis(
-        long timeBetweenEvictionRunsMillis) {
+            long timeBetweenEvictionRunsMillis) {
         this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
     }
 
     /**
      * get the numTestsPerEvictionRun
-     * 
+     *
      * @return the numTestsPerEvictionRun
      */
     public int getNumTestsPerEvictionRun() {
@@ -400,9 +386,8 @@ public class RedisClient {
 
     /**
      * set numTestsPerEvictionRun value to numTestsPerEvictionRun
-     * 
-     * @param numTestsPerEvictionRun
-     *            the numTestsPerEvictionRun to set
+     *
+     * @param numTestsPerEvictionRun the numTestsPerEvictionRun to set
      */
     public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
         this.numTestsPerEvictionRun = numTestsPerEvictionRun;
@@ -410,7 +395,7 @@ public class RedisClient {
 
     /**
      * get the minEvictableIdleTimeMillis
-     * 
+     *
      * @return the minEvictableIdleTimeMillis
      */
     public long getMinEvictableIdleTimeMillis() {
@@ -419,9 +404,8 @@ public class RedisClient {
 
     /**
      * set minEvictableIdleTimeMillis value to minEvictableIdleTimeMillis
-     * 
-     * @param minEvictableIdleTimeMillis
-     *            the minEvictableIdleTimeMillis to set
+     *
+     * @param minEvictableIdleTimeMillis the minEvictableIdleTimeMillis to set
      */
     public void setMinEvictableIdleTimeMillis(long minEvictableIdleTimeMillis) {
         this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
@@ -429,7 +413,7 @@ public class RedisClient {
 
     /**
      * get the softMinEvictableIdleTimeMillis
-     * 
+     *
      * @return the softMinEvictableIdleTimeMillis
      */
     public long getSoftMinEvictableIdleTimeMillis() {
@@ -439,18 +423,17 @@ public class RedisClient {
     /**
      * set softMinEvictableIdleTimeMillis value to
      * softMinEvictableIdleTimeMillis
-     * 
-     * @param softMinEvictableIdleTimeMillis
-     *            the softMinEvictableIdleTimeMillis to set
+     *
+     * @param softMinEvictableIdleTimeMillis the softMinEvictableIdleTimeMillis to set
      */
     public void setSoftMinEvictableIdleTimeMillis(
-        long softMinEvictableIdleTimeMillis) {
+            long softMinEvictableIdleTimeMillis) {
         this.softMinEvictableIdleTimeMillis = softMinEvictableIdleTimeMillis;
     }
 
     /**
      * get the lifo
-     * 
+     *
      * @return the lifo
      */
     public boolean isLifo() {
@@ -459,9 +442,8 @@ public class RedisClient {
 
     /**
      * set lifo value to lifo
-     * 
-     * @param lifo
-     *            the lifo to set
+     *
+     * @param lifo the lifo to set
      */
     public void setLifo(boolean lifo) {
         this.lifo = lifo;
@@ -469,7 +451,7 @@ public class RedisClient {
 
     /**
      * get the timeout
-     * 
+     *
      * @return the timeout
      */
     public int getTimeout() {

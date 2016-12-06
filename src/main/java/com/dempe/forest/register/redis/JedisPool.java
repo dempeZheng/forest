@@ -26,12 +26,12 @@ import java.util.logging.Logger;
 
 /**
  * Connection pool for jedis.
- * 
+ *
  * @author xiemalin
  * @since 1.0
  */
 public class JedisPool extends Pool<Jedis> {
-    
+
     private static final Logger LOG = Logger.getLogger(JedisPool.class.getName());
 
     public JedisPool(final GenericObjectPoolConfig poolConfig, final String host) {
@@ -60,7 +60,7 @@ public class JedisPool extends Pool<Jedis> {
      */
     private static class JedisFactory extends BasePooledObjectFactory<Jedis> {
         /**
-         * 
+         *
          */
         private static final String REDIS_PING_KEY = "____pbrpc_ping_key_____";
         private final String host;
@@ -94,9 +94,8 @@ public class JedisPool extends Pool<Jedis> {
 
         /**
          * This implementation always returns {@code true}.
-         * 
+         *
          * @param p ignored
-         * 
          * @return {@code true}
          */
         @Override

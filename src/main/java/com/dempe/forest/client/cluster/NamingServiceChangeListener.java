@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 /**
  * A listenr for {@link NamingService} changed call back.
- * 
+ *
  * @author xiemalin
  * @since 2.18
  */
@@ -50,7 +50,7 @@ public abstract class NamingServiceChangeListener {
 
     /**
      * set delay value to delay
-     * 
+     *
      * @param delay the delay to set
      */
     public void setDelay(long delay) {
@@ -59,7 +59,7 @@ public abstract class NamingServiceChangeListener {
 
     /**
      * set period value to period
-     * 
+     *
      * @param period the period to set
      */
     public void setPeriod(long period) {
@@ -89,7 +89,7 @@ public abstract class NamingServiceChangeListener {
         private Map<String, List<RegisterInfo>> serviceMap;
 
         public UpdateNamingServiceTask(NamingServiceChangeListener loadBalancer,
-                Map<String, List<RegisterInfo>> serviceMap) {
+                                       Map<String, List<RegisterInfo>> serviceMap) {
             this.loadBalancer = loadBalancer;
             this.serviceMap = new HashMap<String, List<RegisterInfo>>();
 
@@ -97,12 +97,12 @@ public abstract class NamingServiceChangeListener {
             Iterator<Entry<String, List<RegisterInfo>>> iter = serviceMap.entrySet().iterator();
             while (iter.hasNext()) {
                 Entry<String, List<RegisterInfo>> entry = iter.next();
-                
+
                 List<RegisterInfo> list = entry.getValue();
                 if (list == null) {
                     list = new ArrayList<RegisterInfo>();
                 }
-                
+
                 this.serviceMap.put(entry.getKey(), new ArrayList<RegisterInfo>(list));
             }
 

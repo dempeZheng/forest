@@ -20,8 +20,8 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
- * Base pool class 
- * 
+ * Base pool class
+ *
  * @author xiemalin
  * @since 2.27
  */

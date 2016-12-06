@@ -21,7 +21,6 @@ import com.dempe.forest.client.cluster.NamingService;
 import com.dempe.forest.register.AsyncRegistryService;
 import com.dempe.forest.register.NotifyListener;
 import com.dempe.forest.register.RegisterInfo;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import redis.clients.jedis.Jedis;
@@ -37,7 +36,7 @@ import java.util.logging.Logger;
 
 /**
  * Register service implements by Redis server.
- * 
+ *
  * @author xiemalin
  * @since 1.0
  */
@@ -53,11 +52,11 @@ public class RedisRegistryService extends AsyncRegistryService implements Naming
     private final AtomicBoolean initilized = new AtomicBoolean(false);
 
     private final Set<RegisterInfo> registeredInfoSet = new CopyOnWriteArraySet<RegisterInfo>();
-    
+
     private static final String REGISTER = "REGISTER";
 
     private static final String UNREGISTER = "UNREGISTER";
-    
+
     private String group;
 
     private boolean administrator = false;
@@ -80,7 +79,7 @@ public class RedisRegistryService extends AsyncRegistryService implements Naming
 
     /**
      * set expirePeriod value to expirePeriod
-     * 
+     *
      * @param expirePeriod the expirePeriod to set
      */
     public void setExpirePeriod(int expirePeriod) {
@@ -89,7 +88,7 @@ public class RedisRegistryService extends AsyncRegistryService implements Naming
 
     /**
      * set dummyRegisterFailed value to dummyRegisterFailed
-     * 
+     *
      * @param dummyRegisterFailed the dummyRegisterFailed to set
      */
     public void setDummyRegisterFailed(boolean dummyRegisterFailed) {
@@ -98,7 +97,7 @@ public class RedisRegistryService extends AsyncRegistryService implements Naming
 
     /**
      * get the redisClient
-     * 
+     *
      * @return the redisClient
      */
     public JedisPool getJedisPool() {
@@ -107,7 +106,7 @@ public class RedisRegistryService extends AsyncRegistryService implements Naming
 
     /**
      * set administrator value to administrator
-     * 
+     *
      * @param administrator the administrator to set
      */
     public void setAdministrator(boolean administrator) {
@@ -116,7 +115,7 @@ public class RedisRegistryService extends AsyncRegistryService implements Naming
 
     /**
      * Initialize with redis client
-     * 
+     *
      * @param redisClient
      */
     public RedisRegistryService(RedisClient redisClient) {
@@ -415,6 +414,7 @@ public class RedisRegistryService extends AsyncRegistryService implements Naming
 
     /**
      * get the group
+     *
      * @return the group
      */
     public String getGroup() {
@@ -423,6 +423,7 @@ public class RedisRegistryService extends AsyncRegistryService implements Naming
 
     /**
      * set group value to group
+     *
      * @param group the group to set
      */
     public void setGroup(String group) {

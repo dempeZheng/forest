@@ -13,7 +13,7 @@ public class Main2 {
 
     public static void main(String[] args) {
         Jedis jedis = new Jedis("116.31.122.26");
-        jedis.set("hello","1");
+        jedis.set("hello", "1");
         String hello = jedis.get("hello");
         System.out.println(hello);
     }

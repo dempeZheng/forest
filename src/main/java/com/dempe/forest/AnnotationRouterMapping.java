@@ -169,7 +169,7 @@ public class AnnotationRouterMapping {
         }
     }
 
-    public  Set<String> getServiceNameSet() {
+    public Set<String> getServiceNameSet() {
         return serviceNameSet;
     }
 }

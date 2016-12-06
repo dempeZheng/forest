@@ -26,21 +26,22 @@ import java.util.concurrent.LinkedBlockingDeque;
  * @since 2.27
  */
 public abstract class AsyncRegistryService implements RegistryCenterService {
-    
+
     private LinkedBlockingDeque<RegisterInfo> asyncQueue = new LinkedBlockingDeque<RegisterInfo>(100);
-    
+
     private boolean stop;
-    
+
     private ExecutorService es = Executors.newFixedThreadPool(1);
-    
+
     /**
      * get the stop
+     *
      * @return the stop
      */
     public boolean isStop() {
         return stop;
     }
-    
+
     public void stop() {
         stop = true;
         es.shutdown();
@@ -48,6 +49,7 @@ public abstract class AsyncRegistryService implements RegistryCenterService {
 
     /**
      * set stop value to stop
+     *
      * @param stop the stop to set
      */
     public void setStop(boolean stop) {
@@ -55,16 +57,16 @@ public abstract class AsyncRegistryService implements RegistryCenterService {
     }
 
     /**
-     * 
+     *
      */
     public AsyncRegistryService() {
-        
+
         es.execute(new Runnable() {
-            
+
             @Override
             public void run() {
                 while (!stop) {
-                    RegisterInfo registerInfo  = null;
+                    RegisterInfo registerInfo = null;
                     try {
                         registerInfo = asyncQueue.take();
                         doRegister(registerInfo);
@@ -77,7 +79,7 @@ public abstract class AsyncRegistryService implements RegistryCenterService {
                 }
             }
         });
-        
+
     }
 
     /* (non-Javadoc)

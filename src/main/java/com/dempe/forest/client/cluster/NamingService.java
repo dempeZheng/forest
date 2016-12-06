@@ -24,7 +24,7 @@ import java.util.Set;
 
 /**
  * Naming service interface.
- * 
+ *
  * @author xiemalin
  * @since 2.15
  */
@@ -32,7 +32,7 @@ public interface NamingService {
 
     /**
      * get server list from naming service.
-     * 
+     *
      * @param serviceSignatures service signatures
      * @return server list mapped by service signature.
      * @throws Exception in case of any exception

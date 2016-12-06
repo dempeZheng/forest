@@ -41,4 +41,5 @@ public class SampleServiceImpl implements SampleService {
     public String hi(String msg) {
         return "hi " + msg;
     }
+
 }

@@ -28,7 +28,7 @@ public class MetricInterceptor extends AbstractInvokerInterceptor {
     private final static Map<String, Metric> metricsMap = Maps.newConcurrentMap();
     private final static String BEG_TIME = "begTime";
 
-   final static ScheduledFuture<?> scheduledFuture = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
+    final static ScheduledFuture<?> scheduledFuture = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
         @Override
         public void run() {
             for (Map.Entry<String, Metric> stringMetricEntry : metricsMap.entrySet()) {
