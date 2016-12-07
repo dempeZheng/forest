@@ -24,7 +24,7 @@ public enum MessageType {
         switch (value & RESPONSE_MESSAGE_TYPE) {
             case 0x0:
                 return Request.class;
-            case 0x1:
+            case RESPONSE_MESSAGE_TYPE:
                 return Response.class;
             default:
                 return Request.class;
@@ -41,5 +41,7 @@ public enum MessageType {
     }
 
     public final static byte RESPONSE_MESSAGE_TYPE = (byte) (1 << 7);
+
+
 
 }

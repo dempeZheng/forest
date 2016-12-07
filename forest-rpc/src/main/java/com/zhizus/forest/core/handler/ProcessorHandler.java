@@ -81,7 +81,7 @@ class InvokerRunnable implements Runnable {
         byte extend = (byte) (message.getHeader().getExtend() | MessageType.RESPONSE_MESSAGE_TYPE);
         message.getHeader().setExtend(extend);
         response.setResult(result);
-        ctx.writeAndFlush(new Message<Response>(message.getHeader(), response));
+        ctx.writeAndFlush(new Message(message.getHeader(), response));
     }
 
 }
