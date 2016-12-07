@@ -13,9 +13,8 @@
 - 支持spring容器
 - 支持服务发现服务注册
 - 支持多种负载均衡策略
-- 支持基于Hystrix的容灾策略
 - client内置连接池
-- 基于netty实现，高性能，单机5w+
+- 基于netty实现，高性能，单机6w
 - 基于spring容器，简单易用
 
 # Protocol
@@ -29,20 +28,15 @@
 
 ``` java
 
-	@ServiceProvider(serviceName = "sampleService", port = 8888)
+	@ServiceProvider(serviceName = "sampleService", haStrategyType = HaStrategyType.FAIL_FAST,
+	        loadBalanceType = LoadBalanceType.RANDOM, connectionTimeout = Constants.CONNECTION_TIMEOUT, port = 8888)
 	public interface SampleService {
 
 	    @MethodProvider(methodName = "say")
 	    String say(String str);
 
-	    @MethodProvider(methodName = "say2")
-	    String say2(String str);
-
-	    @MethodProvider(methodName = "echo")
+	    @MethodProvider(methodName = "echo", serializeType = SerializeType.fastjson, compressType = CompressType.gzip)
 	    String echo(String msg);
-
-	    @MethodProvider(methodName = "hi",serializeType = SerializeType.fastjson, compressType = CompressType.gizp)
-	    String hi(String msg);
 
 	}
 
@@ -54,36 +48,25 @@
 >基于注解`@ServiceExport`发布服务，基于注解 `@MethodExport`发布方法，
 
 ``` java
-@ServiceExport
-public class SampleServiceImpl implements SampleService {
 
-    @MethodExport
-    @Rate(2)// 服务限流，每秒2个请求 可选
-    @Interceptor("metricInterceptor")//添加统计拦截器，可选
-    @Override
-    public String say(String str) {
-        return "say " + str;
-    }
+	@ServiceExport
+	public class SampleServiceImpl implements SampleService {
 
-    @MethodExport
-    @Override
-    public String say2(String str) {
-        return "say2 " + str;
-    }
+	    @MethodExport
+	    @Rate(2)
+	    @Override
+	    public String say(String str) {
+	        return "say " + str;
+	    }
 
-    @Interceptor("metricInterceptor")
-    @MethodExport
-    @Override
-    public String echo(String msg) {
-        return "echo " + msg;
-    }
+	    @Interceptor("metricInterceptor")
+	    @MethodExport
+	    @Override
+	    public String echo(String msg) {
+	        return "echo " + msg;
+	    }
+	}
 
-    @MethodExport
-    @Override
-    public String hi(String msg) {
-        return "hi " + msg;
-    }
-}
 
 ```
 
@@ -94,57 +77,42 @@ public class SampleServiceImpl implements SampleService {
 `application.xml`
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="quickstart"/>
+	<?xml version="1.0" encoding="UTF-8"?>
+	<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	       xmlns:context="http://www.springframework.org/schema/context"
+	       xmlns="http://www.springframework.org/schema/beans"
+	       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	        http://www.springframework.org/schema/beans/spring-beans.xsd
+	        http://www.springframework.org/schema/context
+	        http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean id="metricInterceptor" class="com.dempe.forest.core.interceptor.MetricInterceptor"/>
+	    <context:component-scan base-package="com.zhizus.forest.demo"/>
 
-    <!--服务注册-->
-    <bean id="namingService" class="com.dempe.forest.register.redis.RedisRegistryService">
-        <constructor-arg>
-            <bean class="com.dempe.forest.register.redis.RedisClient">
-                <property name="redisServer" value="116.31.122.26"></property>
-                <property name="port" value="6379"></property>
-                <property name="testOnBorrow" value="true"></property>
-                <property name="maxWait" value="2000"></property>
-            </bean>
-        </constructor-arg>
-        <property name="administrator" value="true"></property>
-        <property name="group" value="default/"></property>
-        <property name="expirePeriod" value="3000"></property>
-    </bean>
+	    <bean id="metricInterceptor" class="com.zhizus.forest.core.interceptor.MetricInterceptor"/>
 
+	    <bean id="forestServer" class="com.zhizus.forest.support.spring.ForestServerBean"/>
 
-    <bean id="forestServer" class="com.dempe.forest.support.spring.ForestServerBean">
-        <property name="registryCenterService" ref="namingService"></property>
-    </bean>
-
-</beans>
+	</beans>
 ```
 
 ### Server开发
 
 ``` java
-public class SampleServer {
 
-    public static void main(String[] args) throws Exception {
+	public class SampleServer {
 
-        new ClassPathXmlApplicationContext(new String[]{"application.xml"});
-    }
-}
+	    public static void main(String[] args) throws Exception {
+	        new ClassPathXmlApplicationContext(new String[]{"application.xml"});
+	    }
+
+	}
+
 ```
 
 ## 4.客户端开发
 
-### spring配置
+###基于spring配置
 
 `application-client.xml`
 
@@ -152,56 +120,79 @@ public class SampleServer {
 
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <context:component-scan base-package="quickstart"/>
+	<?xml version="1.0" encoding="UTF-8"?>
+	<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	       xmlns:context="http://www.springframework.org/schema/context"
+	       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+	       xmlns:aop="http://www.springframework.org/schema/aop"
+	       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	        http://www.springframework.org/schema/beans/spring-beans.xsd
+	        http://www.springframework.org/schema/context
+	        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <bean id="methodConf" class="com.dempe.forest.MethodProviderConf">
-        <property name="compressType">
-            <util:constant static-field="com.dempe.forest.core.CompressType.compressNo"/>
-        </property>
-        <property name="serializeType">
-            <util:constant static-field="com.dempe.forest.core.SerializeType.fastjson"/>
-        </property>
-        <property name="timeout" value="5000"></property>
-    </bean>
+	    <context:component-scan base-package="com.zhizus.forest.demo.client"/>
 
-    <bean id="sampleServiceProxy" class="com.dempe.forest.support.spring.ForestProxyFactoryBean">
-        <property name="serviceInterface" value="com.zhizus.forest.demo.api.SampleService"></property>
-        <!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
-        <property name="methodConfMap">
-            <map>
-                <entry key="echo" value-ref="methodConf"></entry>
-                <entry key="say" value-ref="methodConf"></entry>
-            </map>
-        </property>
-    </bean>
+	    <bean id="methodConfig" class="com.zhizus.forest.common.config.MethodConfig">
+	        <property name="compressType">
+	            <util:constant static-field="com.zhizus.forest.common.CompressType.none"/>
+	        </property>
+	        <property name="serializeType">
+	            <util:constant static-field="com.zhizus.forest.common.SerializeType.fastjson"/>
+	        </property>
+	        <property name="timeout" value="5000"></property>
+	    </bean>
 
-</beans>
+
+	    <bean id="sampleServiceProxy" class="com.zhizus.forest.support.spring.ForestProxyFactoryBean">
+	        <property name="serviceInterface" value="com.zhizus.forest.demo.api.SampleService"></property>
+	        <!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
+	        <property name="methodConfigMap">
+	            <map>
+	                <entry key="echo" value-ref="methodConfig"></entry>
+	                <entry key="say" value-ref="methodConfig"></entry>
+	            </map>
+	        </property>
+	    </bean>
+
+
+	</beans>
 ```
-
-### 客户端开发
 
 ``` java
 
-public class SpringSampleClient {
+	public class SampleClient {
 
-    public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-client.xml"});
-        SampleService sampleServiceProxy = (SampleService) context.getBean("sampleServiceProxy");
-        String hello = sampleServiceProxy.say("hello");
-        System.out.println(hello);
-    }
+	    public static void main(String[] args) throws InterruptedException {
+	        ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-client.xml"});
+	        SampleService bean = (SampleService) context.getBean("sampleServiceProxy");
+	        String test = bean.say("hello");
+	        System.out.println(test);
 
-}
+	    }
+```
 
+### 基于默认注解
+
+```java
+
+	SampleService sampleService = Forest.from(SampleService.class);
+
+```
+
+### 基于代码自定义配置
+
+``` java
+
+	SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Builder.newBuilder()
+		                .withMethodConfig("say", MethodConfig.Builder.newBuilder()
+		                        .withCompressType(CompressType.none)
+		                        .withSerializeType(SerializeType.fastjson)
+		                        .build())
+		                .withMethodConfig("echo", MethodConfig.Builder.newBuilder()
+		                        .withCompressType(CompressType.none)
+		                        .build())
+		                .build());
 ```
 
 ### Console输出
@@ -216,19 +207,17 @@ public class SpringSampleClient {
 21:19:56.925 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:56032, avgTime:0, maxTime:5, minTime:0
 ```
 
-[更多示例](https://github.com/dempeZheng/forest/tree/master/src/main/java/quickstart)
+[更多示例](https://github.com/dempeZheng/forest/tree/master/forest-demo)
 
 
 # Documents
 
-* [Wiki](https://github.com/dempeZheng/forest/wiki)
 * [Wiki(中文)](https://github.comdempeZheng/forest/wiki/zh_overview)
 
 # TODO
 
 - 服务注册发现
 - 基于Hystrix的容灾策略
-- client高可用
 - 多语言协议支持
 
 # License
