@@ -173,8 +173,8 @@ public class SampleServer {
         <property name="timeout" value="5000"></property>
     </bean>
 
-    <bean id="sampleServiceProxy" class="com.dempe.forest.support.spring.ProxyFactoryBean">
-        <property name="serviceInterface" value="quickstart.api.SampleService"></property>
+    <bean id="sampleServiceProxy" class="com.dempe.forest.support.spring.ForestProxyFactoryBean">
+        <property name="serviceInterface" value="com.zhizus.forest.demo.api.SampleService"></property>
         <!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
         <property name="methodConfMap">
             <map>
