@@ -21,7 +21,7 @@ import com.zhizus.forest.common.util.ForestUtil;
  * Time: 16:23
  * To change this template use File | Settings | File Templates.
  */
-public class Header implements Cloneable {
+public class Header {
 
     private short magic;// 魔数
     private byte version; // 协议版本
@@ -32,14 +32,12 @@ public class Header implements Cloneable {
      */
     /**
      * 扩展字段[0-2=>序列化方式，3-4=>压缩方式，0 不压缩,1 gzip，2使用Snappy 1.0.5
-     * 5-6=>(event( 可支持4种event， 如normal, exception等)),7=>]
+     * 5-6=>(event( 可支持4种event， 如normal, exception等)),7=>0:request,1:response]
      */
     private byte extend;
     private Long messageID;// 消息id
-    private String uri;// 协议路由uri
     private Integer size;// 消息payload长度
 
-    private transient long timeOut;
 
     public Header() {
     }
@@ -49,20 +47,17 @@ public class Header implements Cloneable {
         this.version = version;
     }
 
-    public Header(short magic, byte version, byte extend, String uri, long timeOut) {
+    public Header(short magic, byte version, byte extend) {
         this.magic = magic;
         this.version = version;
         this.extend = extend;
-        this.uri = uri;
-        this.timeOut = timeOut;
     }
 
-    public Header(short magic, byte version, byte extend, Long messageID, String uri, Integer size) {
+    public Header(short magic, byte version, byte extend, Long messageID,  Integer size) {
         this.magic = magic;
         this.version = version;
         this.extend = extend;
         this.messageID = messageID;
-        this.uri = uri;
         this.size = size;
     }
 
@@ -114,27 +109,6 @@ public class Header implements Cloneable {
         this.size = size;
     }
 
-    public String getUri() {
-        return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
-    public long getTimeOut() {
-        return timeOut;
-    }
-
-    public void setTimeOut(long timeOut) {
-        this.timeOut = timeOut;
-    }
-
-    @Override
-    public Header clone() throws CloneNotSupportedException {
-        return (Header) super.clone();
-    }
-
     public static class HeaderMaker {
         HeaderMaker() {
         }
@@ -153,11 +127,6 @@ public class Header implements Cloneable {
 
         public HeaderMaker loadWithMethodConfig(MethodConfig config) {
             header.setExtend(ForestUtil.getExtend(config.getSerializeType(), config.getCompressType()));
-            return this;
-        }
-
-        public HeaderMaker withUri(String uri) {
-            header.setUri(uri);
             return this;
         }
 

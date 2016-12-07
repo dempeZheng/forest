@@ -21,7 +21,7 @@ public @interface MethodProvider {
 
     SerializeType serializeType() default SerializeType.kyro;
 
-    CompressType compressType() default CompressType.compressNo;
+    CompressType compressType() default CompressType.none;
 
     int timeout() default Constants.DEFAULT_TIMEOUT; // 客户端超时时间
 

@@ -1,6 +1,11 @@
 package com.zhizus.forest.common.codec;
 
+import com.zhizus.forest.common.CompressType;
 import com.zhizus.forest.common.Constants;
+import com.zhizus.forest.common.MessageType;
+import com.zhizus.forest.common.SerializeType;
+import com.zhizus.forest.common.codec.compress.Compress;
+import com.zhizus.forest.common.codec.serialize.Serialization;
 import com.zhizus.forest.common.exception.ForestFrameworkException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,7 +20,7 @@ public class ForestDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
-        if (byteBuf.readableBytes() < Constants.HEADER_SIZE_NEW) {
+        if (byteBuf.readableBytes() < Constants.HEADER_SIZE) {
             return;
         }
         byteBuf.markReaderIndex();
@@ -27,14 +32,6 @@ public class ForestDecoder extends ByteToMessageDecoder {
         byte version = byteBuf.readByte();
         byte extend = byteBuf.readByte();
         long messageID = byteBuf.readLong();
-        short uriLen = byteBuf.readShort();
-        if (byteBuf.readableBytes() < uriLen + 4) {
-            byteBuf.resetReaderIndex();
-            return;
-        }
-        byte[] uriArr = new byte[uriLen];
-        byteBuf.readBytes(uriArr);
-        String uri = new String(uriArr);
         int size = byteBuf.readInt();
         if (byteBuf.readableBytes() < size) {
             byteBuf.resetReaderIndex();
@@ -43,10 +40,12 @@ public class ForestDecoder extends ByteToMessageDecoder {
         // TODO 限制最大包长
         byte[] payload = new byte[size];
         byteBuf.readBytes(payload);
-        Header header = new Header(magic, version, extend, messageID, uri, size);
-        Message message = new Message();
-        message.setHeader(header);
-        message.setPayload(payload);
+
+        Serialization serialization = SerializeType.getSerializationByExtend(extend);
+        Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
+        Object req =  serialization.deserialize(compress.unCompress(payload), MessageType.getMessageTypeByExtend(extend));
+        Header header = new Header(magic, version, extend, messageID, size);
+        Message message = new Message(header, req);
         list.add(message);
     }
 }

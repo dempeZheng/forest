@@ -16,7 +16,7 @@
 
     <bean id="methodConfig" class="com.zhizus.forest.common.config.MethodConfig">
         <property name="compressType">
-            <util:constant static-field="com.zhizus.forest.common.CompressType.compressNo"/>
+            <util:constant static-field="com.zhizus.forest.common.CompressType.none"/>
         </property>
         <property name="serializeType">
             <util:constant static-field="com.zhizus.forest.common.SerializeType.fastjson"/>

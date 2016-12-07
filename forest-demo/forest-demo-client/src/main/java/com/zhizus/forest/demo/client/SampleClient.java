@@ -16,19 +16,19 @@ public class SampleClient {
 
     public static void main(String[] args) throws InterruptedException {
         serviceTest();
-        serviceSpringTest();
-//        benchmarkTest();
+//        serviceSpringTest();
+        benchmarkTest();
 
     }
 
     public static void serviceTest() throws InterruptedException {
         SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Builder.newBuilder()
                 .withMethodConfig("say", MethodConfig.Builder.newBuilder()
-                        .withCompressType(CompressType.compressNo)
+                        .withCompressType(CompressType.none)
                         .withSerializeType(SerializeType.fastjson)
                         .build())
                 .withMethodConfig("echo", MethodConfig.Builder.newBuilder()
-                        .withCompressType(CompressType.compressNo)
+                        .withCompressType(CompressType.none)
                         .build())
                 .build());
 

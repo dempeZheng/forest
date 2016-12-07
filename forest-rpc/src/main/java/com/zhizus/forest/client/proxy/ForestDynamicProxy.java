@@ -1,19 +1,16 @@
 package com.zhizus.forest.client.proxy;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import com.zhizus.forest.client.cluster.ClusterProvider;
 import com.zhizus.forest.client.proxy.processor.*;
-import com.zhizus.forest.common.codec.Header;
-import com.zhizus.forest.common.codec.Message;
-import com.zhizus.forest.common.codec.compress.Compress;
-import com.zhizus.forest.common.codec.serialize.Serialization;
-import com.zhizus.forest.common.config.MethodConfig;
-import com.zhizus.forest.common.config.ServiceConfig;
-import com.zhizus.forest.common.CompressType;
-import com.zhizus.forest.common.SerializeType;
 import com.zhizus.forest.common.annotation.MethodProvider;
 import com.zhizus.forest.common.annotation.ServiceProvider;
-import com.zhizus.forest.common.util.ForestUtil;
-import com.google.common.base.Strings;
+import com.zhizus.forest.common.codec.Header;
+import com.zhizus.forest.common.codec.Message;
+import com.zhizus.forest.common.codec.Request;
+import com.zhizus.forest.common.config.MethodConfig;
+import com.zhizus.forest.common.config.ServiceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +34,8 @@ public class ForestDynamicProxy implements InvocationHandler {
     private String serviceName;
 
     private ClusterProvider clusterProvider;
+
+    public Map<Method,Header> headerMapCache = Maps.newConcurrentMap();
 
     public ForestDynamicProxy(ServiceConfig serviceConfig, Class<?> interfaceClass) throws InterruptedException {
         this(interfaceClass);
@@ -98,14 +97,17 @@ public class ForestDynamicProxy implements InvocationHandler {
             LOGGER.info("serviceName:{},methodName is not found", serviceName, method.getName());
             return null;
         }
-        Compress compress = CompressType.getCompressTypeByValueByExtend(methodConfig.getCompressType().getValue());
-        Serialization serialization = SerializeType.getSerializationByExtend(methodConfig.getSerializeType().getValue());
-        byte[] serialize = serialization.serialize(args);
-        Message message = new Message(Header.HeaderMaker.newMaker()
-                .loadWithMethodConfig(methodConfig)
-                .withMessageId(id.incrementAndGet())
-                .withUri(ForestUtil.buildUri(serviceName, methodName)).make(),
-                compress.compress(serialize));
+        Header header = headerMapCache.get(method);
+        if(header==null){
+            header = Header.HeaderMaker.newMaker()
+                    .loadWithMethodConfig(methodConfig)
+                    .withMessageId(id.incrementAndGet()).make();
+
+        }
+
+
+        Message message = new Message(header,
+                new Request(serviceName, methodName, args));
         return clusterProvider.call(message);
 
     }

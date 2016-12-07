@@ -1,5 +1,9 @@
 package com.zhizus.forest.common.codec;
 
+import com.zhizus.forest.common.CompressType;
+import com.zhizus.forest.common.SerializeType;
+import com.zhizus.forest.common.codec.compress.Compress;
+import com.zhizus.forest.common.codec.serialize.Serialization;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
@@ -16,9 +20,10 @@ public class ForestEncoder extends MessageToByteEncoder<Message> {
         byteBuf.writeByte(header.getVersion());
         byteBuf.writeByte(header.getExtend());
         byteBuf.writeLong(header.getMessageID());
-        byteBuf.writeShort(header.getUri().length());
-        byteBuf.writeBytes(header.getUri().getBytes());
-        byteBuf.writeInt(message.getPayload().length);
-        byteBuf.writeBytes(message.getPayload());
+        Serialization serialization = SerializeType.getSerializationByExtend(header.getExtend());
+        Compress compress = CompressType.getCompressTypeByValueByExtend(header.getExtend());
+        byte[] payload = compress.compress(serialization.serialize(message.getContent()));
+        byteBuf.writeInt(payload.length);
+        byteBuf.writeBytes(payload);
     }
 }

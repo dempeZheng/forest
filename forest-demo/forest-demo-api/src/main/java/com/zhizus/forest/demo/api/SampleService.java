@@ -15,7 +15,7 @@ public interface SampleService {
     @MethodProvider(methodName = "say")
     String say(String str);
 
-    @MethodProvider(methodName = "echo", serializeType = SerializeType.fastjson, compressType = CompressType.gizp)
+    @MethodProvider(methodName = "echo", serializeType = SerializeType.fastjson, compressType = CompressType.gzip)
     String echo(String msg);
 
 

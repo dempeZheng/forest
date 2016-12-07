@@ -1,12 +1,14 @@
 package com.zhizus.forest.core.interceptor;
 
 
-import com.zhizus.forest.ForestContext;
-import com.zhizus.forest.common.util.ForestUtil;
 import com.google.common.collect.Maps;
+import com.zhizus.forest.ForestContext;
+import com.zhizus.forest.common.codec.Request;
+import com.zhizus.forest.common.util.ForestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -46,7 +48,11 @@ public class MetricInterceptor extends AbstractInvokerInterceptor {
     public boolean afterInvoke(Object target, Method method, Object result) {
         Long beginTime = Long.valueOf(ForestContext.getAttr(BEG_TIME));
         long exeTime = System.currentTimeMillis() - beginTime;
-        String key = ForestContext.getHeader().getUri();
+        Object content = ForestContext.getMessage().getContent();
+        if (!(content instanceof Request)) {
+            return true;
+        }
+        String key = ForestUtil.buildUri(((Request) content).getServiceName(), ((Request) content).getMethodName());
         Metric metric = metricsMap.get(key);
         if (metric == null) {
             synchronized (this) {

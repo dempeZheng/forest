@@ -3,18 +3,17 @@ package com.zhizus.forest.common.codec;
 /**
  * Created by Dempe on 2016/12/7.
  */
-public class Message {
+public class Message<T> {
 
     private Header header;
 
-    private byte[] payload;
-
+    private T content;
 
     public Message() {
     }
 
-    public Message(Header header, byte[] payload) {
-        this.payload = payload;
+    public Message(Header header, T content) {
+        this.content = content;
         this.header = header;
     }
 
@@ -26,12 +25,11 @@ public class Message {
         this.header = header;
     }
 
-    public byte[] getPayload() {
-        return payload;
+    public T getContent() {
+        return content;
     }
 
-    public void setPayload(byte[] payload) {
-        this.payload = payload;
+    public void setContent(T content) {
+        this.content = content;
     }
-
 }

@@ -1,8 +1,8 @@
 package com.zhizus.forest;
 
-import com.zhizus.forest.common.codec.Header;
-import com.zhizus.forest.common.exception.ForestFrameworkException;
 import com.google.common.collect.Maps;
+import com.zhizus.forest.common.codec.Message;
+import com.zhizus.forest.common.exception.ForestFrameworkException;
 import io.netty.channel.Channel;
 
 import java.util.Map;
@@ -16,17 +16,17 @@ public class ForestContext {
 
     private Channel channel;
 
-    private Header header;
+    private Message message;
 
     private Map<String, String> attrs = Maps.newHashMap();
 
-    private ForestContext(Channel channel, Header header) {
+    private ForestContext(Channel channel, Message message) {
         this.channel = channel;
-        this.header = header;
+        this.message = message;
     }
 
-    public static Header getHeader() {
-        return getForestContext().header;
+    public static Message getMessage() {
+        return getForestContext().message;
     }
 
     public static Channel getChannel() {
@@ -54,8 +54,8 @@ public class ForestContext {
 
     }
 
-    public static void setForestContext(Channel channel, Header header) {
-        contextMap.set(new ForestContext(channel, header));
+    public static void setForestContext(Channel channel, Message message) {
+        contextMap.set(new ForestContext(channel, message));
     }
 
 }

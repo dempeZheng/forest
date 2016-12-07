@@ -94,7 +94,7 @@ public class NettyClient {
                     }
                 } catch (Exception e) {
                     LOGGER.error(name + " clear timeout future Error: methodName="
-                            + entry.getValue().getRequest().getHeader().getUri() + " requestId=" + entry.getKey(), e);
+                            + entry.getValue().getRequest().getHeader() + " requestId=" + entry.getKey(), e);
                 }
             }
         }
