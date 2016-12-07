@@ -14,7 +14,7 @@
 - 支持服务发现服务注册
 - 支持多种负载均衡策略
 - client内置连接池
-- 基于netty实现，高性能，单机6w
+- 基于netty实现，高性能，单机8w+
 - 基于spring容器，简单易用
 
 # Protocol
@@ -173,13 +173,10 @@ SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Bui
 ### Console输出
 
 ```
-21:19:50.924 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:57904, avgTime:0, maxTime:5, minTime:0
-21:19:51.924 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:60205, avgTime:0, maxTime:5, minTime:0
-21:19:52.924 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:61398, avgTime:0, maxTime:5, minTime:0
-21:19:53.925 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:59617, avgTime:0, maxTime:5, minTime:0
-21:19:54.925 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:59147, avgTime:0, maxTime:5, minTime:0
-21:19:55.926 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:56509, avgTime:0, maxTime:5, minTime:0
-21:19:56.925 [pool-1-thread-1] INFO  c.d.f.c.i.MetricInterceptor 36 - group:def_group, methodName:/sampleService/echo, current tps:56032, avgTime:0, maxTime:5, minTime:0
+23:10:10.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:83342, avgTime:0, maxTime:63, minTime:0 
+23:10:11.298 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:86271, avgTime:0, maxTime:63, minTime:0 
+23:10:12.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:86063, avgTime:0, maxTime:63, minTime:0 
+23:10:13.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:84305, avgTime:0, maxTime:63, minTime:0 
 ```
 
 [更多示例](https://github.com/dempeZheng/forest/tree/master/forest-demo)
