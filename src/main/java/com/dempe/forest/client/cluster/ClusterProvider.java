@@ -6,7 +6,6 @@ import com.dempe.forest.client.cluster.ha.FailFastStrategy;
 import com.dempe.forest.client.cluster.lb.AbstractLoadBalance;
 import com.dempe.forest.client.cluster.lb.RandomLoadBalance;
 import com.dempe.forest.codec.Message;
-import com.dempe.forest.codec.Response;
 import com.google.common.collect.Lists;
 import org.aeonbits.owner.ConfigFactory;
 

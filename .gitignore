@@ -46,7 +46,6 @@ atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
-src/main/java/com/dempe/forest/client/cluster/ha/
-src/main/java/com/dempe/forest/client/cluster/lb/
+
 src/test/
 target/
