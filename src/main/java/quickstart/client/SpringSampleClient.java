@@ -4,11 +4,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/12/5
- * Time: 11:51
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public class SpringSampleClient {
 

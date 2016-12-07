@@ -3,11 +3,7 @@ package com.dempe.forest;
 import org.aeonbits.owner.Config;
 
 /**
- * 基于owner实现的配置文件类，功能强大
- * User: Dempe
- * Date: 2015/12/11
- * Time: 17:51
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 @Config.Sources("classpath:server.properties")
 public interface ServerConfig extends Config {

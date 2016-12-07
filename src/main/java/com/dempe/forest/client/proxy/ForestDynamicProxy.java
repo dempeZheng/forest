@@ -23,7 +23,9 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-
+/**
+ * Created by Dempe on 2016/12/7.
+ */
 public class ForestDynamicProxy implements InvocationHandler {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ForestDynamicProxy.class);

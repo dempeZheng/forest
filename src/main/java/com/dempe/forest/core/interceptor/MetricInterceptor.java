@@ -15,11 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 性能统计拦截器
- * User: Dempe
- * Date: 2016/12/1
- * Time: 18:25
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public class MetricInterceptor extends AbstractInvokerInterceptor {
 

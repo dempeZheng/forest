@@ -5,11 +5,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/3/9
- * Time: 10:57
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public class Promise<T> implements Callback<T>, Future<T> {
 

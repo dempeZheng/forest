@@ -6,11 +6,7 @@ import com.dempe.forest.codec.compress.NoCompress;
 import com.dempe.forest.codec.compress.SnappyCompress;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/11/30
- * Time: 11:58
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public enum CompressType {
 

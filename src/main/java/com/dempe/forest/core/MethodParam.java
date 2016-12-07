@@ -12,11 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2015/11/3
- * Time: 14:39
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public class MethodParam {
 

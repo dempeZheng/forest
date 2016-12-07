@@ -14,11 +14,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
 /**
- * 优先从spring容器中加载group的线程池，如果找不到则创建默认的线程池
- * User: Dempe
- * Date: 2016/12/2
- * Time: 18:19
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public class ForestExecutorGroup implements Closeable {
 

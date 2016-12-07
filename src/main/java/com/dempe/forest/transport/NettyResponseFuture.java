@@ -5,11 +5,7 @@ import com.dempe.forest.codec.Message;
 import io.netty.channel.Channel;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/12/1
- * Time: 11:21
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public class NettyResponseFuture<T> {
     private long createTime;

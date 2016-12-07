@@ -8,11 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/11/29
- * Time: 17:34
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public class Hessian2Serialization implements Serialization {
 

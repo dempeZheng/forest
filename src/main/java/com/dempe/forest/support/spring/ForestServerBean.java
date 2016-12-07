@@ -18,11 +18,7 @@ import org.springframework.context.ApplicationContextAware;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/12/5
- * Time: 11:54
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public class ForestServerBean implements InitializingBean, DisposableBean, ApplicationContextAware {
 

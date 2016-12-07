@@ -7,11 +7,7 @@ import com.dempe.forest.core.annotation.ServiceExport;
 import quickstart.api.SampleService;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/12/3
- * Time: 下午 5:31
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 @ServiceExport
 public class SampleServiceImpl implements SampleService {

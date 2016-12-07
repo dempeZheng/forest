@@ -1,11 +1,7 @@
 package com.dempe.forest.core.exception;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/11/25
- * Time: 17:28
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public abstract class ForestAbstractException extends RuntimeException {
     private static final long serialVersionUID = -8742311167276890503L;

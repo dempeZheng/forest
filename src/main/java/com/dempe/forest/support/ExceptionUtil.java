@@ -19,10 +19,6 @@ package com.dempe.forest.support;
 
 import com.dempe.forest.core.exception.ForestBizException;
 
-/**
- * @author maijunsheng
- * @version 创建时间：2013-6-14
- */
 public class ExceptionUtil {
 
     /**

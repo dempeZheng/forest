@@ -6,11 +6,7 @@ import org.xerial.snappy.Snappy;
 import java.io.IOException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/11/28
- * Time: 15:41
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public class SnappyCompress implements Compress {
 

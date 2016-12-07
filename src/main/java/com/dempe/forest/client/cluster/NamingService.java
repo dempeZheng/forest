@@ -23,10 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Naming service interface.
- *
- * @author xiemalin
- * @since 2.15
+ * Created by Dempe on 2016/12/7.
  */
 public interface NamingService {
 

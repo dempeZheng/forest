@@ -6,11 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/12/6 0006
- * Time: 下午 9:06
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public class Forest {
 
@@ -21,7 +17,6 @@ public class Forest {
     }
 
     public static <T> T from(Class<T> clazz, ServiceConfig config) throws InterruptedException {
-
         return ForestDynamicProxy.newInstance(clazz, config);
     }
 

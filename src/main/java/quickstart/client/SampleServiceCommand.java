@@ -7,9 +7,7 @@ import quickstart.api.SampleService;
 import javax.annotation.Resource;
 
 /**
- * User: Dempe
- * Date: 2016/12/6
- * Time: 16:16
+ * Created by Dempe on 2016/12/7.
  */
 //@Component
 public class SampleServiceCommand {

@@ -20,11 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/11/25
- * Time: 16:43
- * To change this template use File | Settings | File Templates.
+ * Created by Dempe on 2016/12/7.
  */
 public class NettyClient {
 

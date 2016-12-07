@@ -17,8 +17,7 @@
 package com.dempe.forest.core.exception;
 
 /**
- * @author maijunsheng
- * @version 创建时间：2013-5-30
+ * Created by Dempe on 2016/12/7.
  */
 public class ForestErrorMsgConstant {
     // service error status 503
