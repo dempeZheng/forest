@@ -1,6 +1,6 @@
 # Forest
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/weibocom/motan/blob/master/LICENSE)
-[![Build Status](https://img.shields.io/travis/weibocom/motan/master.svg?label=Build)](https://travis-ci.org/weibocom/motan)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dempeZheng/forest/blob/master/LICENSE)
+[![Build Status](https://img.shields.io/travis/dempeZheng/forest/master.svg?label=Build)](https://travis-ci.org/dempeZheng/forest)
 
 # Overview
 基于netty, spring,轻量的高性能分布式RPC服务框架。简单，易用，高效。
