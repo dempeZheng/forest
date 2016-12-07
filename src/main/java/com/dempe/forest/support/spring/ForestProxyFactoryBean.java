@@ -18,9 +18,9 @@ import java.util.Map;
  * Time: 10:44
  * To change this template use File | Settings | File Templates.
  */
-public class ProxyFactoryBean implements FactoryBean<Object>, InitializingBean, DisposableBean {
+public class ForestProxyFactoryBean implements FactoryBean<Object>, InitializingBean, DisposableBean {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ProxyFactoryBean.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ForestProxyFactoryBean.class);
 
     private Class<?> serviceInterface;
 

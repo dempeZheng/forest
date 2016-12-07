@@ -36,13 +36,6 @@ public class ForestUtil {
         return "/" + actionBeanName + "/" + uri;
     }
 
-    public static String buildUri(Object target, Method method) {
-        ServiceExport action = target.getClass().getAnnotation(ServiceExport.class);
-        String actionValue = null;//action.value();
-        MethodProvider methodProvider = method.getAnnotation(MethodProvider.class);
-        String uri = methodProvider.methodName();
-        return ForestUtil.buildUri(actionValue, uri);
-    }
 
     public static String getGroup(Method method) {
         MethodExport methodExport = method.getAnnotation(MethodExport.class);
