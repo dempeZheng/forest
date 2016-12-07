@@ -1,11 +1,9 @@
 package com.dempe.forest.client.proxy;
 
-import com.dempe.forest.ClientConfig;
-import com.dempe.forest.client.ChannelPool;
+import com.dempe.forest.client.cluster.ClusterProvider;
 import com.dempe.forest.client.proxy.processor.*;
 import com.dempe.forest.codec.Header;
 import com.dempe.forest.codec.Message;
-import com.dempe.forest.codec.Response;
 import com.dempe.forest.codec.compress.Compress;
 import com.dempe.forest.codec.serialize.Serialization;
 import com.dempe.forest.config.MethodConfig;
@@ -15,10 +13,7 @@ import com.dempe.forest.core.SerializeType;
 import com.dempe.forest.core.annotation.MethodProvider;
 import com.dempe.forest.core.annotation.ServiceProvider;
 import com.dempe.forest.support.ForestUtil;
-import com.dempe.forest.transport.NettyClient;
-import com.dempe.forest.transport.NettyResponseFuture;
 import com.google.common.base.Strings;
-import org.aeonbits.owner.ConfigFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +34,9 @@ public class ForestDynamicProxy implements InvocationHandler {
 
     private String serviceName;
 
-    public ForestDynamicProxy(ServiceConfig serviceConfig, Class<?> interfaceClass) {
+    private ClusterProvider clusterProvider;
+
+    public ForestDynamicProxy(ServiceConfig serviceConfig, Class<?> interfaceClass) throws InterruptedException {
         this(interfaceClass);
         for (Map.Entry<String, MethodConfig> methodConfigEntry : serviceConfig.getMethodConfigMap().entrySet()) {
             MethodConfig methodConfigFromAnnotation = config.getMethodConfig(methodConfigEntry.getKey());
@@ -55,7 +52,9 @@ public class ForestDynamicProxy implements InvocationHandler {
         config.setServiceName(serviceName);
     }
 
-    public ForestDynamicProxy(Class<?> interfaceClass) {
+    public ForestDynamicProxy(Class<?> interfaceClass) throws InterruptedException {
+        clusterProvider = new ClusterProvider();
+        clusterProvider.init();
         config = ServiceConfig.Builder.newBuilder().build();
         AnnotationProcessorsProvider processors = AnnotationProcessorsProvider.DEFAULT;
         registerAnnotationProcessors(processors);
@@ -75,11 +74,11 @@ public class ForestDynamicProxy implements InvocationHandler {
         processors.register(new MethodProviderAnnotationProcessor());
     }
 
-    public static <T> T newInstance(Class<T> clazz, ServiceConfig serviceConfig) {
+    public static <T> T newInstance(Class<T> clazz, ServiceConfig serviceConfig) throws InterruptedException {
         return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(serviceConfig, clazz));
     }
 
-    public static <T> T newInstance(Class<T> clazz) {
+    public static <T> T newInstance(Class<T> clazz) throws InterruptedException {
         return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(clazz));
     }
 
@@ -105,8 +104,7 @@ public class ForestDynamicProxy implements InvocationHandler {
                 .withMessageId(id.incrementAndGet())
                 .withUri(ForestUtil.buildUri(serviceName, methodName)).make(),
                 compress.compress(serialize));
-        // // TODO: 2016/12/7
-        NettyResponseFuture<Response> responseFuture = new ChannelPool(new NettyClient(ConfigFactory.create(ClientConfig.class))).write(message, methodConfig.getTimeout());
-        return responseFuture.getPromise().await().getResult();
+        return clusterProvider.call(message);
+
     }
 }

@@ -14,17 +14,6 @@ public class SampleServer {
     public static void main(String[] args) throws Exception {
 
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
-//        RedisRegistryService namingService = (RedisRegistryService) context.getBean("namingService");
-//
-//        Set<String> serviceNameSet = Sets.newHashSet();
-//        serviceNameSet.add("sampleService");
-//        Map<String, List<RegisterInfo>> map = namingService.list(serviceNameSet);
-//        for (Map.Entry<String, List<RegisterInfo>> stringListEntry : map.entrySet()) {
-//            for (RegisterInfo registerInfo : stringListEntry.getValue()) {
-//                System.out.println(registerInfo);
-//            }
-//        }
-
 
     }
 

@@ -16,11 +16,11 @@ public class Forest {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Forest.class);
 
-    public static <T> T from(Class<T> clazz) {
+    public static <T> T from(Class<T> clazz) throws InterruptedException {
         return ForestDynamicProxy.newInstance(clazz);
     }
 
-    public static <T> T from(Class<T> clazz, ServiceConfig config) {
+    public static <T> T from(Class<T> clazz, ServiceConfig config) throws InterruptedException {
 
         return ForestDynamicProxy.newInstance(clazz, config);
     }
