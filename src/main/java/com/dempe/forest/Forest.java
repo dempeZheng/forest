@@ -1,6 +1,9 @@
 package com.dempe.forest;
 
-import com.dempe.forest.client.proxy.RpcProxy;
+import com.dempe.forest.client.proxy.ForestDynamicProxy;
+import com.dempe.forest.config.ServiceConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,18 +14,18 @@ import com.dempe.forest.client.proxy.RpcProxy;
  */
 public class Forest {
 
-    final static RpcProxy rpcProxy = new RpcProxy(new RefConfMapping());
+    private final static Logger LOGGER = LoggerFactory.getLogger(Forest.class);
 
     public static <T> T from(Class<T> clazz) {
-        return rpcProxy.getProxy(clazz);
+        return ForestDynamicProxy.newInstance(clazz);
     }
-//    public static Forest registerMethodOption(String methodName,MethodOption methodOption){
-//        rpcProxy.setMethodOption(methodName, methodOption);
-//        return this;
-//
-//    }
 
-   public static void createServer(){
+    public static <T> T from(Class<T> clazz, ServiceConfig config) {
 
-   }
+        return ForestDynamicProxy.newInstance(clazz, config);
+    }
+
+    public static void createServer() {
+
+    }
 }

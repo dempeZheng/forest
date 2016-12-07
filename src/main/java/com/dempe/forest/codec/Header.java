@@ -1,5 +1,10 @@
 package com.dempe.forest.codec;
 
+import com.dempe.forest.Constants;
+import com.dempe.forest.config.MethodConfig;
+import com.dempe.forest.core.ProtoVersion;
+import com.dempe.forest.support.ForestUtil;
+
 /**
  * 0-15	16-23	24-31	32-95	96-127
  * magic	version	extend flag	request id	body content length
@@ -36,6 +41,11 @@ public class Header implements Cloneable {
     private transient long timeOut;
 
     public Header() {
+    }
+
+    public Header(short magic, byte version) {
+        this.magic = magic;
+        this.version = version;
     }
 
     public Header(short magic, byte version, byte extend, String uri, long timeOut) {
@@ -123,5 +133,39 @@ public class Header implements Cloneable {
     public Header clone() throws CloneNotSupportedException {
         return (Header) super.clone();
     }
+
+    public static class HeaderMaker {
+        HeaderMaker() {
+        }
+
+        Header header;
+
+        public static HeaderMaker newMaker() {
+            HeaderMaker maker = new HeaderMaker();
+            maker.header = new Header(Constants.MAGIC, ProtoVersion.VERSION_1.getVersion());
+            return maker;
+        }
+
+        public Header make() {
+            return header;
+        }
+
+        public HeaderMaker loadWithMethodConfig(MethodConfig config) {
+            header.setExtend(ForestUtil.getExtend(config.getSerializeType(), config.getCompressType()));
+            return this;
+        }
+
+        public HeaderMaker withUri(String uri) {
+            header.setUri(uri);
+            return this;
+        }
+
+        public HeaderMaker withMessageId(long messageID) {
+            header.setMessageID(messageID);
+            return this;
+        }
+    }
+
+
 }
 

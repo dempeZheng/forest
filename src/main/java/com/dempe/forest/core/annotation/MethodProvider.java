@@ -1,5 +1,6 @@
 package com.dempe.forest.core.annotation;
 
+import com.dempe.forest.Constants;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
 
@@ -25,7 +26,7 @@ public @interface MethodProvider {
 
     CompressType compressType() default CompressType.compressNo;
 
-    int timeout() default 5000; // 客户端超时时间
+    int timeout() default Constants.DEFAULT_TIMEOUT; // 客户端超时时间
 
 }
 

@@ -11,7 +11,7 @@ import javax.annotation.Resource;
  * Date: 2016/12/6
  * Time: 16:16
  */
-@Component
+//@Component
 public class SampleServiceCommand {
 
     @Resource(name = "sampleServiceProxy")

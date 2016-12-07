@@ -28,7 +28,6 @@
 
 
     <bean id="forestServer" class="com.dempe.forest.support.spring.ForestServerBean">
-        <!--<property name="registryCenterService" ref="namingService"></property>-->
     </bean>
 
 

@@ -1,49 +1,50 @@
 package quickstart.client;
 
-import com.dempe.forest.Constants;
-import com.dempe.forest.ClientOptions;
-import com.dempe.forest.client.proxy.RpcProxy;
+import com.dempe.forest.Forest;
+import com.dempe.forest.config.MethodConfig;
+import com.dempe.forest.config.ServiceConfig;
 import com.dempe.forest.core.CompressType;
 import com.dempe.forest.core.SerializeType;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import quickstart.api.SampleService;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/12/3 0003
- * Time: 下午 5:27
- * To change this template use File | Settings | File Templates.
- */
 public class SampleClient {
 
-    public static void main(String[] args) throws InterruptedException {
-        sampleServiceTest();
+    public static void main(String[] args) {
+        serviceTest();
+        serviceSpringTest();
 //        benchmarkTest();
+
     }
 
-    public static void sampleServiceTest() throws InterruptedException {
-        ClientOptions clientOptions = ClientOptions.create()
-                .setCompressType(CompressType.gizp)
-                .setSerializeType(SerializeType.fastjson)
-                .setTimeout(Constants.DEFAULT_TIMEOUT);
-        SampleService sampleService = new RpcProxy()
-                // set proxy say 方法配置(如果不配置，则默认使用接口注解的配置,如果都没有配置，则使用默认配置)
-                .setMethodOption("say", clientOptions)
-                .setMethodOption("say2", clientOptions)
-                .setMethodOption("echo", ClientOptions.create()
-                        .setSerializeType(SerializeType.hession2))
-                .getProxy(SampleService.class);
-        String world = sampleService.say("world");
-        System.out.println("say:" + world);
-        String echo = sampleService.echo("echo hello");
-        System.out.println("echo:" + echo);
+    public static void serviceTest() {
+        SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Builder.newBuilder()
+                .withMethodConfig("say", MethodConfig.Builder.newBuilder()
+                        .withCompressType(CompressType.gizp)
+                        .withSerializeType(SerializeType.fastjson)
+                        .build())
+                .withMethodConfig("echo", MethodConfig.Builder.newBuilder()
+                        .withCompressType(CompressType.compressNo)
+                        .build())
+                .build());
+
+        String hello = sampleService.say("hello");
+        System.out.println(hello);
     }
 
-    public static void benchmarkTest() throws InterruptedException {
-        final SampleService sampleService = new RpcProxy().getProxy(SampleService.class);
+    public static void serviceSpringTest() {
+        ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-client.xml"});
+        SampleService bean = (SampleService) context.getBean("sampleServiceProxy");
+        String test = bean.say("hello");
+        System.out.println(test);
+    }
+
+    public static void benchmarkTest() {
+        final SampleService sampleService = Forest.from(SampleService.class);
         ExecutorService executorService = Executors.newCachedThreadPool();
         for (int i = 0; i < 20; i++) {
             executorService.submit(new Runnable() {

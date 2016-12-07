@@ -1,7 +1,8 @@
 package com.dempe.forest.support.spring;
 
-import com.dempe.forest.ClientOptions;
-import com.dempe.forest.client.proxy.RpcProxy;
+import com.dempe.forest.client.proxy.ForestDynamicProxy;
+import com.dempe.forest.config.MethodConfig;
+import com.dempe.forest.config.ServiceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -23,21 +24,17 @@ public class ProxyFactoryBean implements FactoryBean<Object>, InitializingBean, 
 
     private Class<?> serviceInterface;
 
-    private RpcProxy rpcProxy;
-
-    private Map<String, ClientOptions> methodConfMap;
+    private Map<String, MethodConfig> methodConfigMap;
 
     private Object proxyBean;
 
-
     @Override
     public void destroy() throws Exception {
-
     }
 
     @Override
     public Object getObject() throws Exception {
-        return rpcProxy.getProxy(serviceInterface);
+        return proxyBean;
     }
 
     @Override
@@ -45,12 +42,12 @@ public class ProxyFactoryBean implements FactoryBean<Object>, InitializingBean, 
         return serviceInterface;
     }
 
-    public Map<String, ClientOptions> getMethodConfMap() {
-        return methodConfMap;
+    public Map<String, MethodConfig> getMethodConfigMap() {
+        return methodConfigMap;
     }
 
-    public void setMethodConfMap(Map<String, ClientOptions> methodConfMap) {
-        this.methodConfMap = methodConfMap;
+    public void setMethodConfigMap(Map<String, MethodConfig> methodConfigMap) {
+        this.methodConfigMap = methodConfigMap;
     }
 
     @Override
@@ -60,16 +57,12 @@ public class ProxyFactoryBean implements FactoryBean<Object>, InitializingBean, 
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        rpcProxy = new RpcProxy();
-        if (methodConfMap != null) {
-            for (Map.Entry<String, ClientOptions> stringMethodConfBeanEntry : methodConfMap.entrySet()) {
-                if (stringMethodConfBeanEntry.getKey() == null) {
-                    LOGGER.warn("methodName is null,methodConfBean:{}", stringMethodConfBeanEntry.getValue());
-                }
-                rpcProxy.setMethodOption(stringMethodConfBeanEntry.getKey(), stringMethodConfBeanEntry.getValue());
-            }
+        ServiceConfig config = ServiceConfig.Builder.newBuilder().build();
+        for (Map.Entry<String, MethodConfig> methodConfigEntry : methodConfigMap.entrySet()) {
+            config.registerMethodConfig(methodConfigEntry.getKey(), methodConfigEntry.getValue());
         }
-        proxyBean = new ProxyFactoryBean();
+        proxyBean = ForestDynamicProxy.newInstance(serviceInterface, config);
+
     }
 
     public Class<?> getServiceInterface() {

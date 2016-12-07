@@ -14,7 +14,7 @@
     <aop:aspectj-autoproxy/>
     <bean id="hystrixAspect" class="com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCommandAspect"></bean>
 
-    <bean id="clientOptions" class="com.dempe.forest.ClientOptions">
+    <bean id="methodConfig" class="com.dempe.forest.config.MethodConfig">
         <property name="compressType">
             <util:constant static-field="com.dempe.forest.core.CompressType.compressNo"/>
         </property>
@@ -28,10 +28,10 @@
     <bean id="sampleServiceProxy" class="com.dempe.forest.support.spring.ProxyFactoryBean">
         <property name="serviceInterface" value="quickstart.api.SampleService"></property>
         <!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
-        <property name="methodConfMap">
+        <property name="methodConfigMap">
             <map>
-                <entry key="echo" value-ref="clientOptions"></entry>
-                <entry key="say" value-ref="clientOptions"></entry>
+                <entry key="echo" value-ref="methodConfig"></entry>
+                <entry key="say" value-ref="methodConfig"></entry>
             </map>
         </property>
     </bean>

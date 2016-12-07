@@ -13,6 +13,15 @@ public class Message {
 
     private byte[] payload;
 
+
+    public Message() {
+    }
+
+    public Message(Header header, byte[] payload) {
+        this.payload = payload;
+        this.header = header;
+    }
+
     public Header getHeader() {
         return header;
     }
