@@ -8,14 +8,13 @@
 # Features
 - 服务端支持多种序列化方式：fastjson，hession，kryo
 - 服务端支持多种压缩方式：gzip，snappy
-- 服务端可根据group进行线程隔离
-- 支持基于spring对不同的group配置不同的业务线程池
-- 支持spring容器
+- 服务端可根据group进行线程隔离，支持基于spring对不同的group配置不同的业务线程池
+- 支持注解配置，也支持spring xml配置
 - 支持服务发现服务注册
-- 支持多种负载均衡策略
+- client端支持多种负载均衡策略和容灾策略
 - client内置连接池
-- 基于netty实现，高性能，单机8w+
-- 基于spring容器，简单易用
+- 基于netty 4.x版本实现，高性能（win 8cpu单机8w+）
+
 
 # Protocol
 
@@ -188,9 +187,10 @@ SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Bui
 
 # TODO
 
-- 服务注册发现
-- 基于Hystrix的容灾策略
-- 多语言协议支持
+- 服务降级功能
+- http服务支持
+- 跨语言协议支持
+- 服务治理管理后台
 
 # License
 
