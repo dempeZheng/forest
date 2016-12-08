@@ -27,4 +27,6 @@ public class Constants {
     public static final String PBRPC_SCHEME = "rpc";
 
     public final static int CONNECTION_TIMEOUT =2000;
+
+    public final static String BASE_PATH = "forest/service";
 }

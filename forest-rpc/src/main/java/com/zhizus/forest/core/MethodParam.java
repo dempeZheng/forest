@@ -1,6 +1,6 @@
 package com.zhizus.forest.core;
 
-import com.zhizus.forest.common.annotation.HttpParam;
+import com.zhizus.forest.common.annotation.Var;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 
@@ -26,8 +26,8 @@ public class MethodParam {
             Annotation[][] parameterAnnotations = method.getParameterAnnotations();
             for (Annotation[] parameterAnnotation : parameterAnnotations) {
                 for (int i = 0; i < parameterAnnotation.length; i++) {
-                    if (parameterAnnotation[i].annotationType() == HttpParam.class) {
-                        String value = ((HttpParam) parameterAnnotation[i]).value();
+                    if (parameterAnnotation[i].annotationType() == Var.class) {
+                        String value = ((Var) parameterAnnotation[i]).value();
                         if (StringUtils.isNotBlank(value)) {
                             parameterNames[i] = value;
                         }

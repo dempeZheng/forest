@@ -15,6 +15,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface MethodExport {
 
-
     String group() default Constants.DEF_GROUP; // 业务组别，不同的group在不同的线程池
 }

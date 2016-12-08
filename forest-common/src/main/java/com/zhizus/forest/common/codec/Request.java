@@ -3,13 +3,6 @@ package com.zhizus.forest.common.codec;
 import java.io.Serializable;
 import java.util.Arrays;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Dempe
- * Date: 2016/12/7 0007
- * Time: 下午 9:14
- * To change this template use File | Settings | File Templates.
- */
 public class Request implements Serializable {
 
     private String serviceName;

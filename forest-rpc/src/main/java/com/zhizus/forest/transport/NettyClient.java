@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Dempe on 2016/12/7.
@@ -35,8 +37,8 @@ public class NettyClient {
         this.host = config.host();
         this.port = config.port();
         init();
-//        Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(
-//                new TimeoutMonitor("timeout_monitor_" + host + "_" + port), 100, 100, TimeUnit.MILLISECONDS);
+        Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(
+                new TimeoutMonitor("timeout_monitor_" + host + "_" + port), 100, 100, TimeUnit.MILLISECONDS);
     }
 
     private void init() throws InterruptedException {
