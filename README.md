@@ -119,10 +119,10 @@ public class SampleServer {
     <context:component-scan base-package="com.zhizus.forest.demo.client"/>
     <bean id="methodConfig" class="com.zhizus.forest.common.config.MethodConfig">
 	<property name="compressType">
-	    <util:constant static-field="com.zhizus.forest.common.CompressType.none"/>
+	    <util:constant static-field="None"/>
 	</property>
 	<property name="serializeType">
-	    <util:constant static-field="com.zhizus.forest.common.SerializeType.fastjson"/>
+	    <util:constant static-field="Fastjson"/>
 	</property>
 	<property name="timeout" value="5000"></property>
     </bean>

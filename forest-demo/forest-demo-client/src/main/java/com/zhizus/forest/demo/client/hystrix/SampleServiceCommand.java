@@ -1,4 +1,4 @@
-package com.zhizus.forest.demo.client;
+package com.zhizus.forest.demo.client.hystrix;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.zhizus.forest.demo.api.SampleService;

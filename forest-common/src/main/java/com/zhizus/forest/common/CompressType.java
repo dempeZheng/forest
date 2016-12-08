@@ -11,7 +11,7 @@ import com.zhizus.forest.common.codec.compress.SnappyCompress;
  */
 public enum CompressType {
 
-    none((byte) 0), gzip((byte) (1 << 4)), snappy((byte) (1 << 5));
+    None((byte) 0), GZIP((byte) (1 << 4)), Snappy((byte) (1 << 5));
 
     private byte value;
 
@@ -41,6 +41,6 @@ public enum CompressType {
         this.value = value;
     }
 
-    public final static CompressType DEFAULT_COMPRESS_TYPE = CompressType.none;
+    public final static CompressType DEFAULT_COMPRESS_TYPE = CompressType.None;
 
 }

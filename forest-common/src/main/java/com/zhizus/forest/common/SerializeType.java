@@ -11,7 +11,7 @@ import com.zhizus.forest.common.codec.serialize.KryoSerialization;
  */
 public enum SerializeType {
 
-    kyro((byte) 0), fastjson((byte) 1), hession2((byte) 2);
+    Kyro((byte) 0), Fastjson((byte) 1), Hession2((byte) 2);
 
     private byte value;
 
@@ -41,5 +41,5 @@ public enum SerializeType {
         this.value = value;
     }
 
-    public final static SerializeType DEFAULT_SERIALIZE_TYPE = SerializeType.kyro;
+    public final static SerializeType DEFAULT_SERIALIZE_TYPE = SerializeType.Kyro;
 }

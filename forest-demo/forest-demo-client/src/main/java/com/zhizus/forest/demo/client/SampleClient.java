@@ -24,11 +24,11 @@ public class SampleClient {
     public static void serviceTest() throws InterruptedException {
         SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Builder.newBuilder()
                 .withMethodConfig("say", MethodConfig.Builder.newBuilder()
-                        .withCompressType(CompressType.none)
-                        .withSerializeType(SerializeType.fastjson)
+                        .withCompressType(CompressType.None)
+                        .withSerializeType(SerializeType.Fastjson)
                         .build())
                 .withMethodConfig("echo", MethodConfig.Builder.newBuilder()
-                        .withCompressType(CompressType.none)
+                        .withCompressType(CompressType.None)
                         .build())
                 .build());
 

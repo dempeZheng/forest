@@ -16,10 +16,10 @@
 
     <bean id="methodConfig" class="com.zhizus.forest.common.config.MethodConfig">
         <property name="compressType">
-            <util:constant static-field="com.zhizus.forest.common.CompressType.none"/>
+            <util:constant static-field="com.zhizus.forest.common.CompressType.None"/>
         </property>
         <property name="serializeType">
-            <util:constant static-field="com.zhizus.forest.common.SerializeType.fastjson"/>
+            <util:constant static-field="com.zhizus.forest.common.SerializeType.Fastjson"/>
         </property>
         <property name="timeout" value="5000"></property>
     </bean>
