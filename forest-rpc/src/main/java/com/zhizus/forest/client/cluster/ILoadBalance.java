@@ -18,4 +18,6 @@ public interface ILoadBalance<T> {
     void onFresh(List<Referer<T>> refererList);
 
 
+
+
 }

@@ -81,7 +81,8 @@ public class ForestDynamicProxy implements InvocationHandler {
             discovery.registerLocal(config.getServiceName(), ((LocalServiceDiscovery) discovery).getAddress());
         }
         Collection<ServiceInstance> collection = discovery.queryForInstances(serviceName);
-        clusterProvider = new ClusterProvider(collection);
+        clusterProvider = new ClusterProvider(collection, serviceName);
+        discovery.subscribe(clusterProvider);
         clusterProvider.init();
 
     }
@@ -97,9 +98,8 @@ public class ForestDynamicProxy implements InvocationHandler {
     }
 
     public static <T> T newInstance(Class<T> clazz, AbstractServiceDiscovery registry) throws Exception {
-        Object instance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(clazz, registry));
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(clazz, registry));
 
-        return (T) instance;
     }
 
 
@@ -123,8 +123,6 @@ public class ForestDynamicProxy implements InvocationHandler {
                     .withMessageId(id.incrementAndGet()).make();
 
         }
-
-
         Message message = new Message(header,
                 new Request(serviceName, methodName, args));
         return clusterProvider.call(message);

@@ -20,4 +20,9 @@ public abstract class AbstractServiceEventListener<T> implements IServiceEventLi
                 break;
         }
     }
+
+    @Override
+    public void onUpdate(ServiceInstance<T> serviceInstance) {
+
+    }
 }

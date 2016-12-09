@@ -1,36 +1,46 @@
 package com.zhizus.forest.client.cluster;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.zhizus.forest.Referer;
 import com.zhizus.forest.client.cluster.ha.FailFastStrategy;
 import com.zhizus.forest.client.cluster.lb.AbstractLoadBalance;
 import com.zhizus.forest.client.cluster.lb.RandomLoadBalance;
 import com.zhizus.forest.common.codec.Message;
+import com.zhizus.forest.registry.AbstractServiceEventListener;
 import org.apache.curator.x.discovery.ServiceInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by Dempe on 2016/12/7.
  */
-public class ClusterProvider<T> {
+public class ClusterProvider extends AbstractServiceEventListener {
 
-    private IHaStrategy<T> haStrategy;
+    private final static Logger LOGGER = LoggerFactory.getLogger(ClusterProvider.class);
 
-    private AbstractLoadBalance<T> loadBalance;
+    private final static Map<String, List<Referer>> refererListMap = Maps.newConcurrentMap();
 
+    private IHaStrategy haStrategy;
 
-    private List<Referer<T>> refererList;
+    private AbstractLoadBalance loadBalance;
+
+    private List<Referer> refererList;
 
     private AtomicBoolean available = new AtomicBoolean(false);
 
     private Collection<ServiceInstance> serviceInstances;
 
-    public ClusterProvider(Collection<ServiceInstance> serviceInstances) {
+    private String serviceName;
+
+    public ClusterProvider(Collection<ServiceInstance> serviceInstances, String serviceName) {
         this.serviceInstances = serviceInstances;
+        this.serviceName = serviceName;
 
     }
 
@@ -39,8 +49,9 @@ public class ClusterProvider<T> {
         refererList = Lists.newArrayList();
         haStrategy = new FailFastStrategy<>();
         for (ServiceInstance serviceInstance : serviceInstances) {
-            refererList.add(new Referer<T>(serviceInstance));
+            refererList.add(new Referer(serviceInstance));
         }
+        refererListMap.put(serviceName, refererList);
         loadBalance = new RandomLoadBalance<>();
         loadBalance.setRefererList(refererList);
 
@@ -50,27 +61,55 @@ public class ClusterProvider<T> {
         return haStrategy.call(message, loadBalance);
     }
 
-
-    public synchronized void onRefresh(List<Referer<T>> refererList) {
-        if (refererList == null || refererList.size() < 1) {
-            return;
-        }
-        loadBalance.onFresh(refererList);
-        List<Referer<T>> oldRefererList = this.refererList;
-        this.refererList = refererList;
-
-        if (oldRefererList == null || oldRefererList.isEmpty()) {
-            return;
-        }
-
-        List<Referer<T>> delayDestroyReferers = new ArrayList<Referer<T>>();
-
-        for (Referer<T> referer : oldRefererList) {
-            if (refererList.contains(referer)) {
-                continue;
+    protected boolean inRefererList(ServiceInstance instance, List<Referer> refererList) {
+        for (Referer referer : refererList) {
+            if (referer.getInstance().equals(instance)) {
+                return true;
             }
-            delayDestroyReferers.add(referer);
         }
+        return false;
+    }
+
+
+    @Override
+    public void onRegister(ServiceInstance serviceInstance) {
+        List<Referer> refererList = refererListMap.get(serviceInstance.getName());
+        if (refererList == null) {
+            refererList = Lists.newCopyOnWriteArrayList();
+        }
+        if (inRefererList(serviceInstance, refererList)) {
+            return;
+        }
+        try {
+            refererList.add(new Referer(serviceInstance));
+        } catch (InterruptedException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        // 如果referList有更改，则通知loadBalance
+        loadBalance.onFresh(refererList);
+
 
     }
+
+    @Override
+    public void onRemove(ServiceInstance serviceInstance) {
+        List<Referer> refererList = refererListMap.get(serviceInstance.getName());
+        if (refererList == null) {
+            return;
+        }
+        boolean isInReferList = false;
+        for (Referer referer : refererList) {
+            if (referer.getInstance().equals(serviceInstance)) {
+                refererList.remove(referer);
+                isInReferList = true;
+                referer.close();
+            }
+        }
+        if (isInReferList) {
+            loadBalance.onFresh(refererList);
+        }
+
+
+    }
+
 }

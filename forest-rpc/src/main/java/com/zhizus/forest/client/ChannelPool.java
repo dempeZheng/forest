@@ -24,11 +24,13 @@ import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class ChannelPool {
+public class ChannelPool implements Closeable{
 
     private static final Logger LOGGER = Logger.getLogger(ChannelPool.class.getName());
     private final PooledObjectFactory<Connection> objectFactory;
@@ -63,8 +65,8 @@ public class ChannelPool {
         }
     }
 
-
-    public void stop() {
+    @Override
+    public void close() throws IOException {
         try {
             if (pool != null) {
                 pool.clear();
