@@ -3,7 +3,7 @@ package com.zhizus.forest.support.spring;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.zhizus.forest.ForestRouter;
-import com.zhizus.forest.ForestServerFactory;
+import com.zhizus.forest.transport.ForestServerFactory;
 import com.zhizus.forest.ServerConfig;
 import com.zhizus.forest.client.proxy.processor.AnnotationProcessorsProvider;
 import com.zhizus.forest.client.proxy.processor.IAnnotationProcessor;
@@ -13,7 +13,7 @@ import com.zhizus.forest.common.annotation.ServiceExport;
 import com.zhizus.forest.common.config.ServiceExportConfig;
 import com.zhizus.forest.common.util.NetUtils;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
-import com.zhizus.forest.transport.NettyServerNew;
+import com.zhizus.forest.transport.NettyServer;
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
@@ -68,7 +68,7 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
             }
             serviceProviderKey.add(serviceKey);
             try {
-                NettyServerNew server = factory.createServer(router, config);
+                NettyServer server = factory.createServer(router, config);
                 server.doBind();
                 // 注册服务
                 ServiceInstance<InstanceDetails> serviceInstance = ServiceInstance.<InstanceDetails>builder()

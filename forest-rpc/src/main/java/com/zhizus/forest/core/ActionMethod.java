@@ -1,8 +1,8 @@
 package com.zhizus.forest.core;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.zhizus.forest.core.interceptor.ChainInvokerInterceptor;
 import com.zhizus.forest.core.interceptor.InvokerInterceptor;
-import com.google.common.util.concurrent.RateLimiter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

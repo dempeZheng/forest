@@ -11,7 +11,7 @@ public interface IServiceEventListener<T> {
 
     void onRemove(ServiceInstance<T> serviceInstance);
 
-    void onUpdate( ServiceInstance<T> serviceInstance);
+    void onUpdate(ServiceInstance<T> serviceInstance);
 
     enum ServiceEvent {
         ON_REGISTER,

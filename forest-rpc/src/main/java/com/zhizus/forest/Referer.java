@@ -29,7 +29,7 @@ public class Referer<T> {
             throw new ForestFrameworkException("client is not available now");
         }
         NettyResponseFuture<Response> responseFuture = channelPool.write(message, Constants.DEFAULT_TIMEOUT);
-        return  responseFuture.getPromise().await().getResult();
+        return responseFuture.getPromise().await().getResult();
 
     }
 }

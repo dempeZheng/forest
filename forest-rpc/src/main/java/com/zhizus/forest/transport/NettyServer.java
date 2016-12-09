@@ -1,7 +1,5 @@
 package com.zhizus.forest.transport;
 
-import com.zhizus.forest.AnnotationRouterMapping;
-import com.zhizus.forest.ForestExecutorGroup;
 import com.zhizus.forest.IRouter;
 import com.zhizus.forest.ServerConfig;
 import com.zhizus.forest.common.codec.ForestDecoder;
@@ -18,24 +16,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by Dempe on 2016/12/7.
+ * Created by Dempe on 2016/12/9.
  */
 public class NettyServer {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyServer.class);
 
     private EventLoopGroup boss;
     private EventLoopGroup worker;
     private ServerBootstrap bootstrap;
     private Channel channel;
-    private IRouter uriMapping;
+    private IRouter iRouter;
     private ServerConfig config;
 
-    public NettyServer(IRouter mapping, ServerConfig config) throws InterruptedException {
-        this.uriMapping = mapping;
+    private int port;
+
+
+    public NettyServer(IRouter iRouter, ServerConfig config, int port) throws InterruptedException {
+        this.iRouter = iRouter;
+        this.port = port;
         this.config = config;
     }
-
 
 
     public ChannelFuture doBind() throws InterruptedException {
@@ -52,11 +52,11 @@ public class NettyServer {
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast("decoder", new ForestDecoder());
                 ch.pipeline().addLast("encoder", new ForestEncoder());
-                ch.pipeline().addLast("processor", new ProcessorHandler(uriMapping));
+                ch.pipeline().addLast("processor", new ProcessorHandler(iRouter));
             }
         });
 
-        ChannelFuture channelFuture = bootstrap.bind(config.port());
+        ChannelFuture channelFuture = bootstrap.bind(port);
         LOGGER.info("NettyServer bind port:{}, soBacklog:{}, soKeepLive:{}, tcpNodDelay:{}", config.port(),
                 config.soBacklog(), config.soKeepAlive(), config.tcpNoDelay());
         channel = channelFuture.channel();

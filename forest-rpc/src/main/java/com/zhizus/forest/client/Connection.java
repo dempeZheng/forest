@@ -16,11 +16,11 @@
 
 package com.zhizus.forest.client;
 
+import com.google.common.collect.Maps;
 import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Response;
 import com.zhizus.forest.common.exception.ForestFrameworkException;
 import com.zhizus.forest.transport.NettyResponseFuture;
-import com.google.common.collect.Maps;
 import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

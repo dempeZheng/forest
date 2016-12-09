@@ -1,12 +1,12 @@
 package com.zhizus.forest.client.cluster.ha;
 
+import com.google.common.collect.Lists;
 import com.zhizus.forest.Referer;
 import com.zhizus.forest.client.cluster.IHaStrategy;
 import com.zhizus.forest.client.cluster.ILoadBalance;
 import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.exception.ForestFrameworkException;
 import com.zhizus.forest.common.util.ExceptionUtil;
-import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

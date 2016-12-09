@@ -1,10 +1,10 @@
 package com.zhizus.forest.common;
 
 
-import com.zhizus.forest.common.codec.serialize.Serialization;
 import com.zhizus.forest.common.codec.serialize.FastJsonSerialization;
 import com.zhizus.forest.common.codec.serialize.Hessian2Serialization;
 import com.zhizus.forest.common.codec.serialize.KryoSerialization;
+import com.zhizus.forest.common.codec.serialize.Serialization;
 
 /**
  * Created by Dempe on 2016/12/7.

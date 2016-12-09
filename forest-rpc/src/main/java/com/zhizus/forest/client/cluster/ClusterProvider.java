@@ -1,12 +1,12 @@
 package com.zhizus.forest.client.cluster;
 
+import com.google.common.collect.Lists;
 import com.zhizus.forest.ClientConfig;
 import com.zhizus.forest.Referer;
 import com.zhizus.forest.client.cluster.ha.FailFastStrategy;
 import com.zhizus.forest.client.cluster.lb.AbstractLoadBalance;
 import com.zhizus.forest.client.cluster.lb.RandomLoadBalance;
 import com.zhizus.forest.common.codec.Message;
-import com.google.common.collect.Lists;
 import org.aeonbits.owner.ConfigFactory;
 
 import java.util.ArrayList;

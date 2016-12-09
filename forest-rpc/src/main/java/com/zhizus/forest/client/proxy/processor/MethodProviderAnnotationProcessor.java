@@ -1,9 +1,9 @@
 package com.zhizus.forest.client.proxy.processor;
 
+import com.google.common.base.Strings;
+import com.zhizus.forest.common.annotation.MethodProvider;
 import com.zhizus.forest.common.config.MethodConfig;
 import com.zhizus.forest.common.config.ServiceProviderConfig;
-import com.zhizus.forest.common.annotation.MethodProvider;
-import com.google.common.base.Strings;
 
 import java.lang.reflect.Method;
 

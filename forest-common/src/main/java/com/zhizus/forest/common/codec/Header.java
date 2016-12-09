@@ -53,7 +53,7 @@ public class Header {
         this.extend = extend;
     }
 
-    public Header(short magic, byte version, byte extend, Long messageID,  Integer size) {
+    public Header(short magic, byte version, byte extend, Long messageID, Integer size) {
         this.magic = magic;
         this.version = version;
         this.extend = extend;

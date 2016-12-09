@@ -43,5 +43,4 @@ public enum MessageType {
     public final static byte RESPONSE_MESSAGE_TYPE = (byte) (1 << 7);
 
 
-
 }

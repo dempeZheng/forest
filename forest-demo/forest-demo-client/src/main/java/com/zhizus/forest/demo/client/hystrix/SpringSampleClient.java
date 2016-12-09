@@ -1,6 +1,5 @@
 package com.zhizus.forest.demo.client.hystrix;
 
-import com.zhizus.forest.demo.client.hystrix.SampleServiceCommand;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

@@ -8,7 +8,6 @@ import com.zhizus.forest.common.util.ForestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.Executors;

@@ -43,7 +43,7 @@ public class ForestDecoder extends ByteToMessageDecoder {
 
         Serialization serialization = SerializeType.getSerializationByExtend(extend);
         Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
-        Object req =  serialization.deserialize(compress.unCompress(payload), MessageType.getMessageTypeByExtend(extend));
+        Object req = serialization.deserialize(compress.unCompress(payload), MessageType.getMessageTypeByExtend(extend));
         Header header = new Header(magic, version, extend, messageID, size);
         Message message = new Message(header, req);
         list.add(message);

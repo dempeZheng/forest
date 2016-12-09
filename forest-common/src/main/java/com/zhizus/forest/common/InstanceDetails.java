@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,27 +25,22 @@ import org.codehaus.jackson.map.annotate.JsonRootName;
  * be more detailed than this. But, this gives a good example.
  */
 @JsonRootName("details")
-public class InstanceDetails
-{
+public class InstanceDetails {
     private String description;
 
-    public InstanceDetails()
-    {
+    public InstanceDetails() {
         this("");
     }
 
-    public InstanceDetails(String description)
-    {
+    public InstanceDetails(String description) {
         this.description = description;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 }
