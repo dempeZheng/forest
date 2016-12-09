@@ -31,7 +31,7 @@
     <bean id="sampleServiceProxy" class="com.zhizus.forest.support.spring.ForestProxyFactoryBean">
         <property name="serviceInterface" value="com.zhizus.forest.demo.api.SampleService"/>
         <!--注册本地-->
-        <property name="registry" ref="localRegistry"/>
+        <property name="discovery" ref="localRegistry"/>
         <!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
         <property name="methodConfigMap">
             <map>

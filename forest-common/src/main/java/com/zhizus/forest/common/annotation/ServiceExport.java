@@ -1,5 +1,6 @@
 package com.zhizus.forest.common.annotation;
 
+import com.zhizus.forest.common.Constants;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
@@ -12,4 +13,6 @@ import java.lang.annotation.*;
 @Documented
 @Component
 public @interface ServiceExport {
+
+    int port() default Constants.DEF_PORT;
 }

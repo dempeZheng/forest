@@ -4,7 +4,7 @@ import com.zhizus.forest.Forest;
 import com.zhizus.forest.common.CompressType;
 import com.zhizus.forest.common.SerializeType;
 import com.zhizus.forest.common.config.MethodConfig;
-import com.zhizus.forest.common.config.ServiceConfig;
+import com.zhizus.forest.common.config.ServiceProviderConfig;
 import com.zhizus.forest.demo.api.SampleService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -22,7 +22,7 @@ public class SampleClient {
     }
 
     public static void serviceTest() throws Exception {
-        SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Builder.newBuilder()
+        SampleService sampleService = Forest.from(SampleService.class, ServiceProviderConfig.Builder.newBuilder()
                 .withMethodConfig("say", MethodConfig.Builder.newBuilder()
                         .withCompressType(CompressType.None)
                         .withSerializeType(SerializeType.Fastjson)

@@ -12,23 +12,23 @@ public abstract class AnnotationProcessorsProvider {
 
     public static final AnnotationProcessorsProvider DEFAULT = new DefaultAnnotationProcessorsProvider();
 
-    private final List<AnnotationProcessor> processors = new CopyOnWriteArrayList<AnnotationProcessor>();
+    private final List<IAnnotationProcessor> processors = new CopyOnWriteArrayList<IAnnotationProcessor>();
 
     public static class DefaultAnnotationProcessorsProvider extends AnnotationProcessorsProvider {
         protected DefaultAnnotationProcessorsProvider() {
-            ServiceLoader<AnnotationProcessor> loader = ServiceLoader.load(AnnotationProcessor.class);
-            Iterator<AnnotationProcessor> iterator = loader.iterator();
+            ServiceLoader<IAnnotationProcessor> loader = ServiceLoader.load(IAnnotationProcessor.class);
+            Iterator<IAnnotationProcessor> iterator = loader.iterator();
             while (iterator.hasNext()) {
                 register(iterator.next());
             }
         }
     }
 
-    public void register(AnnotationProcessor processor) {
+    public void register(IAnnotationProcessor processor) {
         processors.add(processor);
     }
 
-    public List<AnnotationProcessor> getProcessors() {
+    public List<IAnnotationProcessor> getProcessors() {
         return processors;
     }
 }

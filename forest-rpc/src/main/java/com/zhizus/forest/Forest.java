@@ -1,7 +1,7 @@
 package com.zhizus.forest;
 
 import com.zhizus.forest.client.proxy.ForestDynamicProxy;
-import com.zhizus.forest.common.config.ServiceConfig;
+import com.zhizus.forest.common.config.ServiceProviderConfig;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +18,8 @@ public class Forest {
         return ForestDynamicProxy.newInstance(clazz, AbstractServiceDiscovery.DEFAULT_DISCOVERY);
     }
 
-    public static <T> T from(Class<T> clazz, ServiceConfig config) throws Exception {
+    public static <T> T from(Class<T> clazz, ServiceProviderConfig config) throws Exception {
         return ForestDynamicProxy.newInstance(clazz, config, AbstractServiceDiscovery.DEFAULT_DISCOVERY);
     }
-
 
 }

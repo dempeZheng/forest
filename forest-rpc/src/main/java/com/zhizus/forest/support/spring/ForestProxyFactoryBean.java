@@ -2,7 +2,7 @@ package com.zhizus.forest.support.spring;
 
 import com.zhizus.forest.client.proxy.ForestDynamicProxy;
 import com.zhizus.forest.common.config.MethodConfig;
-import com.zhizus.forest.common.config.ServiceConfig;
+import com.zhizus.forest.common.config.ServiceProviderConfig;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class ForestProxyFactoryBean implements FactoryBean<Object>, Initializing
 
     private Object proxyBean;
 
-    private AbstractServiceDiscovery registry;
+    private AbstractServiceDiscovery discovery;
 
     @Override
     public void destroy() throws Exception {
@@ -56,11 +56,11 @@ public class ForestProxyFactoryBean implements FactoryBean<Object>, Initializing
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        ServiceConfig config = ServiceConfig.Builder.newBuilder().build();
+        ServiceProviderConfig config = ServiceProviderConfig.Builder.newBuilder().build();
         for (Map.Entry<String, MethodConfig> methodConfigEntry : methodConfigMap.entrySet()) {
             config.registerMethodConfig(methodConfigEntry.getKey(), methodConfigEntry.getValue());
         }
-        proxyBean = ForestDynamicProxy.newInstance(serviceInterface, config, registry);
+        proxyBean = ForestDynamicProxy.newInstance(serviceInterface, config, discovery);
     }
 
     public Class<?> getServiceInterface() {
@@ -71,11 +71,11 @@ public class ForestProxyFactoryBean implements FactoryBean<Object>, Initializing
         this.serviceInterface = serviceInterface;
     }
 
-    public AbstractServiceDiscovery getRegistry() {
-        return registry;
+    public AbstractServiceDiscovery getDiscovery() {
+        return discovery;
     }
 
-    public void setRegistry(AbstractServiceDiscovery registry) {
-        this.registry = registry;
+    public void setDiscovery(AbstractServiceDiscovery discovery) {
+        this.discovery = discovery;
     }
 }

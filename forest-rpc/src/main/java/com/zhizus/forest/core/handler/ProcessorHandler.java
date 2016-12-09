@@ -1,8 +1,7 @@
 package com.zhizus.forest.core.handler;
 
-import com.zhizus.forest.AnnotationRouterMapping;
 import com.zhizus.forest.ForestContext;
-import com.zhizus.forest.ForestExecutorGroup;
+import com.zhizus.forest.IRouter;
 import com.zhizus.forest.common.MessageType;
 import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Request;
@@ -10,10 +9,13 @@ import com.zhizus.forest.common.codec.Response;
 import com.zhizus.forest.common.exception.ForestErrorMsgConstant;
 import com.zhizus.forest.common.util.ForestUtil;
 import com.zhizus.forest.core.ActionMethod;
+import com.zhizus.forest.support.StandardThreadExecutor;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.Executor;
 
 /**
  * Created by Dempe on 2016/12/7.
@@ -22,25 +24,23 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message<Reques
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ProcessorHandler.class);
     // 业务线程池
-    private static ForestExecutorGroup executorGroup;
-    private AnnotationRouterMapping mapping;
+    private static Executor executor = new StandardThreadExecutor();
+    private IRouter router;
 
-    public ProcessorHandler(AnnotationRouterMapping mapping, ForestExecutorGroup executorGroup) {
-        this.mapping = mapping;
-        this.executorGroup = executorGroup;
+    public ProcessorHandler(IRouter router) {
+        this.router = router;
     }
 
     @Override
     protected void channelRead0(final ChannelHandlerContext channelHandlerContext, Message<Request> message) throws Exception {
-
         Request request = message.getContent();
         String uri = ForestUtil.buildUri(request.getServiceName(), request.getMethodName());
-        final ActionMethod actionMethod = mapping.getInvokerWrapperByURI(uri);
+        final ActionMethod actionMethod = router.router(uri);
         if (actionMethod == null) {
             LOGGER.warn("no mapping methodName:{}", uri);
             return;
         }
-        executorGroup.execute(actionMethod.getGroup(), new InvokerRunnable(actionMethod, message, channelHandlerContext));
+        executor.execute(new InvokerRunnable(actionMethod, message, channelHandlerContext));
     }
 
 

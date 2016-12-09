@@ -1,7 +1,7 @@
 package com.zhizus.forest.transport;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zhizus.forest.AnnotationRouterMapping;
+import com.zhizus.forest.IRouter;
 import com.zhizus.forest.ServerConfig;
 import com.zhizus.forest.core.ActionMethod;
 import com.zhizus.forest.core.MethodParam;
@@ -32,10 +32,10 @@ public class HttpForestServer {
     private final static Logger LOGGER = LoggerFactory.getLogger(HttpForestServer.class);
     HttpServerProvider provider = null;
     HttpServer httpServer = null;
-    private AnnotationRouterMapping mapping;
+    private IRouter mapping;
     private ServerConfig config;
 
-    public HttpForestServer(AnnotationRouterMapping mapping, ServerConfig config) {
+    public HttpForestServer(IRouter mapping, ServerConfig config) {
         this.mapping = mapping;
         this.config = config;
         provider = HttpServerProvider.provider();
@@ -71,7 +71,7 @@ public class HttpForestServer {
                 } else if (StringUtils.equals(httpExchange.getRequestMethod(), HttpMethod.GET.toString())) {
                     params = decoder.parameters();
                 }
-                ActionMethod actionMethod = mapping.getInvokerWrapperByURI(path);
+                ActionMethod actionMethod = mapping.router(path);
                 String[] parameterNames = MethodParam.getParameterNames(actionMethod.getMethod());
                 Object[] paramValues = MethodParam.getParameterValuesByMap(parameterNames, actionMethod.getMethod(), params);
 

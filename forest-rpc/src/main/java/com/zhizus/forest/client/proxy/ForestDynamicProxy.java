@@ -10,7 +10,7 @@ import com.zhizus.forest.common.codec.Header;
 import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Request;
 import com.zhizus.forest.common.config.MethodConfig;
-import com.zhizus.forest.common.config.ServiceConfig;
+import com.zhizus.forest.common.config.ServiceProviderConfig;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.registry.impl.LocalServiceDiscovery;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class ForestDynamicProxy implements InvocationHandler {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ForestDynamicProxy.class);
 
-    private ServiceConfig config;
+    private ServiceProviderConfig config;
 
     private final static AtomicLong id = new AtomicLong(0);
 
@@ -41,9 +41,9 @@ public class ForestDynamicProxy implements InvocationHandler {
 
     public Map<Method, Header> headerMapCache = Maps.newConcurrentMap();
 
-    public ForestDynamicProxy(ServiceConfig serviceConfig, Class<?> interfaceClass, AbstractServiceDiscovery registry) throws Exception {
+    public ForestDynamicProxy(ServiceProviderConfig serviceProviderConfig, Class<?> interfaceClass, AbstractServiceDiscovery registry) throws Exception {
         this(interfaceClass, registry);
-        for (Map.Entry<String, MethodConfig> methodConfigEntry : serviceConfig.getMethodConfigMap().entrySet()) {
+        for (Map.Entry<String, MethodConfig> methodConfigEntry : serviceProviderConfig.getMethodConfigMap().entrySet()) {
             MethodConfig methodConfigFromAnnotation = config.getMethodConfig(methodConfigEntry.getKey());
             if (methodConfigFromAnnotation == null) {
                 LOGGER.warn("methodName is not exist. err methodName:{},serviceName:{}", methodConfigEntry.getKey(), serviceName);
@@ -60,14 +60,14 @@ public class ForestDynamicProxy implements InvocationHandler {
     public ForestDynamicProxy(Class<?> interfaceClass, AbstractServiceDiscovery registry) throws Exception {
         clusterProvider = new ClusterProvider();
         clusterProvider.init();
-        config = ServiceConfig.Builder.newBuilder().build();
+        config = ServiceProviderConfig.Builder.newBuilder().build();
         AnnotationProcessorsProvider processors = AnnotationProcessorsProvider.DEFAULT;
         registerAnnotationProcessors(processors);
         ServiceProvider serviceProvider = interfaceClass.getAnnotation(ServiceProvider.class);
         this.serviceName = Strings.isNullOrEmpty(serviceProvider.serviceName()) ? interfaceClass.getSimpleName() : serviceProvider.serviceName();
         // 加载注解配置作为默认配置
         for (Method method : interfaceClass.getMethods()) {
-            for (AnnotationProcessor processor : processors.getProcessors()) {
+            for (IAnnotationProcessor processor : processors.getProcessors()) {
                 processor.process(serviceName, method, config);
             }
         }
@@ -88,8 +88,8 @@ public class ForestDynamicProxy implements InvocationHandler {
         processors.register(new MethodProviderAnnotationProcessor());
     }
 
-    public static <T> T newInstance(Class<T> clazz, ServiceConfig serviceConfig, AbstractServiceDiscovery registry) throws Exception {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(serviceConfig, clazz, registry));
+    public static <T> T newInstance(Class<T> clazz, ServiceProviderConfig serviceProviderConfig, AbstractServiceDiscovery registry) throws Exception {
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(serviceProviderConfig, clazz, registry));
     }
 
     public static <T> T newInstance(Class<T> clazz, AbstractServiceDiscovery registry) throws Exception {

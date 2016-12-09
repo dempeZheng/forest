@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Created by Dempe on 2016/12/7.
  */
-public class ServiceConfig {
+public class ServiceProviderConfig {
 
     private String serviceName;
 
@@ -48,15 +48,15 @@ public class ServiceConfig {
     }
 
     public static class Builder {
-        private ServiceConfig config;
+        private ServiceProviderConfig config;
 
         public static Builder newBuilder() {
             Builder builder = new Builder();
-            builder.config = new ServiceConfig();
+            builder.config = new ServiceProviderConfig();
             return builder;
         }
 
-        public ServiceConfig build() {
+        public ServiceProviderConfig build() {
             return config;
         }
 

@@ -18,8 +18,6 @@ public @interface ServiceProvider {
 
     String serviceName() default "";
 
-    int port() default 0;
-
     HaStrategyType haStrategyType() default HaStrategyType.FAIL_FAST;
 
     LoadBalanceType loadBalanceType() default LoadBalanceType.RANDOM;
