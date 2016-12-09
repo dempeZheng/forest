@@ -11,23 +11,13 @@
 
     <bean id="metricInterceptor" class="com.zhizus.forest.core.interceptor.MetricInterceptor"/>
 
-    <!--&lt;!&ndash;服务注册&ndash;&gt;-->
-    <!--<bean id="namingService" class="com.dempe.forest.register.redis.RedisRegistryService">-->
-    <!--<constructor-arg>-->
-    <!--<bean class="com.dempe.forest.register.redis.RedisClient">-->
-    <!--<property name="redisServer" value="116.31.122.26"></property>-->
-    <!--<property name="port" value="6379"></property>-->
-    <!--<property name="testOnBorrow" value="true"></property>-->
-    <!--<property name="maxWait" value="2000"></property>-->
-    <!--</bean>-->
-    <!--</constructor-arg>-->
-    <!--<property name="administrator" value="true"></property>-->
-    <!--<property name="group" value="default/"></property>-->
-    <!--<property name="expirePeriod" value="3000"></property>-->
-    <!--</bean>-->
+    <bean id="registry" class="com.zhizus.forest.registry.impl.ZkServiceDiscovery">
+        <property name="connStr" value="localhost:2181"/>
+    </bean>
 
 
     <bean id="forestServer" class="com.zhizus.forest.support.spring.ForestServerBean">
+        <property name="registry" ref="registry"></property>
     </bean>
 
 

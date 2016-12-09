@@ -13,12 +13,14 @@ import com.zhizus.forest.common.config.MethodConfig;
 import com.zhizus.forest.common.config.ServiceProviderConfig;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.registry.impl.LocalServiceDiscovery;
+import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -37,7 +39,7 @@ public class ForestDynamicProxy implements InvocationHandler {
 
     private ClusterProvider clusterProvider;
 
-    private AbstractServiceDiscovery registry;
+    private AbstractServiceDiscovery<ServiceInstance> discovery;
 
     public Map<Method, Header> headerMapCache = Maps.newConcurrentMap();
 
@@ -57,9 +59,8 @@ public class ForestDynamicProxy implements InvocationHandler {
 
     }
 
-    public ForestDynamicProxy(Class<?> interfaceClass, AbstractServiceDiscovery registry) throws Exception {
-        clusterProvider = new ClusterProvider();
-        clusterProvider.init();
+    public ForestDynamicProxy(Class<?> interfaceClass, AbstractServiceDiscovery discovery) throws Exception {
+
         config = ServiceProviderConfig.Builder.newBuilder().build();
         AnnotationProcessorsProvider processors = AnnotationProcessorsProvider.DEFAULT;
         registerAnnotationProcessors(processors);
@@ -72,13 +73,16 @@ public class ForestDynamicProxy implements InvocationHandler {
             }
         }
         config.setServiceName(serviceName);
-        if (registry == null) {
-            registry = AbstractServiceDiscovery.DEFAULT_DISCOVERY;
+        if (discovery == null) {
+            discovery = AbstractServiceDiscovery.DEFAULT_DISCOVERY;
         }
-        this.registry = registry;
-        if (registry instanceof LocalServiceDiscovery) {
-            registry.registerLocal(config.getServiceName(), ((LocalServiceDiscovery) registry).getAddress());
+        this.discovery = discovery;
+        if (discovery instanceof LocalServiceDiscovery) {
+            discovery.registerLocal(config.getServiceName(), ((LocalServiceDiscovery) discovery).getAddress());
         }
+        Collection<ServiceInstance> collection = discovery.queryForInstances(serviceName);
+        clusterProvider = new ClusterProvider(collection);
+        clusterProvider.init();
 
     }
 

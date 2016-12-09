@@ -1,15 +1,15 @@
 package com.zhizus.forest.client.cluster;
 
 import com.google.common.collect.Lists;
-import com.zhizus.forest.ClientConfig;
 import com.zhizus.forest.Referer;
 import com.zhizus.forest.client.cluster.ha.FailFastStrategy;
 import com.zhizus.forest.client.cluster.lb.AbstractLoadBalance;
 import com.zhizus.forest.client.cluster.lb.RandomLoadBalance;
 import com.zhizus.forest.common.codec.Message;
-import org.aeonbits.owner.ConfigFactory;
+import org.apache.curator.x.discovery.ServiceInstance;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -22,15 +22,25 @@ public class ClusterProvider<T> {
 
     private AbstractLoadBalance<T> loadBalance;
 
+
     private List<Referer<T>> refererList;
 
     private AtomicBoolean available = new AtomicBoolean(false);
 
+    private Collection<ServiceInstance> serviceInstances;
+
+    public ClusterProvider(Collection<ServiceInstance> serviceInstances) {
+        this.serviceInstances = serviceInstances;
+
+    }
+
     public void init() throws InterruptedException {
         available.set(true);
         refererList = Lists.newArrayList();
-        refererList.add(new Referer<T>(ConfigFactory.create(ClientConfig.class)));
         haStrategy = new FailFastStrategy<>();
+        for (ServiceInstance serviceInstance : serviceInstances) {
+            refererList.add(new Referer<T>(serviceInstance));
+        }
         loadBalance = new RandomLoadBalance<>();
         loadBalance.setRefererList(refererList);
 

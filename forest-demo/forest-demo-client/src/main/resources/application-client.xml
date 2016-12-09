@@ -24,14 +24,18 @@
         <property name="timeout" value="5000"/>
     </bean>
 
-    <bean id="localRegistry" class="com.zhizus.forest.registry.impl.LocalServiceDiscovery">
-        <constructor-arg name="address" value="localhost:9999"/>
+    <!--<bean id="localRegistry" class="com.zhizus.forest.registry.impl.LocalServiceDiscovery">-->
+        <!--<constructor-arg name="address" value="localhost:9999"/>-->
+    <!--</bean>-->
+
+    <bean id="zkRegistry" class="com.zhizus.forest.registry.impl.ZkServiceDiscovery">
+        <property name="connStr" value="localhost:2181"/>
     </bean>
 
     <bean id="sampleServiceProxy" class="com.zhizus.forest.support.spring.ForestProxyFactoryBean">
         <property name="serviceInterface" value="com.zhizus.forest.demo.api.SampleService"/>
         <!--注册本地-->
-        <property name="discovery" ref="localRegistry"/>
+        <property name="discovery" ref="zkRegistry"/>
         <!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
         <property name="methodConfigMap">
             <map>

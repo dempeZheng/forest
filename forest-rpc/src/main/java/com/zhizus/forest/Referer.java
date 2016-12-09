@@ -7,6 +7,7 @@ import com.zhizus.forest.common.codec.Response;
 import com.zhizus.forest.common.exception.ForestFrameworkException;
 import com.zhizus.forest.transport.NettyClient;
 import com.zhizus.forest.transport.NettyResponseFuture;
+import org.apache.curator.x.discovery.ServiceInstance;
 
 /**
  * Created by Dempe on 2016/12/7.
@@ -17,7 +18,10 @@ public class Referer<T> {
 
     public Referer(ClientConfig clientConfig) throws InterruptedException {
         channelPool = new ChannelPool(new NettyClient(clientConfig));
+    }
 
+    public Referer(ServiceInstance instance) throws InterruptedException {
+        channelPool = new ChannelPool(new NettyClient(instance));
     }
 
     public boolean isAvailable() {
