@@ -7,16 +7,16 @@ import org.apache.curator.x.discovery.ServiceInstance;
  */
 public abstract class AbstractServiceEventListener<T> implements IServiceEventListener<T> {
 
-    public void onFresh(ServiceInstance<T> serviceInstanceOld, ServiceInstance<T> serviceInstanceNew, ServiceEvent event) {
+    public void onFresh(ServiceInstance<T> serviceInstance, ServiceEvent event) {
         switch (event) {
             case ON_REGISTER:
-                onRegister(serviceInstanceNew);
+                onRegister(serviceInstance);
                 break;
             case ON_UPDATE:
-                onUpdate(serviceInstanceOld, serviceInstanceNew);
+                onUpdate(serviceInstance);
                 break;
             case ON_REMOVE:
-                onRemove(serviceInstanceOld);
+                onRemove(serviceInstance);
                 break;
         }
     }

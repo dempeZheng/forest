@@ -2,6 +2,7 @@ package com.zhizus.forest.registry;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.zhizus.forest.registry.impl.LocalServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceInstance;
 
 import java.util.List;
@@ -12,7 +13,14 @@ import java.util.Map;
  */
 public abstract class AbstractServiceDiscovery<T> implements IServiceDiscovery<T> {
 
+    public final static AbstractServiceDiscovery DEFAULT_DISCOVERY = new LocalServiceDiscovery("localhost:9999");
+
     private Map<String, List<AbstractServiceEventListener<T>>> listenerForNameMap = Maps.newConcurrentMap();
+
+
+    public void registerLocal(String serviceName, String address) throws Exception {
+
+    }
 
     @Override
     public void subscribe(String serviceName, AbstractServiceEventListener<T> listener) {
@@ -56,13 +64,13 @@ public abstract class AbstractServiceDiscovery<T> implements IServiceDiscovery<T
     }
 
 
-    protected void notify(String serviceName, ServiceInstance<T> serviceInstanceOld, ServiceInstance<T> serviceInstanceNew, IServiceEventListener.ServiceEvent event) {
-        List<AbstractServiceEventListener<T>> listenerList = listenerForNameMap.get(serviceName);
+    protected void notify(ServiceInstance<T> serviceInstance, IServiceEventListener.ServiceEvent event) {
+        List<AbstractServiceEventListener<T>> listenerList = listenerForNameMap.get(serviceInstance.getName());
         if (listenerList == null) {
             return;
         }
         for (AbstractServiceEventListener<T> listener : listenerList) {
-            listener.onFresh(serviceInstanceOld, serviceInstanceNew, event);
+            listener.onFresh(serviceInstance, event);
         }
     }
 }

@@ -8,10 +8,7 @@ import com.zhizus.forest.registry.IServiceEventListener;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.x.discovery.ServiceInstance;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Dempe on 2016/12/8.
@@ -20,26 +17,42 @@ public class LocalServiceDiscovery<T> extends AbstractServiceDiscovery<T> {
 
     private Map<String, ServiceInstance<T>> serviceMap = Maps.newConcurrentMap();
 
+    private String address;
+
+    public LocalServiceDiscovery(String address) {
+        this.address = address;
+    }
+
+
+    public void registerLocal(String serviceName, String address) throws Exception {
+        for (String url : address.split(",")) {
+            String host = StringUtils.substringBefore(url, ":");
+            int port = Integer.parseInt(StringUtils.substringAfter(url, ":"));
+            ServiceInstance<T> serviceInstance = ServiceInstance.<T>builder().address(host).id(UUID.randomUUID().toString().replace("-", ""))
+                    .port(port).name(serviceName).build();
+            registerService(serviceInstance);
+        }
+    }
+
     private Map<String, List<AbstractServiceEventListener<T>>> listenerForNameMap = Maps.newConcurrentMap();
 
     @Override
     public void registerService(ServiceInstance<T> service) throws Exception {
         serviceMap.put(service.getId(), service);
-        notify(service.getName(), null, service, IServiceEventListener.ServiceEvent.ON_REGISTER);
+        notify(service, IServiceEventListener.ServiceEvent.ON_REGISTER);
 
     }
 
     @Override
     public void updateService(ServiceInstance<T> service) throws Exception {
-        ServiceInstance<T> serviceInstanceOld = serviceMap.get(service.getId());
         serviceMap.put(service.getId(), service);
-        notify(service.getName(), serviceInstanceOld, service, IServiceEventListener.ServiceEvent.ON_UPDATE);
+        notify(service, IServiceEventListener.ServiceEvent.ON_UPDATE);
     }
 
     @Override
     public void unregisterService(ServiceInstance<T> service) throws Exception {
         serviceMap.remove(service.getId());
-        notify(service.getName(), service, null, IServiceEventListener.ServiceEvent.ON_REMOVE);
+        notify(service, IServiceEventListener.ServiceEvent.ON_REMOVE);
     }
 
 
@@ -68,5 +81,11 @@ public class LocalServiceDiscovery<T> extends AbstractServiceDiscovery<T> {
         return serviceMap.get(id);
     }
 
+    public String getAddress() {
+        return address;
+    }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

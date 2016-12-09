@@ -11,6 +11,8 @@ import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Request;
 import com.zhizus.forest.common.config.MethodConfig;
 import com.zhizus.forest.common.config.ServiceConfig;
+import com.zhizus.forest.registry.AbstractServiceDiscovery;
+import com.zhizus.forest.registry.impl.LocalServiceDiscovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +37,12 @@ public class ForestDynamicProxy implements InvocationHandler {
 
     private ClusterProvider clusterProvider;
 
-    public Map<Method,Header> headerMapCache = Maps.newConcurrentMap();
+    private AbstractServiceDiscovery registry;
 
-    public ForestDynamicProxy(ServiceConfig serviceConfig, Class<?> interfaceClass) throws InterruptedException {
-        this(interfaceClass);
+    public Map<Method, Header> headerMapCache = Maps.newConcurrentMap();
+
+    public ForestDynamicProxy(ServiceConfig serviceConfig, Class<?> interfaceClass, AbstractServiceDiscovery registry) throws Exception {
+        this(interfaceClass, registry);
         for (Map.Entry<String, MethodConfig> methodConfigEntry : serviceConfig.getMethodConfigMap().entrySet()) {
             MethodConfig methodConfigFromAnnotation = config.getMethodConfig(methodConfigEntry.getKey());
             if (methodConfigFromAnnotation == null) {
@@ -50,10 +54,10 @@ public class ForestDynamicProxy implements InvocationHandler {
             methodConfig.setServiceName(methodConfigFromAnnotation.getServiceName());
             config.registerMethodConfig(methodConfigEntry.getKey(), methodConfig);
         }
-        config.setServiceName(serviceName);
+
     }
 
-    public ForestDynamicProxy(Class<?> interfaceClass) throws InterruptedException {
+    public ForestDynamicProxy(Class<?> interfaceClass, AbstractServiceDiscovery registry) throws Exception {
         clusterProvider = new ClusterProvider();
         clusterProvider.init();
         config = ServiceConfig.Builder.newBuilder().build();
@@ -67,6 +71,15 @@ public class ForestDynamicProxy implements InvocationHandler {
                 processor.process(serviceName, method, config);
             }
         }
+        config.setServiceName(serviceName);
+        if (registry == null) {
+            registry = AbstractServiceDiscovery.DEFAULT_DISCOVERY;
+        }
+        this.registry = registry;
+        if (registry instanceof LocalServiceDiscovery) {
+            registry.registerLocal(config.getServiceName(), ((LocalServiceDiscovery) registry).getAddress());
+        }
+
     }
 
     public static void registerAnnotationProcessors(AnnotationProcessorsProvider processors) {
@@ -75,12 +88,14 @@ public class ForestDynamicProxy implements InvocationHandler {
         processors.register(new MethodProviderAnnotationProcessor());
     }
 
-    public static <T> T newInstance(Class<T> clazz, ServiceConfig serviceConfig) throws InterruptedException {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(serviceConfig, clazz));
+    public static <T> T newInstance(Class<T> clazz, ServiceConfig serviceConfig, AbstractServiceDiscovery registry) throws Exception {
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(serviceConfig, clazz, registry));
     }
 
-    public static <T> T newInstance(Class<T> clazz) throws InterruptedException {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(clazz));
+    public static <T> T newInstance(Class<T> clazz, AbstractServiceDiscovery registry) throws Exception {
+        Object instance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(clazz, registry));
+
+        return (T) instance;
     }
 
 
@@ -98,7 +113,7 @@ public class ForestDynamicProxy implements InvocationHandler {
             return null;
         }
         Header header = headerMapCache.get(method);
-        if(header==null){
+        if (header == null) {
             header = Header.HeaderMaker.newMaker()
                     .loadWithMethodConfig(methodConfig)
                     .withMessageId(id.incrementAndGet()).make();

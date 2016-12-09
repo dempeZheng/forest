@@ -3,6 +3,7 @@ package com.zhizus.forest.support.spring;
 import com.zhizus.forest.client.proxy.ForestDynamicProxy;
 import com.zhizus.forest.common.config.MethodConfig;
 import com.zhizus.forest.common.config.ServiceConfig;
+import com.zhizus.forest.registry.AbstractServiceDiscovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -23,6 +24,8 @@ public class ForestProxyFactoryBean implements FactoryBean<Object>, Initializing
     private Map<String, MethodConfig> methodConfigMap;
 
     private Object proxyBean;
+
+    private AbstractServiceDiscovery registry;
 
     @Override
     public void destroy() throws Exception {
@@ -57,8 +60,7 @@ public class ForestProxyFactoryBean implements FactoryBean<Object>, Initializing
         for (Map.Entry<String, MethodConfig> methodConfigEntry : methodConfigMap.entrySet()) {
             config.registerMethodConfig(methodConfigEntry.getKey(), methodConfigEntry.getValue());
         }
-        proxyBean = ForestDynamicProxy.newInstance(serviceInterface, config);
-
+        proxyBean = ForestDynamicProxy.newInstance(serviceInterface, config, registry);
     }
 
     public Class<?> getServiceInterface() {
@@ -67,5 +69,13 @@ public class ForestProxyFactoryBean implements FactoryBean<Object>, Initializing
 
     public void setServiceInterface(Class<?> serviceInterface) {
         this.serviceInterface = serviceInterface;
+    }
+
+    public AbstractServiceDiscovery getRegistry() {
+        return registry;
+    }
+
+    public void setRegistry(AbstractServiceDiscovery registry) {
+        this.registry = registry;
     }
 }

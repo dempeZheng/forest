@@ -3,7 +3,7 @@ package com.zhizus.forest.registry.impl;
 import com.zhizus.forest.common.Constants;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.registry.IServiceEventListener;
-import com.zhizus.forest.registry.InstanceDetails;
+import com.zhizus.forest.common.InstanceDetails;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.ChildData;
@@ -26,7 +26,7 @@ public class ZkServiceDiscovery extends AbstractServiceDiscovery<InstanceDetails
 
     private final static InstanceSerializer serializer = new JsonInstanceSerializer<>(InstanceDetails.class);
 
-    private ServiceDiscovery<com.zhizus.forest.registry.InstanceDetails> serviceDiscovery;
+    private ServiceDiscovery<InstanceDetails> serviceDiscovery;
 
     private String connStr = "localhost:2181";
 
@@ -66,15 +66,15 @@ public class ZkServiceDiscovery extends AbstractServiceDiscovery<InstanceDetails
         ServiceInstance serviceInstance = serializer.deserialize(data.getData());
         switch (event.getType()) {
             case NODE_ADDED: {
-                notify(serviceInstance.getName(), null, serviceInstance, IServiceEventListener.ServiceEvent.ON_REGISTER);
+                notify(serviceInstance, IServiceEventListener.ServiceEvent.ON_REGISTER);
                 break;
             }
             case NODE_UPDATED: {
-                notify(serviceInstance.getName(), null, serviceInstance, IServiceEventListener.ServiceEvent.ON_UPDATE);
+                notify(serviceInstance, IServiceEventListener.ServiceEvent.ON_UPDATE);
                 break;
             }
             case NODE_REMOVED: {
-                notify(serviceInstance.getName(), null, serviceInstance, IServiceEventListener.ServiceEvent.ON_REMOVE);
+                notify(serviceInstance, IServiceEventListener.ServiceEvent.ON_REMOVE);
                 break;
             }
             default:

@@ -2,13 +2,14 @@ package com.zhizus.forest.demo.client.hystrix;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.zhizus.forest.demo.api.SampleService;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 /**
  * Created by Dempe on 2016/12/7.
  */
-//@Component
+@Component
 public class SampleServiceCommand {
 
     @Resource(name = "sampleServiceProxy")

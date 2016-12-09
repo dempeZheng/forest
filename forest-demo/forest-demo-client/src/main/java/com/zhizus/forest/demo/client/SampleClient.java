@@ -14,14 +14,14 @@ import java.util.concurrent.Executors;
 
 public class SampleClient {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
         serviceTest();
-//        serviceSpringTest();
-        benchmarkTest();
+        serviceSpringTest();
+//        benchmarkTest();
 
     }
 
-    public static void serviceTest() throws InterruptedException {
+    public static void serviceTest() throws Exception {
         SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Builder.newBuilder()
                 .withMethodConfig("say", MethodConfig.Builder.newBuilder()
                         .withCompressType(CompressType.None)
@@ -43,7 +43,7 @@ public class SampleClient {
         System.out.println(test);
     }
 
-    public static void benchmarkTest() throws InterruptedException {
+    public static void benchmarkTest() throws Exception {
         final SampleService sampleService = Forest.from(SampleService.class);
         ExecutorService executorService = Executors.newCachedThreadPool();
         for (int i = 0; i < 20; i++) {

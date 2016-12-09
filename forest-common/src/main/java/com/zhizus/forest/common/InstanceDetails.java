@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.zhizus.forest.registry;
+package com.zhizus.forest.common;
 
 import org.codehaus.jackson.map.annotate.JsonRootName;
 

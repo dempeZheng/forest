@@ -21,17 +21,22 @@
         <property name="serializeType">
             <util:constant static-field="com.zhizus.forest.common.SerializeType.Fastjson"/>
         </property>
-        <property name="timeout" value="5000"></property>
+        <property name="timeout" value="5000"/>
     </bean>
 
+    <bean id="localRegistry" class="com.zhizus.forest.registry.impl.LocalServiceDiscovery">
+        <constructor-arg name="address" value="localhost:9999"/>
+    </bean>
 
     <bean id="sampleServiceProxy" class="com.zhizus.forest.support.spring.ForestProxyFactoryBean">
-        <property name="serviceInterface" value="com.zhizus.forest.demo.api.SampleService"></property>
+        <property name="serviceInterface" value="com.zhizus.forest.demo.api.SampleService"/>
+        <!--注册本地-->
+        <property name="registry" ref="localRegistry"/>
         <!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
         <property name="methodConfigMap">
             <map>
-                <entry key="echo" value-ref="methodConfig"></entry>
-                <entry key="say" value-ref="methodConfig"></entry>
+                <entry key="echo" value-ref="methodConfig"/>
+                <entry key="say" value-ref="methodConfig"/>
             </map>
         </property>
     </bean>
