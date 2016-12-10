@@ -25,16 +25,10 @@
 >通过注解`@ServiceProvider`暴露服务，通过`@MethodProvide`暴露方法默认配置，如：`压缩方式，序列化方式，客户端超时时间`
 
 ``` java
-@ServiceProvider(serviceName = "sampleService", haStrategyType = HaStrategyType.FAIL_FAST,
-	loadBalanceType = LoadBalanceType.RANDOM, connectionTimeout = Constants.CONNECTION_TIMEOUT, port = 8888)
+@ServiceProvider
 public interface SampleService {
-
-    @MethodProvider(methodName = "say")
+    @MethodProvider
     String say(String str);
-
-    @MethodProvider(methodName = "echo", serializeType = SerializeType.fastjson, compressType = CompressType.gzip)
-    String echo(String msg);
-
 }
  ```
 
@@ -47,17 +41,9 @@ public interface SampleService {
 public class SampleServiceImpl implements SampleService {
 
     @MethodExport
-    @Rate(2)
     @Override
     public String say(String str) {
 	return "say " + str;
-    }
-
-    @Interceptor("metricInterceptor")
-    @MethodExport
-    @Override
-    public String echo(String msg) {
-	return "echo " + msg;
     }
 }
 ```
@@ -79,8 +65,7 @@ public class SampleServiceImpl implements SampleService {
 	http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:component-scan base-package="com.zhizus.forest.demo"/>
-    <bean id="metricInterceptor" class="com.zhizus.forest.core.interceptor.MetricInterceptor"/>
-    <bean id="forestServer" class="com.zhizus.forest.support.spring.ForestServerBean"/>
+   <bean id="forestServer" class="com.zhizus.forest.support.spring.ForestServerBean"/>
 
 </beans>
 ```
@@ -98,84 +83,18 @@ public class SampleServer {
 
 ## 4.客户端开发
 
-###基于spring配置
-
-`application-client.xml`
-
-> 可以使用api注解暴露的默认配置，也可以通过spring为每个方法定义配置
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans.xsd
-	http://www.springframework.org/schema/context
-	http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
-
-    <context:component-scan base-package="com.zhizus.forest.demo.client"/>
-    <bean id="methodConfig" class="com.zhizus.forest.common.config.MethodConfig">
-	<property name="compressType">
-	    <util:constant static-field="None"/>
-	</property>
-	<property name="serializeType">
-	    <util:constant static-field="Fastjson"/>
-	</property>
-	<property name="timeout" value="5000"></property>
-    </bean>
-    <bean id="sampleServiceProxy" class="com.zhizus.forest.support.spring.ForestProxyFactoryBean">
-	<property name="serviceInterface" value="com.zhizus.forest.demo.api.SampleService"></property>
-	<!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
-	<property name="methodConfigMap">
-	    <map>
-		<entry key="echo" value-ref="methodConfig"></entry>
-		<entry key="say" value-ref="methodConfig"></entry>
-	    </map>
-	</property>
-    </bean>
-</beans>
-```
-
-``` java
-public class SampleClient {
-    public static void main(String[] args) throws InterruptedException {
-	ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-client.xml"});
-	SampleService bean = (SampleService) context.getBean("sampleServiceProxy");
-	String test = bean.say("hello");
-	System.out.println(test);
-    }
-}
-```
-
-### 基于默认注解
-
 ```java
 SampleService sampleService = Forest.from(SampleService.class);
-```
-
-### 基于代码自定义配置
-
-``` java
-SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Builder.newBuilder()
-			.withMethodConfig("say", MethodConfig.Builder.newBuilder()
-				.withCompressType(CompressType.none)
-				.withSerializeType(SerializeType.fastjson)
-				.build())
-			.withMethodConfig("echo", MethodConfig.Builder.newBuilder()
-				.withCompressType(CompressType.none)
-				.build())
-			.build());
+String result = sampleService.say("hello");
 ```
 
 ### Console输出
 
 ```
-23:10:10.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:83342, avgTime:0, maxTime:63, minTime:0 
-23:10:11.298 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:86271, avgTime:0, maxTime:63, minTime:0 
-23:10:12.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:86063, avgTime:0, maxTime:63, minTime:0 
-23:10:13.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:84305, avgTime:0, maxTime:63, minTime:0 
+23:10:10.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/say, current tps:83342, avgTime:0, maxTime:63, minTime:0
+23:10:11.298 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/say, current tps:86271, avgTime:0, maxTime:63, minTime:0
+23:10:12.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/say, current tps:86063, avgTime:0, maxTime:63, minTime:0
+23:10:13.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/say, current tps:84305, avgTime:0, maxTime:63, minTime:0
 ```
 
 [更多示例](https://github.com/dempeZheng/forestRPC/tree/master/forest-demo)
