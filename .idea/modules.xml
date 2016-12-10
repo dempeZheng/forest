@@ -2,18 +2,15 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/forest.iml" filepath="$PROJECT_DIR$/forest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/forest-common/forest-common.iml" filepath="$PROJECT_DIR$/forest-common/forest-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/forest-demo/forest-demo.iml" filepath="$PROJECT_DIR$/forest-demo/forest-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/forest-demo/forest-demo-api/forest-demo-api.iml" filepath="$PROJECT_DIR$/forest-demo/forest-demo-api/forest-demo-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/forest-demo/forest-demo-client/forest-demo-client.iml" filepath="$PROJECT_DIR$/forest-demo/forest-demo-client/forest-demo-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/forest-demo/forest-demo-server/forest-demo-server.iml" filepath="$PROJECT_DIR$/forest-demo/forest-demo-server/forest-demo-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/forest-rpc/forest-rpc.iml" filepath="$PROJECT_DIR$/forest-rpc/forest-rpc.iml" />
       <module fileurl="file://$PROJECT_DIR$/ketty.iml" filepath="$PROJECT_DIR$/ketty.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ketty-analysis/ketty-analysis.iml" filepath="$PROJECT_DIR$/ketty-analysis/ketty-analysis.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ketty-client/ketty-client.iml" filepath="$PROJECT_DIR$/ketty-client/ketty-client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ketty-codec/ketty-codec.iml" filepath="$PROJECT_DIR$/ketty-codec/ketty-codec.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ketty-common/ketty-common.iml" filepath="$PROJECT_DIR$/ketty-common/ketty-common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ketty-example/ketty-example.iml" filepath="$PROJECT_DIR$/ketty-example/ketty-example.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ketty-ha/ketty-ha.iml" filepath="$PROJECT_DIR$/ketty-ha/ketty-ha.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ketty-monitor/ketty-monitor.iml" filepath="$PROJECT_DIR$/ketty-monitor/ketty-monitor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ketty-mvc/ketty-mvc.iml" filepath="$PROJECT_DIR$/ketty-mvc/ketty-mvc.iml" />
       <module fileurl="file://$PROJECT_DIR$/ketty-name/ketty-name.iml" filepath="$PROJECT_DIR$/ketty-name/ketty-name.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ketty-router/ketty-router.iml" filepath="$PROJECT_DIR$/ketty-router/ketty-router.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ketty-srv/ketty-srv.iml" filepath="$PROJECT_DIR$/ketty-srv/ketty-srv.iml" />
     </modules>
   </component>
 </project>

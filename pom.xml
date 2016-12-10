@@ -4,151 +4,35 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.dempe.ketty</groupId>
-    <artifactId>ketty</artifactId>
+    <groupId>com.zhizus</groupId>
+    <artifactId>forest</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>ketty-mvc</module>
-        <module>ketty-router</module>
-        <module>ketty-srv</module>
-        <module>ketty-client</module>
-        <module>ketty-analysis</module>
-        <module>ketty-codec</module>
-        <module>ketty-common</module>
-        <module>ketty-example</module>
-        <module>ketty-monitor</module>
-        <module>ketty-ha</module>
-        <module>ketty-name</module>
+        <module>forest-demo</module>
+        <module>forest-common</module>
+        <module>forest-rpc</module>
     </modules>
 
     <properties>
-        <java_source_version>1.6</java_source_version>
-        <java_target_version>1.6</java_target_version>
-        <project_encoding>UTF-8</project_encoding>
-        <jserverlib_version>1.7.8-SNAPSHOT</jserverlib_version>
-        <mina_version>2.0.4</mina_version>
-        <netty_version>3.5.5.Final</netty_version>
-        <javassist_version>3.16.1-GA</javassist_version>
-        <jackson_version>1.9.9</jackson_version>
-        <slf4j_version>1.7.0</slf4j_version>
-        <logback_version>1.0.7</logback_version>
-        <zookeeper_version>3.4.5</zookeeper_version>
-        <curator_version>1.3.3</curator_version>
-        <junit_version>4.10</junit_version>
-        <mockito_version>1.9.0</mockito_version>
-        <powermock_version>1.4.11</powermock_version>
-        <springframework_version>3.1.1.RELEASE</springframework_version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <netty.version>5.0.0.Alpha1</netty.version>
+        <netty.version>4.1.0.Final</netty.version>
         <netty.groupId>io.netty</netty.groupId>
-        <github.global.server>github</github.global.server>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.source.jdk>1.7</java.source.jdk>
+        <spring.version>4.2.5.RELEASE</spring.version>
+        <snappy-java.version>1.1.1.6</snappy-java.version>
+        <org.slf4j.version>1.7.5</org.slf4j.version>
     </properties>
 
-
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <url>dav:https://github.com/dempeZheng/maven-repository/raw/master/releases</url>
-            <!--<url>file://${project.build.directory}/maven-repository</url>-->
-            <!--<url>https://github.com/dempeZheng/maven-repository/raw/master/releases</url>-->
-        </repository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>maven-repository</id>
-            <url>https://raw.github.com/dempeZheng/maven-repository/master/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
-
-    <dependencyManagement>
-        <dependencies>
-
-            <!-- netty -->
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty</artifactId>
-                <version>${netty_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.javassist</groupId>
-                <artifactId>javassist</artifactId>
-                <version>${javassist_version}</version>
-            </dependency>
-
-            <!-- log -->
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>log4j-over-slf4j</artifactId>
-                <version>${slf4j_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>jcl-over-slf4j</artifactId>
-                <version>${slf4j_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.janino</groupId>
-                <artifactId>janino</artifactId>
-                <version>2.6.1</version>
-            </dependency>
-            <!-- test -->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit_version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>${mockito_version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-module-junit4</artifactId>
-                <version>${powermock_version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito</artifactId>
-                <version>${powermock_version}</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
-
         <dependency>
             <groupId>${netty.groupId}</groupId>
             <artifactId>netty-buffer</artifactId>
             <version>${netty.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
+            <groupId>${netty.groupId}</groupId>
             <artifactId>netty-common</artifactId>
             <version>${netty.version}</version>
         </dependency>
@@ -174,130 +58,130 @@
             <artifactId>netty-codec-http</artifactId>
             <version>${netty.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+        </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>1.0.13</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.janino</groupId>
-            <artifactId>janino</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${org.slf4j.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
+            <groupId>org.aeonbits.owner</groupId>
+            <artifactId>owner</artifactId>
+            <version>1.0.8</version>
         </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.2</version>
+            <version>1.1.36</version>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-asm</artifactId>
-            <version>3.1.1.RELEASE</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>2.2</version>
         </dependency>
 
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-example</artifactId>
-            <version>5.0.0.Alpha1</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>17.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+            <version>${snappy-java.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>4.0.38</version>
+        </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware.kryo</groupId>
+            <artifactId>kryo</artifactId>
+            <version>2.24.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-x-discovery</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
-        <extensions>
-            <!--Wagon 插件可以帮助deploy时的文件传输（http, scp, scm, file, ftp等）-->
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-webdav-jackrabbit</artifactId>
-                <version>2.2</version>
-            </extension>
-        </extensions>
-        <pluginManagement>
-            <plugins>
-                <!--<plugin>-->
-                    <!--<groupId>org.apache.maven.plugins</groupId>-->
-                    <!--<artifactId>maven-resources-plugin</artifactId>-->
-                    <!--<version>2.5</version>-->
-                    <!--<configuration>-->
-                        <!--<encoding>${project_encoding}</encoding>-->
-                    <!--</configuration>-->
-                <!--</plugin>-->
-                <!--<plugin>-->
-                    <!--<groupId>org.apache.maven.plugins</groupId>-->
-                    <!--<artifactId>maven-compiler-plugin</artifactId>-->
-                    <!--<version>2.3.2</version>-->
-                    <!--<configuration>-->
-                        <!--<encoding>${project_encoding}</encoding>-->
-                        <!--<source>${java_source_version}</source>-->
-                        <!--<target>${java_target_version}</target>-->
-                    <!--</configuration>-->
-                <!--</plugin>-->
-                <plugin>
-                    <groupId>com.github.github</groupId>
-                    <artifactId>site-maven-plugin</artifactId>
-                    <version>0.12</version>
-                    <configuration>
-                        <message>Maven artifacts for ${project.version}</message>
-                        <!-- git commit message -->
-                        <noJekyll>true</noJekyll>
-                        <!-- disable webpage processing -->
-                        <outputDirectory>${project.build.directory}/maven-repository</outputDirectory>
-                        <!-- matches distribution management repository url above -->
-                        <branch>refs/heads/maven-repository</branch>
-                        <!-- remote branch name -->
-                        <includes>
-                            <include>
-                                **/*
-                            </include>
-                        </includes>
-                        <repositoryName>maven-repository</repositoryName>
-                        <repositoryOwner>dempeZheng</repositoryOwner>
-                    </configuration>
-                    <executions>
-                        <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
-                        <execution>
-                            <goals>
-                                <goal>site</goal>
-                            </goals>
-                            <phase>deploy</phase>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.1</version>
-                    <configuration>
-                        <altDeploymentRepository>
-                            internal.repo::default::file://${project.build.directory}/maven-repository
-                        </altDeploymentRepository>
-                    </configuration>
-                </plugin>
-
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>${java.source.jdk}</source>
+                    <target>${java.source.jdk}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
+
+
 </project>

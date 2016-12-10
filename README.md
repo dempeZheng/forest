@@ -1,185 +1,201 @@
-##Ketty
->基于netty实现的服务端Nio MVC业务开发平台，提供性能监控，日志分析，动态扩展的功能。
+# Forest
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dempeZheng/forest/blob/master/LICENSE)
+[![Build Status](https://img.shields.io/travis/dempeZheng/forest/master.svg?label=Build)](https://travis-ci.org/dempeZheng/forest)
 
-###ketty-srv模块
->基于netty实现支持自定义协议扩展的Nio MVC高性能业务框架
+# Overview
+基于netty, spring,轻量的高性能分布式RPC服务框架。简单，易用，高效。
 
-####协议
-- Http
-- Ketty(自定义私有协议)
+# Features
+- 服务端支持多种序列化方式：fastjson，hession，kryo
+- 服务端支持多种压缩方式：gzip，snappy
+- 服务端可根据group进行线程隔离，支持基于spring对不同的group配置不同的业务线程池
+- 支持注解配置，也支持spring xml配置
+- 支持服务发现服务注册
+- client端支持多种负载均衡策略和容灾策略
+- client内置连接池
+- 基于netty 4.x版本实现，高性能（win 8cpu单机8w+）
 
 
-####基于注解的 mvc
+# Protocol
 
-- @Inject注入
-- @Path 路径支持
-- @Param参数自动注入value
+# Quick Start
 
-####支持方法调用频率限制RateLimiter
+## 1.定义接口
+
+>通过注解`@ServiceProvider`暴露服务，通过`@MethodProvide`暴露方法默认配置，如：`压缩方式，序列化方式，客户端超时时间`
 
 ``` java
-@Action
-public class SimpleAction {
+@ServiceProvider(serviceName = "sampleService", haStrategyType = HaStrategyType.FAIL_FAST,
+	loadBalanceType = LoadBalanceType.RANDOM, connectionTimeout = Constants.CONNECTION_TIMEOUT, port = 8888)
+public interface SampleService {
 
-    @Inject
-    private UserService userService;
+    @MethodProvider(methodName = "say")
+    String say(String str);
 
-    // 每秒最多可调用100次，超过100次丢弃，
-	@Rate(value=100)
-	@Interceptor(id = "echoInterceptor")
-    @Path
-    public User getUserByUid(@Param String uid) {
-        return userService.getUserByUid(uid);
-    }
+    @MethodProvider(methodName = "echo", serializeType = SerializeType.fastjson, compressType = CompressType.gzip)
+    String echo(String msg);
+
 }
+ ```
 
-```
+## 2.实现接口
 
-####拦截器 example
+>基于注解`@ServiceExport`发布服务，基于注解 `@MethodExport`发布方法，
+
 ``` java
-@Around
-public class EchoInterceptor extends BaseInterceptor {
+@ServiceExport
+public class SampleServiceImpl implements SampleService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(EchoInterceptor.class);
-
+    @MethodExport
+    @Rate(2)
     @Override
-    public boolean before() {
-        LOGGER.info("==============EchoInterceptor before=========");
-        return true;
+    public String say(String str) {
+	return "say " + str;
     }
 
+    @Interceptor("metricInterceptor")
+    @MethodExport
     @Override
-    public boolean after() {
-        LOGGER.info("==============EchoInterceptor after=========");
-        return true;
+    public String echo(String msg) {
+	return "echo " + msg;
     }
 }
 ```
 
-#### KettyServer example
-``` java
-// nio mvc 业务server启动类example
-new KettyServer.Builder()
-                .tcpNoDelay(true)
-                .soKeepAlive(true)
-                .setHttpProtocol()
-                .host("localhost")
-                .port(8888)
-                .build()
-                .start();
+## 3.服务端开发
 
-// 测试jetty客户端
-public class JettClientTest {
-	public static ClientSender clientSender = new ClientSender("localhost", 8888);
-	public static void main(String[] args) throws Exception {
-		KettyRequest request = new KettyRequest();
-		request.setUri("/simpleAction/getUserByUid");
-		JSONObject params = new JSONObject();
-		params.put("uid", "12345677");
-		request.setParameter(params);
-		String result = clientSender.sendAndWait(request);
-		System.out.println("result : " + result);
-	}
-}
+### spring context 配置：
+
+`application.xml`
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.zhizus.forest.demo"/>
+    <bean id="metricInterceptor" class="com.zhizus.forest.core.interceptor.MetricInterceptor"/>
+    <bean id="forestServer" class="com.zhizus.forest.support.spring.ForestServerBean"/>
+
+</beans>
 ```
 
-#### HttpServer example
+### Server开发
+
 ``` java
-// nio mvc 业务server启动类example
-public class SimpleServer {
+public class SampleServer {
     public static void main(String[] args) throws Exception {
-         new KettyServer.Builder()
-                        .setKettyProtocol()
-                        .port(8888)
-                        .build()
-                        .start();
+	new ClassPathXmlApplicationContext(new String[]{"application.xml"});
     }
 }
 
 ```
-####TODO 
 
-- 支持自定义协议扩展
-- 安全验证
-- 性能优化
-- WebSocket协议的实现
+## 4.客户端开发
 
-###ketty-client模块
->KettyServer高可用NIO客户端
+###基于spring配置
 
-####High availability
-支持多个节点，节点不可用自动移除
+`application-client.xml`
 
-#### Client pool
-支持连接池
+> 可以使用api注解暴露的默认配置，也可以通过spring为每个方法定义配置
 
-#### 断链自动重连
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-#### 自动维护心跳
+    <context:component-scan base-package="com.zhizus.forest.demo.client"/>
+    <bean id="methodConfig" class="com.zhizus.forest.common.config.MethodConfig">
+	<property name="compressType">
+	    <util:constant static-field="None"/>
+	</property>
+	<property name="serializeType">
+	    <util:constant static-field="Fastjson"/>
+	</property>
+	<property name="timeout" value="5000"></property>
+    </bean>
+    <bean id="sampleServiceProxy" class="com.zhizus.forest.support.spring.ForestProxyFactoryBean">
+	<property name="serviceInterface" value="com.zhizus.forest.demo.api.SampleService"></property>
+	<!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
+	<property name="methodConfigMap">
+	    <map>
+		<entry key="echo" value-ref="methodConfig"></entry>
+		<entry key="say" value-ref="methodConfig"></entry>
+	    </map>
+	</property>
+    </bean>
+</beans>
+```
 
-###ketty-codec模块
->编解码框架
+``` java
+public class SampleClient {
+    public static void main(String[] args) throws InterruptedException {
+	ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-client.xml"});
+	SampleService bean = (SampleService) context.getBean("sampleServiceProxy");
+	String test = bean.say("hello");
+	System.out.println(test);
+    }
+}
+```
 
-####KettyRequest
+### 基于默认注解
 
-<table>
-<tr bgcolor="#DCDCDC">
-	<th colspan="5" width="50%">header</th>
-	<th>body</th>
-</tr>
-<tr>	
-	<td>size</td>
-	<td>len</td>
-	<td>uri</td>
-	<td>msgId</td>
-	<td>paramsMap</td>
-	<td>body</td>
-</tr>
-<tr>	
-	<td>short(2byte)</td>
-	<td>short(2byte)</td>
-	<td>string</td>
-	<td>int(4byte)</td>
-	<td>map</td>
-	<td>JSONString</td>
-</tr>
-</table>
+```java
+SampleService sampleService = Forest.from(SampleService.class);
+```
 
-####KettyResponse
+### 基于代码自定义配置
 
-<table>
-<tr bgcolor="#DCDCDC">
-	<th colspan="4" width="50%">header</th>
-	<th>body</th>
-</tr>
-<tr>	
-	<td>size</td>
-	<td>len</td>
-	<td>msgId(消息id)</td>
-	<td>resCode(消息返回码)</td>
-	<td>body</td>
-</tr>
-<tr>	
-	<td>short(2byte)</td>
-	<td>short(2byte)</td>
-	<td>int(4byte)</td>
-	<td>short(2byte)</td>
-	<td>JSONString</td>
-</tr>
-</table>
+``` java
+SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Builder.newBuilder()
+			.withMethodConfig("say", MethodConfig.Builder.newBuilder()
+				.withCompressType(CompressType.none)
+				.withSerializeType(SerializeType.fastjson)
+				.build())
+			.withMethodConfig("echo", MethodConfig.Builder.newBuilder()
+				.withCompressType(CompressType.none)
+				.build())
+			.build());
+```
 
-###ketty-router模块
->服务代理模块，提供路由分发功能
+### Console输出
 
-###ketty-monitor模块
->性能监控
->报警
+```
+23:10:10.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:83342, avgTime:0, maxTime:63, minTime:0 
+23:10:11.298 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:86271, avgTime:0, maxTime:63, minTime:0 
+23:10:12.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:86063, avgTime:0, maxTime:63, minTime:0 
+23:10:13.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:84305, avgTime:0, maxTime:63, minTime:0 
+```
 
-###ketty-analysis模块
->接口统计分析
->智能推荐
+[更多示例](https://github.com/dempeZheng/forest/tree/master/forest-demo)
 
-[READ MORE](http://zhizus.com)
+
+# Documents
+
+* [Wiki(中文)](https://github.comdempeZheng/forest)
+
+# TODO
+
+- 服务降级功能
+- http服务支持
+- 跨语言协议支持
+- 服务治理管理后台
+
+# License
+
+Forest is released under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
 
 
 

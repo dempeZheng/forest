@@ -22,21 +22,53 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="ketty-analysis" />
-        <module name="ketty-client" />
-        <module name="ketty-codec" />
-        <module name="ketty-common" />
-        <module name="ketty-example" />
-        <module name="ketty-ha" />
         <module name="ketty-halb" />
-        <module name="ketty-monitor" />
-        <module name="ketty-mvc" />
-        <module name="ketty-name" />
-        <module name="ketty-router" />
-        <module name="ketty-srv" />
+      </profile>
+      <profile default="false" name="Annotation profile for forest-demo-client" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="forest-demo-client" />
+      </profile>
+      <profile default="false" name="Annotation profile for forest-demo-server" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="forest-demo-server" />
+      </profile>
+      <profile default="false" name="Annotation profile for forest-demo-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="forest-demo-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for forest-rpc" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="forest-rpc" />
+      </profile>
+      <profile default="false" name="Annotation profile for forest-common" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="forest-common" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="forest" target="1.7" />
+      <module name="forest-common" target="1.7" />
+      <module name="forest-demo" target="1.7" />
+      <module name="forest-demo-api" target="1.7" />
+      <module name="forest-demo-client" target="1.7" />
+      <module name="forest-demo-server" target="1.7" />
+      <module name="forest-rpc" target="1.7" />
+      <module name="ketty" target="1.5" />
       <module name="ketty-analysis" target="1.6" />
       <module name="ketty-client" target="1.6" />
       <module name="ketty-codec" target="1.6" />
@@ -45,6 +77,7 @@
       <module name="ketty-halb" target="1.6" />
       <module name="ketty-monitor" target="1.6" />
       <module name="ketty-mvc" target="1.6" />
+      <module name="ketty-name" target="1.5" />
       <module name="ketty-router" target="1.6" />
       <module name="ketty-srv" target="1.6" />
     </bytecodeTargetLevel>
