@@ -1,6 +1,6 @@
 # Forest
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dempeZheng/forest/blob/master/LICENSE)
-[![Build Status](https://img.shields.io/travis/dempeZheng/forest/master.svg?label=Build)](https://travis-ci.org/dempeZheng/forest)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dempeZheng/forestRPC/blob/master/LICENSE)
+[![Build Status](https://img.shields.io/travis/dempeZheng/forestRPC/master.svg?label=Build)](https://travis-ci.org/dempeZheng/forestRPC)
 
 # Overview
 基于netty, spring,轻量的高性能分布式RPC服务框架。简单，易用，高效。
@@ -178,12 +178,12 @@ SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Bui
 23:10:13.295 [pool-1-thread-1] INFO MetricInterceptor 34 - methodName:/sampleService/echo, current tps:84305, avgTime:0, maxTime:63, minTime:0 
 ```
 
-[更多示例](https://github.com/dempeZheng/forest/tree/master/forest-demo)
+[更多示例](https://github.com/dempeZheng/forestRPC/tree/master/forest-demo)
 
 
 # Documents
 
-* [Wiki(中文)](https://github.comdempeZheng/forest)
+* [Wiki(中文)](https://github.comdempeZheng/forestRPC)
 
 # TODO
 
