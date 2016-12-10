@@ -183,7 +183,7 @@ SampleService sampleService = Forest.from(SampleService.class, ServiceConfig.Bui
 
 # Documents
 
-* [Wiki(中文)](https://github.comdempeZheng/forestRPC)
+* [Wiki(中文)](https://github.com/dempeZheng/forestRPC)
 
 # TODO
 
