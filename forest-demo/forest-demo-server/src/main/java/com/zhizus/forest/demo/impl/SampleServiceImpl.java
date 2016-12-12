@@ -15,7 +15,6 @@ public class SampleServiceImpl implements SampleService {
 
     @MethodExport
     @Rate(2)
-    @Interceptor("metricInterceptor")
     @Override
     public String say(String str) {
         return "say " + str;

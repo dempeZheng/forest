@@ -1,7 +1,7 @@
 package com.zhizus.forest.registry.impl;
 
 import com.zhizus.forest.common.Constants;
-import com.zhizus.forest.common.InstanceDetails;
+import com.zhizus.forest.common.MetaInfo;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.registry.IServiceEventListener;
 import org.apache.curator.framework.CuratorFramework;
@@ -22,11 +22,11 @@ import java.util.Collection;
 /**
  * Created by Dempe on 2016/12/8.
  */
-public class ZkServiceDiscovery extends AbstractServiceDiscovery<InstanceDetails> implements InitializingBean, TreeCacheListener {
+public class ZkServiceDiscovery extends AbstractServiceDiscovery<MetaInfo> implements InitializingBean, TreeCacheListener {
 
-    private final static InstanceSerializer serializer = new JsonInstanceSerializer<>(InstanceDetails.class);
+    private final static InstanceSerializer serializer = new JsonInstanceSerializer<>(MetaInfo.class);
 
-    private ServiceDiscovery<InstanceDetails> serviceDiscovery;
+    private ServiceDiscovery<MetaInfo> serviceDiscovery;
 
     private String connStr = "localhost:2181";
 
@@ -51,12 +51,12 @@ public class ZkServiceDiscovery extends AbstractServiceDiscovery<InstanceDetails
     }
 
     @Override
-    public Collection<ServiceInstance<InstanceDetails>> queryForInstances(String name) throws Exception {
+    public Collection<ServiceInstance<MetaInfo>> queryForInstances(String name) throws Exception {
         return serviceDiscovery.queryForInstances(name);
     }
 
     @Override
-    public ServiceInstance<InstanceDetails> queryForInstance(String name, String id) throws Exception {
+    public ServiceInstance<MetaInfo> queryForInstance(String name, String id) throws Exception {
         return serviceDiscovery.queryForInstance(name, id);
     }
 
@@ -85,7 +85,7 @@ public class ZkServiceDiscovery extends AbstractServiceDiscovery<InstanceDetails
     public void afterPropertiesSet() throws Exception {
         CuratorFramework client = CuratorFrameworkFactory.newClient(connStr, new ExponentialBackoffRetry(1000, 3));
         client.start();
-        serviceDiscovery = ServiceDiscoveryBuilder.builder(InstanceDetails.class)
+        serviceDiscovery = ServiceDiscoveryBuilder.builder(MetaInfo.class)
                 .client(client)
                 .basePath(Constants.BASE_PATH)
                 .serializer(serializer)

@@ -8,7 +8,7 @@ import com.zhizus.forest.ServerConfig;
 import com.zhizus.forest.client.proxy.processor.AnnotationProcessorsProvider;
 import com.zhizus.forest.client.proxy.processor.IAnnotationProcessor;
 import com.zhizus.forest.client.proxy.processor.ServiceExportProcessor;
-import com.zhizus.forest.common.InstanceDetails;
+import com.zhizus.forest.common.MetaInfo;
 import com.zhizus.forest.common.annotation.ServiceExport;
 import com.zhizus.forest.common.config.ServiceExportConfig;
 import com.zhizus.forest.common.util.NetUtils;
@@ -71,7 +71,7 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
                 NettyServer server = factory.createServer(router, config);
                 server.doBind();
                 // 注册服务
-                ServiceInstance<InstanceDetails> serviceInstance = ServiceInstance.<InstanceDetails>builder()
+                ServiceInstance<MetaInfo> serviceInstance = ServiceInstance.<MetaInfo>builder()
                         .name(serviceName)
                         .address(NetUtils.getLocalAddress().getHostAddress())
                         .port(port)
