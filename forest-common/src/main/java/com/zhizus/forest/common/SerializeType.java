@@ -37,9 +37,5 @@ public enum SerializeType {
         return value;
     }
 
-    public void setValue(byte value) {
-        this.value = value;
-    }
-
     public final static SerializeType DEFAULT_SERIALIZE_TYPE = SerializeType.Kyro;
 }

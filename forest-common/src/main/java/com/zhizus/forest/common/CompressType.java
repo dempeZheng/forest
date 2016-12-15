@@ -15,7 +15,6 @@ public enum CompressType {
 
     private byte value;
 
-
     CompressType(byte value) {
         this.value = value;
     }
@@ -35,10 +34,6 @@ public enum CompressType {
 
     public byte getValue() {
         return value;
-    }
-
-    public void setValue(byte value) {
-        this.value = value;
     }
 
     public final static CompressType DEFAULT_COMPRESS_TYPE = CompressType.None;

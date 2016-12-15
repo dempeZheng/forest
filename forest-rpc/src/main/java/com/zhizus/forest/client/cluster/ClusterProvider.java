@@ -7,6 +7,7 @@ import com.zhizus.forest.client.cluster.ha.FailFastStrategy;
 import com.zhizus.forest.client.cluster.lb.AbstractLoadBalance;
 import com.zhizus.forest.client.cluster.lb.RandomLoadBalance;
 import com.zhizus.forest.common.codec.Message;
+import com.zhizus.forest.common.exception.ForestFrameworkException;
 import com.zhizus.forest.registry.AbstractServiceEventListener;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
@@ -84,6 +85,7 @@ public class ClusterProvider extends AbstractServiceEventListener {
             refererList.add(new Referer(serviceInstance));
         } catch (InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
+            throw new ForestFrameworkException("refer add err");
         }
         // 如果referList有更改，则通知loadBalance
         loadBalance.onFresh(refererList);
