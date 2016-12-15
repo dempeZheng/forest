@@ -123,6 +123,7 @@ public class NetUtils {
                     try {
                         socket.close();
                     } catch (Throwable e) {
+                        LOGGER.error(e.getMessage(), e);
                     }
                 }
             } catch (Exception e) {

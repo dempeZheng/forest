@@ -80,11 +80,11 @@ public class ForestRouter implements IRouter {
 
             } else {
                 for (String beanId : id.split(",")) {
-                    InvokerInterceptor invokerInterceptor = (InvokerInterceptor) context.getBean(beanId);
-                    if (invokerInterceptor == null) {
-                        LOGGER.warn("interceptor for value:{} not exist in spring container", beanId);
+                    Object bean = context.getBean(beanId);
+                    if (bean != null && bean instanceof InvokerInterceptor) {
+                        InvokerInterceptor invokerInterceptor = (InvokerInterceptor) bean;
+                        actionMethod.addInterceptorList(invokerInterceptor);
                     }
-                    actionMethod.addInterceptorList(invokerInterceptor);
                 }
             }
         }

@@ -17,7 +17,7 @@ public class ChainInvokerInterceptor implements InvokerInterceptor {
     public boolean beforeInvoke(Object target, Method method, Object... args) {
         Iterator<InvokerInterceptor> iterator = interceptors.iterator();
         boolean noInterrupt = true;
-        while (iterator.hasNext() && true) {
+        while (iterator.hasNext() && noInterrupt) {
             noInterrupt = iterator.next().beforeInvoke(target, method, args);
         }
         return noInterrupt;
@@ -39,7 +39,7 @@ public class ChainInvokerInterceptor implements InvokerInterceptor {
     public boolean afterInvoke(Object target, Method method, Object result) {
         Iterator<InvokerInterceptor> iterator = interceptors.iterator();
         boolean noInterrupt = true;
-        while (iterator.hasNext() && true) {
+        while (iterator.hasNext() && noInterrupt) {
             noInterrupt = iterator.next().afterInvoke(target, method, result);
         }
         return noInterrupt;

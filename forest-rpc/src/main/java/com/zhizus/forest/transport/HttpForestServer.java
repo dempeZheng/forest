@@ -78,9 +78,9 @@ public class HttpForestServer {
                 try {
                     ret = JSONObject.toJSONString(actionMethod.rateLimiterInvoker(paramValues));
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                 }
                 ret = StringUtils.defaultIfEmpty(ret, "null");
                 byte[] bytes = ret.getBytes();
