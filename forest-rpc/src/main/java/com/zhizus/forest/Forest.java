@@ -14,7 +14,6 @@ public class Forest {
     private final static Logger LOGGER = LoggerFactory.getLogger(Forest.class);
 
     public static <T> T from(Class<T> clazz) throws Exception {
-
         return ForestDynamicProxy.newInstance(clazz, AbstractServiceDiscovery.DEFAULT_DISCOVERY);
     }
 
