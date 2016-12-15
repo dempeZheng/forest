@@ -5,7 +5,7 @@
     <parent>
         <artifactId>forest</artifactId>
         <groupId>com.zhizus</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.zhizus</groupId>
             <artifactId>forest-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.0.1</version>
         </dependency>
     </dependencies>
 

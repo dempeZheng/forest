@@ -7,14 +7,14 @@
     <groupId>com.zhizus</groupId>
     <artifactId>forest</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1</version>
     <modules>
         <module>forest-demo</module>
         <module>forest-rpc</module>
         <module>forest-common</module>
     </modules>
 
-    <name>ForestRPC</name>
+    <name>Forest RPC</name>
     <description>Forest RPC</description>
     <url>https://github.com/dempeZheng/forest</url>
 

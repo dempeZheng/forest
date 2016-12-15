@@ -1,5 +1,6 @@
 package com.zhizus.forest.client.proxy.processor;
 
+import com.google.common.base.Strings;
 import com.zhizus.forest.common.annotation.MethodProvider;
 import com.zhizus.forest.common.annotation.ServiceExport;
 import com.zhizus.forest.common.annotation.ServiceProvider;
@@ -25,22 +26,33 @@ public class ServiceExportProcessor extends AbstractAnnotationProcessor {
         String methodName = null;
         for (Class<?> anInterface : interfaces) {
             ServiceProvider provider = anInterface.getAnnotation(ServiceProvider.class);
-            serviceName = provider.serviceName();
+            if (provider == null) {
+                continue;
+            }
+            serviceName = Strings.isNullOrEmpty(provider.serviceName()) ? serviceClass.getSimpleName() :
+                    provider.serviceName();
+
+            config.setServiceName(serviceName);
+            config.setPort(serviceExport.port());
+
             for (Method interfaceMethod : anInterface.getMethods()) {
+                MethodProvider methodProvider = interfaceMethod.getAnnotation(MethodProvider.class);
+                if (methodProvider == null) {
+                    continue;
+                }
                 if (methodEquals(interfaceMethod, method)) {
-                    MethodProvider methodProvider = interfaceMethod.getAnnotation(MethodProvider.class);
-                    if (methodProvider == null) {
-                        continue;
-                    }
-                    methodName = methodProvider.methodName();
+                    methodName = Strings.isNullOrEmpty(methodProvider.methodName()) ?
+                            interfaceMethod.getName() : methodProvider.methodName();
+
+                    MethodExportConfig methodExportConfig = new MethodExportConfig();
+                    methodExportConfig.setMethodName(methodName);
+                    config.register(method, methodExportConfig);
+
                 }
             }
         }
-        config.setServiceName(serviceName);
-        config.setPort(serviceExport.port());
-        MethodExportConfig methodExportConfig = new MethodExportConfig();
-        methodExportConfig.setMethodName(methodName);
-        config.register(method, methodExportConfig);
+
+
     }
 
 
