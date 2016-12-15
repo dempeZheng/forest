@@ -20,6 +20,24 @@
 
 # Quick Start
 
+
+Add dependencies to pom.
+
+``` xml
+<dependency>
+    <groupId>com.zhizus</groupId>
+    <artifactId>forest-rpc</artifactId>
+    <version>0.0.1</version>
+</dependency>
+
+<dependency>
+    <groupId>com.zhizus</groupId>
+    <artifactId>forest-common</artifactId>
+    <version>0.0.1</version>
+</dependency>
+```
+
+
 ## 1.定义接口
 
 >通过注解`@ServiceProvider`暴露服务，通过`@MethodProvide`暴露方法默认配置，如：`压缩方式，序列化方式，客户端超时时间`
@@ -114,6 +132,7 @@ String result = sampleService.say("hello");
 # License
 
 Forest is released under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
 
 
 
