@@ -3,12 +3,11 @@
 [![Build Status](https://img.shields.io/travis/dempeZheng/forest/master.svg?label=Build)](https://travis-ci.org/dempeZheng/forest)
 
 # Overview
-基于netty, spring,轻量的高性能分布式RPC服务框架。简单，易用，高效。
+基于netty轻量的高性能分布式RPC服务框架。简单，易用，高效。
 
 # Features
 - 服务端支持多种序列化方式：fastjson，hession，kryo
 - 服务端支持多种压缩方式：gzip，snappy
-- 服务端可根据group进行线程隔离，支持基于spring对不同的group配置不同的业务线程池
 - 支持注解配置，也支持spring xml配置
 - 支持服务发现服务注册
 - client端支持多种负载均衡策略和容灾策略
