@@ -51,6 +51,13 @@
         <spring.version>4.2.5.RELEASE</spring.version>
         <snappy-java.version>1.1.1.6</snappy-java.version>
         <org.slf4j.version>1.7.5</org.slf4j.version>
+        <apache.curator.version>2.7.1</apache.curator.version>
+        <esotericsoftware.kryo.version>2.24.0</esotericsoftware.kryo.version>
+        <caucho.hession.version>4.0.38</caucho.hession.version>
+        <google.guava.version>17.0</google.guava.version>
+        <commons-pool2.version>2.2</commons-pool2.version>
+        <alibaba.fastjson.version>1.1.36</alibaba.fastjson.version>
+        <aeonbits.owner.version>1.0.8</aeonbits.owner.version>
     </properties>
 
     <profiles>
@@ -147,16 +154,9 @@
             </repository>
         </distributionManagement>
     </profile>
-
     </profiles>
 
-
     <dependencies>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
-        </dependency>
         <dependency>
             <groupId>${netty.groupId}</groupId>
             <artifactId>netty-buffer</artifactId>
@@ -172,13 +172,11 @@
             <artifactId>netty-codec</artifactId>
             <version>${netty.version}</version>
         </dependency>
-
         <dependency>
             <groupId>${netty.groupId}</groupId>
             <artifactId>netty-transport</artifactId>
             <version>${netty.version}</version>
         </dependency>
-
         <dependency>
             <groupId>${netty.groupId}</groupId>
             <artifactId>netty-handler</artifactId>
@@ -189,14 +187,11 @@
             <artifactId>netty-codec-http</artifactId>
             <version>${netty.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
@@ -212,7 +207,6 @@
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -228,59 +222,46 @@
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${org.slf4j.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.aeonbits.owner</groupId>
             <artifactId>owner</artifactId>
             <version>1.0.8</version>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.1.36</version>
+            <version>${alibaba.fastjson.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
-            <version>2.2</version>
+            <version>${commons-pool2.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>17.0</version>
+            <version>${google.guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
             <version>${snappy-java.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.caucho</groupId>
             <artifactId>hessian</artifactId>
-            <version>4.0.38</version>
+            <version>${caucho.hession.version}</version>
         </dependency>
         <dependency>
             <groupId>com.esotericsoftware.kryo</groupId>
             <artifactId>kryo</artifactId>
-            <version>2.24.0</version>
+            <version>${esotericsoftware.kryo.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-x-discovery</artifactId>
-            <version>2.7.1</version>
+            <version>${apache.curator.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>2.4.2</version>
-        </dependency>
-
     </dependencies>
 
 
