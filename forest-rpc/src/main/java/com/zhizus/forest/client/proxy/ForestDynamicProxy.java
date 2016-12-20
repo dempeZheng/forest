@@ -2,9 +2,14 @@ package com.zhizus.forest.client.proxy;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.zhizus.forest.client.cluster.ClusterPoolProvider;
 import com.zhizus.forest.client.cluster.FailoverCheckingStrategy;
+import com.zhizus.forest.client.cluster.IHaStrategy;
+import com.zhizus.forest.client.cluster.ha.FailFastStrategy;
+import com.zhizus.forest.client.cluster.ha.FailoverStrategy;
+import com.zhizus.forest.client.cluster.lb.AbstractLoadBalance;
+import com.zhizus.forest.client.cluster.lb.RandomLoadBalance;
 import com.zhizus.forest.client.proxy.processor.*;
+import com.zhizus.forest.common.ServerInfo;
 import com.zhizus.forest.common.annotation.MethodProvider;
 import com.zhizus.forest.common.annotation.ServiceProvider;
 import com.zhizus.forest.common.codec.Header;
@@ -12,6 +17,7 @@ import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Request;
 import com.zhizus.forest.common.config.MethodConfig;
 import com.zhizus.forest.common.config.ServiceProviderConfig;
+import com.zhizus.forest.common.exception.ForestFrameworkException;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.registry.impl.LocalServiceDiscovery;
 import com.zhizus.forest.transport.NettyClient;
@@ -38,17 +44,25 @@ public class ForestDynamicProxy implements InvocationHandler {
 
     private String serviceName;
 
-    private FailoverCheckingStrategy<NettyClient> failoverCheckingStrategy;
+    private FailoverCheckingStrategy<ServerInfo<NettyClient>> failoverCheckingStrategy;
 
     private AbstractServiceDiscovery<ServiceInstance> discovery;
 
-    private ClusterPoolProvider<NettyClient> poolProvider;
+    private IHaStrategy<ServerInfo<NettyClient>> haStrategy;
+    private AbstractLoadBalance<ServerInfo<NettyClient>> loadBalance;
+
 
     public Map<Method, Header> headerMapCache = Maps.newConcurrentMap();
 
     public ForestDynamicProxy(ServiceProviderConfig serviceProviderConfig, Class<?> interfaceClass,
                               AbstractServiceDiscovery registry, FailoverCheckingStrategy failoverCheckingStrategy) throws Exception {
         this(interfaceClass, registry, failoverCheckingStrategy);
+        // 覆盖service的配置
+        config.setLoadBalanceType(serviceProviderConfig.getLoadBalanceType());
+        config.setHaStrategyType(serviceProviderConfig.getHaStrategyType());
+        config.setConnectionTimeout(serviceProviderConfig.getConnectionTimeout());
+
+        // 覆盖method的配置
         for (Map.Entry<String, MethodConfig> methodConfigEntry : serviceProviderConfig.getMethodConfigMap().entrySet()) {
             MethodConfig methodConfigFromAnnotation = config.getMethodConfig(methodConfigEntry.getKey());
             if (methodConfigFromAnnotation == null) {
@@ -60,16 +74,36 @@ public class ForestDynamicProxy implements InvocationHandler {
             methodConfig.setServiceName(methodConfigFromAnnotation.getServiceName());
             config.registerMethodConfig(methodConfigEntry.getKey(), methodConfig);
         }
+        switch (config.getHaStrategyType()) {
+            case FAIL_FAST:
+                haStrategy = new FailFastStrategy();
+                break;
+            case FAIL_OVER:
+                haStrategy = new FailoverStrategy();
+                break;
+        }
+        switch (config.getLoadBalanceType()) {
+            case RANDOM:
+                loadBalance = new RandomLoadBalance<>(failoverCheckingStrategy, serviceName, discovery);
+                break;
+            // TODO: 2016/12/20
+        }
 
     }
 
-    public ForestDynamicProxy(Class<?> interfaceClass, AbstractServiceDiscovery discovery, FailoverCheckingStrategy failoverCheckingStrategy) throws Exception {
-
+    protected ForestDynamicProxy(Class<?> interfaceClass, AbstractServiceDiscovery discovery, FailoverCheckingStrategy failoverCheckingStrategy) throws Exception {
         this.failoverCheckingStrategy = failoverCheckingStrategy;
-        config = ServiceProviderConfig.Builder.newBuilder().build();
         AnnotationProcessorsProvider processors = AnnotationProcessorsProvider.DEFAULT;
         registerAnnotationProcessors(processors);
         ServiceProvider serviceProvider = interfaceClass.getAnnotation(ServiceProvider.class);
+        if (serviceProvider == null) {
+            throw new ForestFrameworkException("interfaceClass " + interfaceClass + "ServiceProvider is null");
+        }
+        config = ServiceProviderConfig.Builder.newBuilder()
+                .withConnectionTimeout(serviceProvider.connectionTimeout())
+                .withHaStrategyType(serviceProvider.haStrategyType())
+                .withLoadBalanceType(serviceProvider.loadBalanceType())
+                .build();
         this.serviceName = Strings.isNullOrEmpty(serviceProvider.serviceName()) ? interfaceClass.getSimpleName() : serviceProvider.serviceName();
         // 加载注解配置作为默认配置
         for (Method method : interfaceClass.getMethods()) {
@@ -85,7 +119,6 @@ public class ForestDynamicProxy implements InvocationHandler {
         if (discovery instanceof LocalServiceDiscovery) {
             discovery.registerLocal(config.getServiceName(), ((LocalServiceDiscovery) discovery).getAddress());
         }
-        poolProvider = new ClusterPoolProvider<>(failoverCheckingStrategy, serviceName, discovery);
 
 
     }
@@ -96,12 +129,15 @@ public class ForestDynamicProxy implements InvocationHandler {
         processors.register(new MethodProviderAnnotationProcessor());
     }
 
-    public static <T> T newInstance(Class<T> clazz, ServiceProviderConfig serviceProviderConfig, AbstractServiceDiscovery registry, FailoverCheckingStrategy strategy) throws Exception {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(serviceProviderConfig, clazz, registry, strategy));
+    public static <T> T newInstance(Class<T> clazz, ServiceProviderConfig serviceProviderConfig,
+                                    AbstractServiceDiscovery registry, FailoverCheckingStrategy strategy) throws Exception {
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz},
+                new ForestDynamicProxy(serviceProviderConfig, clazz, registry, strategy));
     }
 
     public static <T> T newInstance(Class<T> clazz, AbstractServiceDiscovery registry, FailoverCheckingStrategy strategy) throws Exception {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(clazz, registry, strategy));
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                new Class[]{clazz}, new ForestDynamicProxy(clazz, registry, strategy));
     }
 
 
@@ -127,7 +163,7 @@ public class ForestDynamicProxy implements InvocationHandler {
         }
         Message message = new Message(header,
                 new Request(serviceName, methodName, args));
-        return poolProvider.call(message);
+        return haStrategy.call(message, loadBalance);
 
     }
 }

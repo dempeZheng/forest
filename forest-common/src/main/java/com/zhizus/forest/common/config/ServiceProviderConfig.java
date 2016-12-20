@@ -1,6 +1,8 @@
 package com.zhizus.forest.common.config;
 
 import com.google.common.collect.Maps;
+import com.zhizus.forest.common.HaStrategyType;
+import com.zhizus.forest.common.LoadBalanceType;
 
 import java.util.Map;
 
@@ -12,6 +14,10 @@ public class ServiceProviderConfig {
     private String serviceName;
 
     private int connectionTimeout;
+
+    private HaStrategyType haStrategyType;
+
+    private LoadBalanceType loadBalanceType;
 
     private Map<String, MethodConfig> methodConfigMap = Maps.newConcurrentMap();
 
@@ -39,6 +45,22 @@ public class ServiceProviderConfig {
         return methodConfigMap.put(methodName, methodConfig);
     }
 
+    public HaStrategyType getHaStrategyType() {
+        return haStrategyType;
+    }
+
+    public void setHaStrategyType(HaStrategyType haStrategyType) {
+        this.haStrategyType = haStrategyType;
+    }
+
+    public LoadBalanceType getLoadBalanceType() {
+        return loadBalanceType;
+    }
+
+    public void setLoadBalanceType(LoadBalanceType loadBalanceType) {
+        this.loadBalanceType = loadBalanceType;
+    }
+
     public int getConnectionTimeout() {
         return connectionTimeout;
     }
@@ -64,7 +86,14 @@ public class ServiceProviderConfig {
             config.setConnectionTimeout(connectionTimeout);
             return this;
         }
-
+        public Builder withHaStrategyType(HaStrategyType type){
+            config.setHaStrategyType(type);
+            return this;
+        }
+        public Builder withLoadBalanceType(LoadBalanceType type){
+            config.setLoadBalanceType(type);
+            return this;
+        }
         public Builder withMethodConfig(String methodName, MethodConfig methodConfig) {
             config.registerMethodConfig(methodName, methodConfig);
             return this;
