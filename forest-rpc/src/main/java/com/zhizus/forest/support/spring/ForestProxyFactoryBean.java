@@ -41,10 +41,6 @@ public class ForestProxyFactoryBean implements FactoryBean<Object>, Initializing
         return serviceInterface;
     }
 
-    public Map<String, MethodConfig> getMethodConfigMap() {
-        return methodConfigMap;
-    }
-
     public void setMethodConfigMap(Map<String, MethodConfig> methodConfigMap) {
         this.methodConfigMap = methodConfigMap;
     }
@@ -61,10 +57,6 @@ public class ForestProxyFactoryBean implements FactoryBean<Object>, Initializing
             config.registerMethodConfig(methodConfigEntry.getKey(), methodConfigEntry.getValue());
         }
         proxyBean = Forest.from(serviceInterface, config, discovery);
-    }
-
-    public Class<?> getServiceInterface() {
-        return serviceInterface;
     }
 
     public void setServiceInterface(Class<?> serviceInterface) {

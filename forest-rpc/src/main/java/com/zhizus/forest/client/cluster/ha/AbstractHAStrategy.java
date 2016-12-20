@@ -11,6 +11,7 @@ import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Response;
 import com.zhizus.forest.transport.NettyClient;
 import com.zhizus.forest.transport.NettyResponseFuture;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,11 @@ public abstract class AbstractHAStrategy implements IHaStrategy<ServerInfo<Netty
 
     private final static Logger LOGGER = LoggerFactory.getLogger(AbstractHAStrategy.class);
 
-    private KeyedConnectionPool poolProvider = new KeyedConnectionPool(new KeyedConnectionPoolFactory());
+    private KeyedConnectionPool poolProvider;
+
+    public AbstractHAStrategy(GenericKeyedObjectPoolConfig config) {
+        poolProvider = new KeyedConnectionPool(new KeyedConnectionPoolFactory(), config);
+    }
 
     protected Object call(ServerInfo<NettyClient> key, Message message, AbstractLoadBalance<ServerInfo<NettyClient>> loadBalance) {
         Object result;

@@ -21,6 +21,7 @@ import com.zhizus.forest.common.exception.ForestFrameworkException;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.registry.impl.LocalServiceDiscovery;
 import com.zhizus.forest.transport.NettyClient;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,25 +40,56 @@ public class ForestDynamicProxy implements InvocationHandler {
     private final static Logger LOGGER = LoggerFactory.getLogger(ForestDynamicProxy.class);
 
     private ServiceProviderConfig config;
-
     private final static AtomicLong id = new AtomicLong(0);
-
     private String serviceName;
-
-    private FailoverCheckingStrategy<ServerInfo<NettyClient>> failoverCheckingStrategy;
-
-    private AbstractServiceDiscovery<ServiceInstance> discovery;
-
     private IHaStrategy<ServerInfo<NettyClient>> haStrategy;
     private AbstractLoadBalance<ServerInfo<NettyClient>> loadBalance;
-
 
     public Map<Method, Header> headerMapCache = Maps.newConcurrentMap();
 
     public ForestDynamicProxy(ServiceProviderConfig serviceProviderConfig, Class<?> interfaceClass,
-                              AbstractServiceDiscovery registry, FailoverCheckingStrategy failoverCheckingStrategy) throws Exception {
-        this(interfaceClass, registry, failoverCheckingStrategy);
-        // 覆盖service的配置
+                              AbstractServiceDiscovery discovery, FailoverCheckingStrategy failoverCheckingStrategy
+            , GenericKeyedObjectPoolConfig keyedObjectPoolConfig) throws Exception {
+
+        // 从注解中初始化配置
+        initConfigFromAnnotation(interfaceClass);
+        // 用传入的serviceProviderConfig覆盖注解的默认配置
+        coverConfig(serviceProviderConfig);
+
+        if (discovery == null) {
+            discovery = AbstractServiceDiscovery.DEFAULT_DISCOVERY;
+        }
+        if (discovery instanceof LocalServiceDiscovery) {
+            discovery.registerLocal(config.getServiceName(), ((LocalServiceDiscovery) discovery).getAddress());
+        }
+
+        switch (config.getHaStrategyType()) {
+            case FAIL_FAST:
+                haStrategy = new FailFastStrategy(keyedObjectPoolConfig);
+                break;
+            case FAIL_OVER:
+                haStrategy = new FailoverStrategy(keyedObjectPoolConfig);
+                break;
+            default:
+                haStrategy = new FailFastStrategy(keyedObjectPoolConfig);
+                break;
+        }
+        switch (config.getLoadBalanceType()) {
+            case RANDOM:
+                loadBalance = new RandomLoadBalance<>(failoverCheckingStrategy, serviceName, discovery);
+                break;
+            default:
+                loadBalance = new RandomLoadBalance<>(failoverCheckingStrategy, serviceName, discovery);
+                break;
+            // TODO: 2016/12/20
+        }
+
+    }
+
+    private void coverConfig(ServiceProviderConfig serviceProviderConfig) {
+        if (serviceProviderConfig == null) {
+            return;
+        }
         config.setLoadBalanceType(serviceProviderConfig.getLoadBalanceType());
         config.setHaStrategyType(serviceProviderConfig.getHaStrategyType());
         config.setConnectionTimeout(serviceProviderConfig.getConnectionTimeout());
@@ -74,50 +106,28 @@ public class ForestDynamicProxy implements InvocationHandler {
             methodConfig.setServiceName(methodConfigFromAnnotation.getServiceName());
             config.registerMethodConfig(methodConfigEntry.getKey(), methodConfig);
         }
-        switch (config.getHaStrategyType()) {
-            case FAIL_FAST:
-                haStrategy = new FailFastStrategy();
-                break;
-            case FAIL_OVER:
-                haStrategy = new FailoverStrategy();
-                break;
-        }
-        switch (config.getLoadBalanceType()) {
-            case RANDOM:
-                loadBalance = new RandomLoadBalance<>(failoverCheckingStrategy, serviceName, discovery);
-                break;
-            // TODO: 2016/12/20
-        }
-
     }
 
-    protected ForestDynamicProxy(Class<?> interfaceClass, AbstractServiceDiscovery discovery, FailoverCheckingStrategy failoverCheckingStrategy) throws Exception {
-        this.failoverCheckingStrategy = failoverCheckingStrategy;
+    protected void initConfigFromAnnotation(Class<?> interfaceClass)  {
+
         AnnotationProcessorsProvider processors = AnnotationProcessorsProvider.DEFAULT;
         registerAnnotationProcessors(processors);
         ServiceProvider serviceProvider = interfaceClass.getAnnotation(ServiceProvider.class);
         if (serviceProvider == null) {
             throw new ForestFrameworkException("interfaceClass " + interfaceClass + "ServiceProvider is null");
         }
+        this.serviceName = Strings.isNullOrEmpty(serviceProvider.serviceName()) ? interfaceClass.getSimpleName() : serviceProvider.serviceName();
+        // 加载注解配置作为默认配置
         config = ServiceProviderConfig.Builder.newBuilder()
                 .withConnectionTimeout(serviceProvider.connectionTimeout())
                 .withHaStrategyType(serviceProvider.haStrategyType())
                 .withLoadBalanceType(serviceProvider.loadBalanceType())
                 .build();
-        this.serviceName = Strings.isNullOrEmpty(serviceProvider.serviceName()) ? interfaceClass.getSimpleName() : serviceProvider.serviceName();
-        // 加载注解配置作为默认配置
+        config.setServiceName(serviceName);
         for (Method method : interfaceClass.getMethods()) {
             for (IAnnotationProcessor processor : processors.getProcessors()) {
                 processor.process(serviceName, method, config);
             }
-        }
-        config.setServiceName(serviceName);
-        if (discovery == null) {
-            discovery = AbstractServiceDiscovery.DEFAULT_DISCOVERY;
-        }
-        this.discovery = discovery;
-        if (discovery instanceof LocalServiceDiscovery) {
-            discovery.registerLocal(config.getServiceName(), ((LocalServiceDiscovery) discovery).getAddress());
         }
 
 
@@ -130,14 +140,16 @@ public class ForestDynamicProxy implements InvocationHandler {
     }
 
     public static <T> T newInstance(Class<T> clazz, ServiceProviderConfig serviceProviderConfig,
-                                    AbstractServiceDiscovery registry, FailoverCheckingStrategy strategy) throws Exception {
+                                    AbstractServiceDiscovery registry, FailoverCheckingStrategy strategy
+            , GenericKeyedObjectPoolConfig keyedObjectPoolConfig) throws Exception {
         return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz},
-                new ForestDynamicProxy(serviceProviderConfig, clazz, registry, strategy));
+                new ForestDynamicProxy(serviceProviderConfig, clazz, registry, strategy, keyedObjectPoolConfig));
     }
 
-    public static <T> T newInstance(Class<T> clazz, AbstractServiceDiscovery registry, FailoverCheckingStrategy strategy) throws Exception {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                new Class[]{clazz}, new ForestDynamicProxy(clazz, registry, strategy));
+    public static <T> T newInstance(Class<T> clazz, ServiceProviderConfig serviceProviderConfig,
+                                    AbstractServiceDiscovery registry, FailoverCheckingStrategy strategy) throws Exception {
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz},
+                new ForestDynamicProxy(serviceProviderConfig, clazz, registry, strategy, new GenericKeyedObjectPoolConfig()));
     }
 
 

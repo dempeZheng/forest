@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class FailoverCheckingStrategy<T> {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     private static final int DEFAULT_FAIL_COUNT = 10;
 
@@ -49,7 +49,7 @@ public class FailoverCheckingStrategy<T> {
     }
 
     public void fail(T object) {
-        logger.info("server {} failed.", object);
+        LOGGER.info("server {} failed.", object);
         boolean addToFail = false;
         try {
             EvictingQueue<Long> evictingQueue = failCountMap.get(object);
@@ -60,11 +60,11 @@ public class FailoverCheckingStrategy<T> {
                 }
             }
         } catch (ExecutionException e) {
-            logger.error("Ops.", e);
+            LOGGER.error("Ops.", e);
         }
         if (addToFail) {
             failedList.put(object, Boolean.TRUE);
-            logger.info("server {} failed. add to fail list.", object);
+            LOGGER.info("server {} failed. add to fail list.", object);
         }
     }
 

@@ -12,7 +12,6 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RandomLoadBalance<T> extends AbstractLoadBalance<T> {
 
-
     public RandomLoadBalance(FailoverCheckingStrategy failoverCheckingStrategy, String serviceName, AbstractServiceDiscovery discovery) {
         super(failoverCheckingStrategy, serviceName, discovery);
     }
