@@ -34,6 +34,9 @@ public abstract class AbstractHAStrategy implements IHaStrategy<ServerInfo<Netty
     protected Object call(ServerInfo<NettyClient> key, Message message, AbstractLoadBalance<ServerInfo<NettyClient>> loadBalance) {
         Object result;
         Connection connection = null;
+        if (key == null) {
+            return null;
+        }
         try {
             connection = poolProvider.borrowObject(key);
             NettyResponseFuture<Response> future = connection.write(message, Constants.DEFAULT_TIMEOUT);

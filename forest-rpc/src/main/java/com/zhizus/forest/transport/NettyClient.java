@@ -1,6 +1,5 @@
 package com.zhizus.forest.transport;
 
-import com.zhizus.forest.ClientConfig;
 import com.zhizus.forest.client.Connection;
 import com.zhizus.forest.common.ServerInfo;
 import com.zhizus.forest.common.codec.ForestDecoder;
@@ -15,7 +14,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,22 +37,6 @@ public class NettyClient implements Closeable {
     public NettyClient(ServerInfo info) throws InterruptedException {
         this.host = info.getHost();
         this.port = info.getPort();
-        init();
-        Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(
-                new TimeoutMonitor("timeout_monitor_" + host + "_" + port), 100, 100, TimeUnit.MILLISECONDS);
-    }
-
-    public NettyClient(ServiceInstance instance) throws InterruptedException {
-        this.host = instance.getAddress();
-        this.port = instance.getPort();
-        init();
-        Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(
-                new TimeoutMonitor("timeout_monitor_" + host + "_" + port), 100, 100, TimeUnit.MILLISECONDS);
-    }
-
-    public NettyClient(ClientConfig config) throws InterruptedException {
-        this.host = config.host();
-        this.port = config.port();
         init();
         Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(
                 new TimeoutMonitor("timeout_monitor_" + host + "_" + port), 100, 100, TimeUnit.MILLISECONDS);
@@ -92,10 +74,6 @@ public class NettyClient implements Closeable {
     @Override
     public void close() {
         group.shutdownGracefully();
-    }
-
-    public boolean isConnected() {
-        return true;
     }
 
     class TimeoutMonitor implements Runnable {

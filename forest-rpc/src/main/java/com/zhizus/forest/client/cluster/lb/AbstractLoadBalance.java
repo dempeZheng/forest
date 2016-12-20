@@ -11,7 +11,6 @@ import com.zhizus.forest.registry.AbstractServiceDiscovery;
  */
 public class AbstractLoadBalance<T> extends ServerInfoList implements ILoadBalance<T> {
 
-
     public AbstractLoadBalance(FailoverCheckingStrategy failoverCheckingStrategy, String serviceName, AbstractServiceDiscovery discovery) {
         super(failoverCheckingStrategy, serviceName, discovery);
     }
