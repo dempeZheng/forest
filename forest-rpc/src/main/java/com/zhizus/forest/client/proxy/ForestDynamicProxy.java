@@ -22,7 +22,6 @@ import com.zhizus.forest.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.registry.impl.LocalServiceDiscovery;
 import com.zhizus.forest.transport.NettyClient;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
