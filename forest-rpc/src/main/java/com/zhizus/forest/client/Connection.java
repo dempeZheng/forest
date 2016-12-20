@@ -25,11 +25,13 @@ import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class Connection {
+public class Connection implements Closeable {
 
     public final static Map<Long, NettyResponseFuture<Response>> callbackMap = Maps.newConcurrentMap();
     private final static Logger LOGGER = LoggerFactory.getLogger(Connection.class);
@@ -72,26 +74,16 @@ public class Connection {
         return responseFuture;
     }
 
-    public void callback(Message message, long timeOut, Promise<Response> promise) {
-        if (!isConnected()) {
-            throw new ForestFrameworkException("client is not connected");
-        }
-        NettyResponseFuture responseFuture = new NettyResponseFuture(System.currentTimeMillis(), timeOut, message, future.channel(), promise);
-        registerCallbackMap(message.getHeader().getMessageID(), responseFuture);
-        try {
-            future.channel().writeAndFlush(message);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            removeCallbackMap(message.getHeader().getMessageID());
-        }
-
-    }
-
     public NettyResponseFuture registerCallbackMap(Long messageId, NettyResponseFuture<Response> responseFuture) {
         return callbackMap.put(messageId, responseFuture);
     }
 
     public NettyResponseFuture removeCallbackMap(Long messageId) {
         return callbackMap.remove(messageId);
+    }
+
+    @Override
+    public void close() throws IOException {
+        future.channel().close();
     }
 }

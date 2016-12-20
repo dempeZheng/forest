@@ -2,8 +2,8 @@ package com.zhizus.forest.client.proxy;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.zhizus.forest.client.ClusterPoolProvider;
-import com.zhizus.forest.client.FailoverCheckingStrategy;
+import com.zhizus.forest.client.cluster.ClusterPoolProvider;
+import com.zhizus.forest.client.cluster.FailoverCheckingStrategy;
 import com.zhizus.forest.client.proxy.processor.*;
 import com.zhizus.forest.common.annotation.MethodProvider;
 import com.zhizus.forest.common.annotation.ServiceProvider;

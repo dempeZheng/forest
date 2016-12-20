@@ -1,6 +1,6 @@
 package com.zhizus.forest.client.cluster.lb;
 
-import com.zhizus.forest.client.FailoverCheckingStrategy;
+import com.zhizus.forest.client.cluster.FailoverCheckingStrategy;
 import com.zhizus.forest.common.ServerInfo;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
 

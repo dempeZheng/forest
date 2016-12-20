@@ -1,4 +1,4 @@
-package com.zhizus.forest.client;
+package com.zhizus.forest.client.cluster;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

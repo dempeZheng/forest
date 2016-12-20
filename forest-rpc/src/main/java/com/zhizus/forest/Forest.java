@@ -1,6 +1,6 @@
 package com.zhizus.forest;
 
-import com.zhizus.forest.client.FailoverCheckingStrategy;
+import com.zhizus.forest.client.cluster.FailoverCheckingStrategy;
 import com.zhizus.forest.client.proxy.ForestDynamicProxy;
 import com.zhizus.forest.common.config.ServiceProviderConfig;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;

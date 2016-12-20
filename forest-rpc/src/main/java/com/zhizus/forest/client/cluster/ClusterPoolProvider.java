@@ -1,6 +1,5 @@
-package com.zhizus.forest.client;
+package com.zhizus.forest.client.cluster;
 
-import com.zhizus.forest.client.cluster.IHaStrategy;
 import com.zhizus.forest.client.cluster.ha.FailFastStrategy;
 import com.zhizus.forest.client.cluster.lb.AbstractLoadBalance;
 import com.zhizus.forest.client.cluster.lb.RandomLoadBalance;

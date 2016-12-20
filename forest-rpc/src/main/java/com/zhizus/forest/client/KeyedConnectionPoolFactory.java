@@ -37,12 +37,13 @@ public class KeyedConnectionPoolFactory implements KeyedPooledObjectFactory<Serv
 
     @Override
     public void destroyObject(ServerInfo<NettyClient> key, PooledObject<Connection> p) throws Exception {
-
+        p.getObject().close();
     }
 
     @Override
     public boolean validateObject(ServerInfo<NettyClient> key, PooledObject<Connection> p) {
-        return false;
+        return p.getObject().isConnected() && p.getObject().getFuture().channel().isOpen()
+                && p.getObject().getFuture().channel().isActive();
     }
 
     @Override
