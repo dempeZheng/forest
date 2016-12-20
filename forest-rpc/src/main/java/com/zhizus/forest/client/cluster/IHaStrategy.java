@@ -1,5 +1,6 @@
 package com.zhizus.forest.client.cluster;
 
+import com.zhizus.forest.client.cluster.lb.AbstractLoadBalance;
 import com.zhizus.forest.common.codec.Message;
 
 /**
@@ -7,5 +8,5 @@ import com.zhizus.forest.common.codec.Message;
  */
 public interface IHaStrategy<T> {
 
-    Object call(Message message, ILoadBalance<T> loadBalance) throws Exception;
+    Object call(Message message, AbstractLoadBalance<T> loadBalance) throws Exception;
 }

@@ -1,6 +1,5 @@
 package com.zhizus.forest.client;
 
-import com.zhizus.forest.client.Connection;
 import com.zhizus.forest.common.ServerInfo;
 import com.zhizus.forest.transport.NettyClient;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;

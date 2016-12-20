@@ -20,7 +20,7 @@ public class KeyedConnectionPoolFactory implements KeyedPooledObjectFactory<Serv
     public PooledObject<Connection> makeObject(ServerInfo<NettyClient> key) throws Exception {
         NettyClient client = key.getClient();
         if (client == null) {
-             client = new NettyClient(key);
+            client = new NettyClient(key);
         }
         ChannelFuture future = client.connect();
         Connection connection = new Connection();

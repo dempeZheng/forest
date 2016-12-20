@@ -2,6 +2,7 @@ package com.zhizus.forest.client.cluster.lb;
 
 import com.zhizus.forest.client.FailoverCheckingStrategy;
 import com.zhizus.forest.common.ServerInfo;
+import com.zhizus.forest.registry.AbstractServiceDiscovery;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -11,8 +12,9 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RandomLoadBalance<T> extends AbstractLoadBalance<T> {
 
-    public RandomLoadBalance(FailoverCheckingStrategy failoverCheckingStrategy) {
-        super(failoverCheckingStrategy);
+
+    public RandomLoadBalance(FailoverCheckingStrategy failoverCheckingStrategy, String serviceName, AbstractServiceDiscovery discovery) {
+        super(failoverCheckingStrategy, serviceName, discovery);
     }
 
     @Override

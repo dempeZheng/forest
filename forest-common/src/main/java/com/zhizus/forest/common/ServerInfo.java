@@ -13,8 +13,8 @@ public class ServerInfo<T> {
 
     private T client;
 
-    public ServerInfo(ServiceInstance instance){
-        this.host= instance.getAddress();
+    public ServerInfo(ServiceInstance instance) {
+        this.host = instance.getAddress();
         this.port = instance.getPort();
     }
 

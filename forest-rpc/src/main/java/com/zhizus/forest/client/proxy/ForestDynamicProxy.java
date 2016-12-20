@@ -2,10 +2,9 @@ package com.zhizus.forest.client.proxy;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.zhizus.forest.client.FailoverCheckingStrategy;
 import com.zhizus.forest.client.ClusterPoolProvider;
+import com.zhizus.forest.client.FailoverCheckingStrategy;
 import com.zhizus.forest.client.proxy.processor.*;
-import com.zhizus.forest.common.InstanceDetails;
 import com.zhizus.forest.common.annotation.MethodProvider;
 import com.zhizus.forest.common.annotation.ServiceProvider;
 import com.zhizus.forest.common.codec.Header;
@@ -23,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -87,10 +85,8 @@ public class ForestDynamicProxy implements InvocationHandler {
         if (discovery instanceof LocalServiceDiscovery) {
             discovery.registerLocal(config.getServiceName(), ((LocalServiceDiscovery) discovery).getAddress());
         }
-        poolProvider = new ClusterPoolProvider<>(failoverCheckingStrategy);
-        Collection<ServiceInstance<InstanceDetails>>  serviceInstances = discovery.queryForInstances(serviceName);
-        poolProvider.initServerInfoListByCollection(serviceInstances);
-        discovery.subscribe(serviceName, poolProvider);
+        poolProvider = new ClusterPoolProvider<>(failoverCheckingStrategy, serviceName, discovery);
+
 
     }
 

@@ -2,6 +2,7 @@ package com.zhizus.forest.client.cluster.ha;
 
 import com.google.common.collect.Lists;
 import com.zhizus.forest.client.cluster.ILoadBalance;
+import com.zhizus.forest.client.cluster.lb.AbstractLoadBalance;
 import com.zhizus.forest.common.ServerInfo;
 import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.exception.ForestFrameworkException;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * Created by Dempe on 2016/12/7.
  */
-public class FailoverStrategy<T> extends AbstractHAStrategy<T> {
+public class FailoverStrategy extends AbstractHAStrategy {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FailoverStrategy.class);
 
@@ -34,7 +35,7 @@ public class FailoverStrategy<T> extends AbstractHAStrategy<T> {
     }
 
     @Override
-    public Object call(Message message, ILoadBalance loadBalance) throws Exception {
+    public Object call(Message message, AbstractLoadBalance loadBalance) throws Exception {
         List<ServerInfo<NettyClient>> referers = selectReferers(loadBalance);
         if (referers.isEmpty()) {
             throw new ForestFrameworkException(String.format("FailoverHaStrategy No refererList for  loadbalance:%s", loadBalance));
@@ -51,7 +52,7 @@ public class FailoverStrategy<T> extends AbstractHAStrategy<T> {
             try {
                 // TODO: 2016/12/7
 //                request.setRetries(i);
-                return  call(refer,message);
+                return call(refer, message, loadBalance);
             } catch (Exception e) {
                 // 对于业务异常，直接抛出
                 if (ExceptionUtil.isBizException(e)) {

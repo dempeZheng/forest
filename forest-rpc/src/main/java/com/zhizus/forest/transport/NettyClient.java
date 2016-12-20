@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Dempe on 2016/12/7.
  */
-public class NettyClient implements Closeable{
+public class NettyClient implements Closeable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyClient.class);
 
@@ -91,8 +90,8 @@ public class NettyClient implements Closeable{
     }
 
     @Override
-    public void close()  {
-       group.shutdownGracefully();
+    public void close() {
+        group.shutdownGracefully();
     }
 
     public boolean isConnected() {

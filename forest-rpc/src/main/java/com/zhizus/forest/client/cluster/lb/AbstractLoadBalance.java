@@ -4,6 +4,7 @@ import com.zhizus.forest.client.FailoverCheckingStrategy;
 import com.zhizus.forest.client.ServerInfoList;
 import com.zhizus.forest.client.cluster.ILoadBalance;
 import com.zhizus.forest.common.ServerInfo;
+import com.zhizus.forest.registry.AbstractServiceDiscovery;
 
 /**
  * Created by Dempe on 2016/12/7.
@@ -11,8 +12,8 @@ import com.zhizus.forest.common.ServerInfo;
 public class AbstractLoadBalance<T> extends ServerInfoList implements ILoadBalance<T> {
 
 
-    public AbstractLoadBalance(FailoverCheckingStrategy failoverCheckingStrategy) {
-        super(failoverCheckingStrategy);
+    public AbstractLoadBalance(FailoverCheckingStrategy failoverCheckingStrategy, String serviceName, AbstractServiceDiscovery discovery) {
+        super(failoverCheckingStrategy, serviceName, discovery);
     }
 
     @Override

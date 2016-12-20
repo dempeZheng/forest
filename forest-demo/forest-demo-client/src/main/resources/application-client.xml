@@ -25,7 +25,7 @@
     </bean>
 
     <!--<bean id="localRegistry" class="com.zhizus.forest.registry.impl.LocalServiceDiscovery">-->
-        <!--<constructor-arg name="address" value="localhost:9999"/>-->
+    <!--<constructor-arg name="address" value="localhost:9999"/>-->
     <!--</bean>-->
 
     <bean id="zkRegistry" class="com.zhizus.forest.registry.impl.ZkServiceDiscovery">

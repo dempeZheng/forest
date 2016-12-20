@@ -11,4 +11,5 @@ public interface ILoadBalance<T> {
 
     ServerInfo<T> selectByKey();
 
+
 }
