@@ -39,7 +39,6 @@ public class ForestDynamicProxy implements InvocationHandler {
     private final static Logger LOGGER = LoggerFactory.getLogger(ForestDynamicProxy.class);
 
     private ServiceProviderConfig config;
-    private final static AtomicLong id = new AtomicLong(0);
     private String serviceName;
     private IHaStrategy<ServerInfo<NettyClient>> haStrategy;
     private AbstractLoadBalance<ServerInfo<NettyClient>> loadBalance;
@@ -174,8 +173,7 @@ public class ForestDynamicProxy implements InvocationHandler {
         Header header = headerMapCache.get(method);
         if (header == null) {
             header = Header.HeaderMaker.newMaker()
-                    .loadWithMethodConfig(methodConfig)
-                    .withMessageId(id.incrementAndGet()).make();
+                    .loadWithMethodConfig(methodConfig).make();
 
         }
         Message message = new Message(header,

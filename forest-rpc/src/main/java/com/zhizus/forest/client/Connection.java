@@ -31,6 +31,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 public class Connection implements Closeable {
@@ -39,6 +40,7 @@ public class Connection implements Closeable {
     private final static Logger LOGGER = LoggerFactory.getLogger(Connection.class);
     private ChannelFuture future;
     private AtomicBoolean isConnected = new AtomicBoolean();
+    private final static AtomicLong id = new AtomicLong(0);
 
     public Connection() {
         this.isConnected.set(false);
@@ -65,6 +67,7 @@ public class Connection implements Closeable {
         if (!isConnected()) {
             throw new ForestFrameworkException("client is not connected");
         }
+        message.getHeader().setMessageID(id.incrementAndGet());
         NettyResponseFuture responseFuture = new NettyResponseFuture(System.currentTimeMillis(), timeOut, message, future.channel(), new Promise());
         registerCallbackMap(message.getHeader().getMessageID(), responseFuture);
         try {
