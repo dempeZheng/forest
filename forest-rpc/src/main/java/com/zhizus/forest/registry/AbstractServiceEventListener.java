@@ -1,5 +1,6 @@
 package com.zhizus.forest.registry;
 
+import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceInstance;
 
 /**
@@ -25,4 +26,7 @@ public abstract class AbstractServiceEventListener<T> implements IServiceEventLi
     public void onUpdate(ServiceInstance<T> serviceInstance) {
 
     }
+
+
+
 }

@@ -1,6 +1,6 @@
 package com.zhizus.forest.support.spring;
 
-import com.zhizus.forest.client.proxy.ForestDynamicProxy;
+import com.zhizus.forest.Forest;
 import com.zhizus.forest.common.config.MethodConfig;
 import com.zhizus.forest.common.config.ServiceProviderConfig;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
@@ -60,7 +60,7 @@ public class ForestProxyFactoryBean implements FactoryBean<Object>, Initializing
         for (Map.Entry<String, MethodConfig> methodConfigEntry : methodConfigMap.entrySet()) {
             config.registerMethodConfig(methodConfigEntry.getKey(), methodConfigEntry.getValue());
         }
-        proxyBean = ForestDynamicProxy.newInstance(serviceInterface, config, discovery);
+        proxyBean = Forest.from(serviceInterface, config, discovery);
     }
 
     public Class<?> getServiceInterface() {

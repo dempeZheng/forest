@@ -2,6 +2,7 @@ package com.zhizus.forest.transport;
 
 import com.zhizus.forest.ClientConfig;
 import com.zhizus.forest.client.Connection;
+import com.zhizus.forest.common.ServerInfo;
 import com.zhizus.forest.common.codec.ForestDecoder;
 import com.zhizus.forest.common.codec.ForestEncoder;
 import com.zhizus.forest.common.codec.Response;
@@ -18,6 +19,8 @@ import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Dempe on 2016/12/7.
  */
-public class NettyClient {
+public class NettyClient implements Closeable{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyClient.class);
 
@@ -33,6 +36,14 @@ public class NettyClient {
     protected EventLoopGroup group;
     private String host;
     private int port;
+
+    public NettyClient(ServerInfo info) throws InterruptedException {
+        this.host = info.getHost();
+        this.port = info.getPort();
+        init();
+        Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(
+                new TimeoutMonitor("timeout_monitor_" + host + "_" + port), 100, 100, TimeUnit.MILLISECONDS);
+    }
 
     public NettyClient(ServiceInstance instance) throws InterruptedException {
         this.host = instance.getAddress();
@@ -79,8 +90,9 @@ public class NettyClient {
         return connect;
     }
 
-    public boolean close() {
-        return false;
+    @Override
+    public void close()  {
+       group.shutdownGracefully();
     }
 
     public boolean isConnected() {

@@ -1,6 +1,7 @@
 package com.zhizus.forest.client.cluster.lb;
 
-import com.zhizus.forest.Referer;
+import com.zhizus.forest.client.FailoverCheckingStrategy;
+import com.zhizus.forest.common.ServerInfo;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -10,29 +11,18 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RandomLoadBalance<T> extends AbstractLoadBalance<T> {
 
+    public RandomLoadBalance(FailoverCheckingStrategy failoverCheckingStrategy) {
+        super(failoverCheckingStrategy);
+    }
+
     @Override
-    public Referer<T> doSelect() {
-        List<Referer<T>> refererList = getRefererList();
-        int idx = (int) (ThreadLocalRandom.current().nextDouble() * refererList.size());
-        for (int i = 0; i < refererList.size(); i++) {
-            Referer<T> ref = refererList.get((i + idx) % refererList.size());
-            if (ref.isAvailable()) {
-                return ref;
-            }
+    public ServerInfo<T> select() {
+        List<ServerInfo<T>> availableServerList = getAvailableServerList();
+        int idx = (int) (ThreadLocalRandom.current().nextDouble() * availableServerList.size());
+        for (int i = 0; i < availableServerList.size(); i++) {
+            ServerInfo<T> serverInfo = availableServerList.get((i + idx) % availableServerList.size());
+            return serverInfo;
         }
         return null;
     }
-
-    @Override
-    public void doSelectToHolder(List<Referer<T>> refersHolder) {
-        List<Referer<T>> refererList = getRefererList();
-        int idx = (int) (ThreadLocalRandom.current().nextDouble() * refererList.size());
-        for (int i = 0; i < refererList.size(); i++) {
-            Referer<T> referer = refererList.get((i + idx) % refererList.size());
-            if (referer.isAvailable()) {
-                refersHolder.add(refererList.get((i + idx) % refererList.size()));
-            }
-        }
-    }
-
 }

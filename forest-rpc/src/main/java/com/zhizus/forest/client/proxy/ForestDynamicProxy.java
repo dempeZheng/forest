@@ -2,8 +2,10 @@ package com.zhizus.forest.client.proxy;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.zhizus.forest.client.cluster.ClusterProvider;
+import com.zhizus.forest.client.FailoverCheckingStrategy;
+import com.zhizus.forest.client.ClusterPoolProvider;
 import com.zhizus.forest.client.proxy.processor.*;
+import com.zhizus.forest.common.InstanceDetails;
 import com.zhizus.forest.common.annotation.MethodProvider;
 import com.zhizus.forest.common.annotation.ServiceProvider;
 import com.zhizus.forest.common.codec.Header;
@@ -13,6 +15,7 @@ import com.zhizus.forest.common.config.MethodConfig;
 import com.zhizus.forest.common.config.ServiceProviderConfig;
 import com.zhizus.forest.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.registry.impl.LocalServiceDiscovery;
+import com.zhizus.forest.transport.NettyClient;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,14 +40,17 @@ public class ForestDynamicProxy implements InvocationHandler {
 
     private String serviceName;
 
-    private ClusterProvider clusterProvider;
+    private FailoverCheckingStrategy<NettyClient> failoverCheckingStrategy;
 
     private AbstractServiceDiscovery<ServiceInstance> discovery;
 
+    private ClusterPoolProvider<NettyClient> poolProvider;
+
     public Map<Method, Header> headerMapCache = Maps.newConcurrentMap();
 
-    public ForestDynamicProxy(ServiceProviderConfig serviceProviderConfig, Class<?> interfaceClass, AbstractServiceDiscovery registry) throws Exception {
-        this(interfaceClass, registry);
+    public ForestDynamicProxy(ServiceProviderConfig serviceProviderConfig, Class<?> interfaceClass,
+                              AbstractServiceDiscovery registry, FailoverCheckingStrategy failoverCheckingStrategy) throws Exception {
+        this(interfaceClass, registry, failoverCheckingStrategy);
         for (Map.Entry<String, MethodConfig> methodConfigEntry : serviceProviderConfig.getMethodConfigMap().entrySet()) {
             MethodConfig methodConfigFromAnnotation = config.getMethodConfig(methodConfigEntry.getKey());
             if (methodConfigFromAnnotation == null) {
@@ -59,8 +65,9 @@ public class ForestDynamicProxy implements InvocationHandler {
 
     }
 
-    public ForestDynamicProxy(Class<?> interfaceClass, AbstractServiceDiscovery discovery) throws Exception {
+    public ForestDynamicProxy(Class<?> interfaceClass, AbstractServiceDiscovery discovery, FailoverCheckingStrategy failoverCheckingStrategy) throws Exception {
 
+        this.failoverCheckingStrategy = failoverCheckingStrategy;
         config = ServiceProviderConfig.Builder.newBuilder().build();
         AnnotationProcessorsProvider processors = AnnotationProcessorsProvider.DEFAULT;
         registerAnnotationProcessors(processors);
@@ -80,10 +87,10 @@ public class ForestDynamicProxy implements InvocationHandler {
         if (discovery instanceof LocalServiceDiscovery) {
             discovery.registerLocal(config.getServiceName(), ((LocalServiceDiscovery) discovery).getAddress());
         }
-        Collection<ServiceInstance> collection = discovery.queryForInstances(serviceName);
-        clusterProvider = new ClusterProvider(collection, serviceName);
-        discovery.subscribe(clusterProvider);
-        clusterProvider.init();
+        poolProvider = new ClusterPoolProvider<>(failoverCheckingStrategy);
+        Collection<ServiceInstance<InstanceDetails>>  serviceInstances = discovery.queryForInstances(serviceName);
+        poolProvider.initServerInfoListByCollection(serviceInstances);
+        discovery.subscribe(serviceName, poolProvider);
 
     }
 
@@ -93,13 +100,12 @@ public class ForestDynamicProxy implements InvocationHandler {
         processors.register(new MethodProviderAnnotationProcessor());
     }
 
-    public static <T> T newInstance(Class<T> clazz, ServiceProviderConfig serviceProviderConfig, AbstractServiceDiscovery registry) throws Exception {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(serviceProviderConfig, clazz, registry));
+    public static <T> T newInstance(Class<T> clazz, ServiceProviderConfig serviceProviderConfig, AbstractServiceDiscovery registry, FailoverCheckingStrategy strategy) throws Exception {
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(serviceProviderConfig, clazz, registry, strategy));
     }
 
-    public static <T> T newInstance(Class<T> clazz, AbstractServiceDiscovery registry) throws Exception {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(clazz, registry));
-
+    public static <T> T newInstance(Class<T> clazz, AbstractServiceDiscovery registry, FailoverCheckingStrategy strategy) throws Exception {
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, new ForestDynamicProxy(clazz, registry, strategy));
     }
 
 
@@ -125,7 +131,7 @@ public class ForestDynamicProxy implements InvocationHandler {
         }
         Message message = new Message(header,
                 new Request(serviceName, methodName, args));
-        return clusterProvider.call(message);
+        return poolProvider.call(message);
 
     }
 }
