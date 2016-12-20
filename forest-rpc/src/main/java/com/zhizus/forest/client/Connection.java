@@ -59,7 +59,7 @@ public class Connection implements Closeable {
         this.isConnected.set(isConnected);
     }
 
-    public NettyResponseFuture<Response> write(Message message, long timeOut) throws Exception {
+    public NettyResponseFuture<Response> request(Message message, long timeOut) throws Exception {
         if (!isConnected()) {
             throw new ForestFrameworkException("client is not connected");
         }

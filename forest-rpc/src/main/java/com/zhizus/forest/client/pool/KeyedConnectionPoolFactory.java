@@ -1,5 +1,6 @@
-package com.zhizus.forest.client;
+package com.zhizus.forest.client.pool;
 
+import com.zhizus.forest.client.Connection;
 import com.zhizus.forest.common.ServerInfo;
 import com.zhizus.forest.transport.NettyClient;
 import io.netty.channel.ChannelFuture;

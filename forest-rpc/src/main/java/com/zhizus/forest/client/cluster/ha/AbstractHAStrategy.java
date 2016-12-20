@@ -1,8 +1,8 @@
 package com.zhizus.forest.client.cluster.ha;
 
 import com.zhizus.forest.client.Connection;
-import com.zhizus.forest.client.KeyedConnectionPool;
-import com.zhizus.forest.client.KeyedConnectionPoolFactory;
+import com.zhizus.forest.client.pool.KeyedConnectionPool;
+import com.zhizus.forest.client.pool.KeyedConnectionPoolFactory;
 import com.zhizus.forest.client.cluster.IHaStrategy;
 import com.zhizus.forest.client.cluster.lb.AbstractLoadBalance;
 import com.zhizus.forest.common.Constants;
@@ -39,7 +39,7 @@ public abstract class AbstractHAStrategy implements IHaStrategy<ServerInfo<Netty
         }
         try {
             connection = poolProvider.borrowObject(key);
-            NettyResponseFuture<Response> future = connection.write(message, Constants.DEFAULT_TIMEOUT);
+            NettyResponseFuture<Response> future = connection.request(message, Constants.DEFAULT_TIMEOUT);
             result = future.getPromise().await(Constants.DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS).getResult();
             poolProvider.returnObject(key, connection);
         } catch (Exception e) {
