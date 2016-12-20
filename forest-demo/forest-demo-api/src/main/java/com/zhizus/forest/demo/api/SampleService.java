@@ -15,7 +15,7 @@ public interface SampleService {
     @MethodProvider(methodName = "say")
     String say(String str);
 
-    @MethodProvider(methodName = "echo", serializeType = SerializeType.Hession2, compressType = CompressType.GZIP)
+    @MethodProvider(methodName = "echo", serializeType = SerializeType.Hession2, compressType = CompressType.None)
     String echo(String msg);
 
 

@@ -17,7 +17,7 @@ public class SampleClient {
     public static void main(String[] args) throws Exception {
         serviceTest();
 //        serviceSpringTest();
-//        benchmarkTest();
+        benchmarkTest();
 
     }
 
@@ -29,6 +29,7 @@ public class SampleClient {
                         .build())
                 .withMethodConfig("echo", MethodConfig.Builder.newBuilder()
                         .withCompressType(CompressType.None)
+                        .withSerializeType(SerializeType.Hession2)
                         .build())
                 .build());
 

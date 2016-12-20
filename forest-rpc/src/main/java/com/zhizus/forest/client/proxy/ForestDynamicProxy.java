@@ -89,9 +89,15 @@ public class ForestDynamicProxy implements InvocationHandler {
         if (serviceProviderConfig == null) {
             return;
         }
-        config.setLoadBalanceType(serviceProviderConfig.getLoadBalanceType());
-        config.setHaStrategyType(serviceProviderConfig.getHaStrategyType());
-        config.setConnectionTimeout(serviceProviderConfig.getConnectionTimeout());
+        if (serviceProviderConfig.getLoadBalanceType() != null) {
+            config.setLoadBalanceType(serviceProviderConfig.getLoadBalanceType());
+        }
+        if (serviceProviderConfig.getHaStrategyType() != null) {
+            config.setHaStrategyType(serviceProviderConfig.getHaStrategyType());
+        }
+        if (serviceProviderConfig.getConnectionTimeout() > 0) {
+            config.setConnectionTimeout(serviceProviderConfig.getConnectionTimeout());
+        }
 
         // 覆盖method的配置
         for (Map.Entry<String, MethodConfig> methodConfigEntry : serviceProviderConfig.getMethodConfigMap().entrySet()) {
@@ -107,7 +113,7 @@ public class ForestDynamicProxy implements InvocationHandler {
         }
     }
 
-    protected void initConfigFromAnnotation(Class<?> interfaceClass)  {
+    protected void initConfigFromAnnotation(Class<?> interfaceClass) {
 
         AnnotationProcessorsProvider processors = AnnotationProcessorsProvider.DEFAULT;
         registerAnnotationProcessors(processors);
