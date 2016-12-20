@@ -1,6 +1,7 @@
 package com.zhizus.forest.common.codec;
 
 import com.zhizus.forest.common.CompressType;
+import com.zhizus.forest.common.EventType;
 import com.zhizus.forest.common.SerializeType;
 import com.zhizus.forest.common.codec.compress.Compress;
 import com.zhizus.forest.common.codec.serialize.Serialization;
@@ -20,9 +21,15 @@ public class ForestEncoder extends MessageToByteEncoder<Message> {
         byteBuf.writeByte(header.getVersion());
         byteBuf.writeByte(header.getExtend());
         byteBuf.writeLong(header.getMessageID());
+        Object content = message.getContent();
+        // 心跳消息,没有body
+        if (content == null && EventType.typeofHeartBeat(header.getExtend())) {
+            byteBuf.writeInt(0);
+            return;
+        }
         Serialization serialization = SerializeType.getSerializationByExtend(header.getExtend());
         Compress compress = CompressType.getCompressTypeByValueByExtend(header.getExtend());
-        byte[] payload = compress.compress(serialization.serialize(message.getContent()));
+        byte[] payload = compress.compress(serialization.serialize(content));
         byteBuf.writeInt(payload.length);
         byteBuf.writeBytes(payload);
     }

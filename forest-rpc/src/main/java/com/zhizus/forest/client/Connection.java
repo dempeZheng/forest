@@ -17,6 +17,8 @@
 package com.zhizus.forest.client;
 
 import com.google.common.collect.Maps;
+import com.zhizus.forest.common.Constants;
+import com.zhizus.forest.common.codec.Header;
 import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Response;
 import com.zhizus.forest.common.exception.ForestFrameworkException;
@@ -59,7 +61,7 @@ public class Connection implements Closeable {
         this.isConnected.set(isConnected);
     }
 
-    public NettyResponseFuture<Response> request(Message message, long timeOut) throws Exception {
+    public NettyResponseFuture<Response> request(Message message, long timeOut) {
         if (!isConnected()) {
             throw new ForestFrameworkException("client is not connected");
         }
@@ -72,6 +74,20 @@ public class Connection implements Closeable {
             removeCallbackMap(message.getHeader().getMessageID());
         }
         return responseFuture;
+    }
+
+    public boolean ping() {
+        Header heartBeatHeader = Header.HeaderMaker.newMaker().make();
+//        heartBeatHeader.setExtend();
+        Message message = new Message(heartBeatHeader, null);
+        NettyResponseFuture<Response> request = request(message, Constants.DEFAULT_TIMEOUT);
+        try {
+            return request.getPromise().await().getCode() == Constants.DEF_PING_CODE;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return false;
+        }
+
     }
 
     public NettyResponseFuture registerCallbackMap(Long messageId, NettyResponseFuture<Response> responseFuture) {

@@ -44,7 +44,7 @@ public class KeyedConnectionPoolFactory implements KeyedPooledObjectFactory<Serv
     @Override
     public boolean validateObject(ServerInfo<NettyClient> key, PooledObject<Connection> p) {
         return p.getObject().isConnected() && p.getObject().getFuture().channel().isOpen()
-                && p.getObject().getFuture().channel().isActive();
+                && p.getObject().getFuture().channel().isActive() && p.getObject().ping();
     }
 
     @Override

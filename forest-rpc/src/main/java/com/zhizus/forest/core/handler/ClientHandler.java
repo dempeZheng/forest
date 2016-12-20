@@ -1,6 +1,8 @@
 package com.zhizus.forest.core.handler;
 
 import com.zhizus.forest.client.Connection;
+import com.zhizus.forest.common.Constants;
+import com.zhizus.forest.common.EventType;
 import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Response;
 import com.zhizus.forest.transport.NettyResponseFuture;
@@ -25,6 +27,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message<Response>
             return;
         }
         Response response = message.getContent();
+        if (EventType.typeofHeartBeat(message.getHeader().getExtend()) && response == null) {
+            response= new Response();
+            response.setCode(Constants.DEF_PING_CODE);
+        }
         responseFuture.getPromise().onReceive(response);
     }
 

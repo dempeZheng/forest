@@ -31,4 +31,6 @@ public class Constants {
     public final static String BASE_PATH = "forest/service";
 
     public final static int DEF_PORT = 9999;
+
+    public final static int DEF_PING_CODE = -1;
 }
