@@ -18,6 +18,7 @@ package com.zhizus.forest.client;
 
 import com.google.common.collect.Maps;
 import com.zhizus.forest.common.Constants;
+import com.zhizus.forest.common.EventType;
 import com.zhizus.forest.common.codec.Header;
 import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Response;
@@ -81,7 +82,7 @@ public class Connection implements Closeable {
 
     public boolean ping() {
         Header heartBeatHeader = Header.HeaderMaker.newMaker().make();
-//        heartBeatHeader.setExtend();
+        heartBeatHeader.setExtend(EventType.HEARTBEAT.getValue());
         Message message = new Message(heartBeatHeader, null);
         NettyResponseFuture<Response> request = request(message, Constants.DEFAULT_TIMEOUT);
         try {
@@ -90,7 +91,6 @@ public class Connection implements Closeable {
             LOGGER.error(e.getMessage(), e);
             return false;
         }
-
     }
 
     public NettyResponseFuture registerCallbackMap(Long messageId, NettyResponseFuture<Response> responseFuture) {
