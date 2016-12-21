@@ -2,6 +2,7 @@ package com.zhizus.forest.core.handler;
 
 import com.zhizus.forest.ForestContext;
 import com.zhizus.forest.IRouter;
+import com.zhizus.forest.common.EventType;
 import com.zhizus.forest.common.MessageType;
 import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Request;
@@ -33,6 +34,12 @@ public class ProcessorHandler extends SimpleChannelInboundHandler<Message<Reques
 
     @Override
     protected void channelRead0(final ChannelHandlerContext channelHandlerContext, Message<Request> message) throws Exception {
+        Byte extend = message.getHeader().getExtend();
+        // 心跳消息,原消息返回
+        if(EventType.typeofHeartBeat(extend)){
+            channelHandlerContext.writeAndFlush(message);
+            return;
+        }
         Request request = message.getContent();
         String uri = ForestUtil.buildUri(request.getServiceName(), request.getMethodName());
         final ActionMethod actionMethod = router.router(uri);

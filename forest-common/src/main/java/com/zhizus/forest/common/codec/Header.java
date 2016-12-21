@@ -25,11 +25,7 @@ public class Header {
 
     private short magic;// 魔数
     private byte version; // 协议版本
-    /**
-     * 0 不压缩
-     * 1 使用Snappy 1.0.5
-     * 2 使用gzip
-     */
+
     /**
      * 扩展字段[0-2=>序列化方式，3-4=>压缩方式，0 不压缩,1 GZIP，2使用Snappy 1.0.5
      * 5-6=>(event( 可支持4种event， 如normal,heartbeat, exception等)),7=>0:request,1:response]

@@ -5,7 +5,7 @@ package com.zhizus.forest.common;
  */
 public enum EventType {
 
-    NORMAL((byte) 0), HEARTBEAT((byte) (1 << 4));
+    NORMAL((byte) 0), HEARTBEAT((byte) (1 << 6));
 
     private byte value;
 
@@ -18,8 +18,10 @@ public enum EventType {
     }
 
     public static boolean typeofHeartBeat(byte extend) {
-        // TODO: 2016/12/20
-        return true;
+        if ((extend & HEARTBEAT.getValue()) == HEARTBEAT.getValue()) {
+            return true;
+        }
+        return false;
     }
 
 }

@@ -5,13 +5,14 @@ import com.zhizus.forest.common.codec.compress.Compress;
 import com.zhizus.forest.common.codec.compress.GZipCompress;
 import com.zhizus.forest.common.codec.compress.NoCompress;
 import com.zhizus.forest.common.codec.compress.SnappyCompress;
+import com.zhizus.forest.common.util.ForestUtil;
 
 /**
  * Created by Dempe on 2016/12/7.
  */
 public enum CompressType {
 
-    None((byte) 0), GZIP((byte) (1 << 4)), Snappy((byte) (1 << 5));
+    None((byte) 0), GZIP((byte) (1 << 3)), Snappy((byte) (1 << 4));
 
     private byte value;
 
@@ -20,12 +21,12 @@ public enum CompressType {
     }
 
     public static Compress getCompressTypeByValueByExtend(byte extend) {
-        switch (extend & 0x30) {
+        switch (extend & 24) {
             case 0x0:
                 return new NoCompress();
-            case 1 << 4:
+            case 1 << 3:
                 return new GZipCompress();
-            case 1 << 5:
+            case 1 << 4:
                 return new SnappyCompress();
             default:
                 return new NoCompress();

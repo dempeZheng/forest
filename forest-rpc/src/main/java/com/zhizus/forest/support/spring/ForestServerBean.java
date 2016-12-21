@@ -84,7 +84,6 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
                 LOGGER.error(e.getMessage(), e);
             }
 
-
         }
     }
 

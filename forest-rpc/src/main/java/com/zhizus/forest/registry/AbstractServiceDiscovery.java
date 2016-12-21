@@ -17,7 +17,6 @@ public abstract class AbstractServiceDiscovery<T> implements IServiceDiscovery<T
 
     private Map<String, List<AbstractServiceEventListener<T>>> listenerForNameMap = Maps.newConcurrentMap();
 
-
     public void registerLocal(String serviceName, String address) throws Exception {
 
     }

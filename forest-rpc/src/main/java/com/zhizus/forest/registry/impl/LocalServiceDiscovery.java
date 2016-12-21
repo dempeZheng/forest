@@ -23,7 +23,6 @@ public class LocalServiceDiscovery<T> extends AbstractServiceDiscovery<T> {
         this.address = address;
     }
 
-
     public void registerLocal(String serviceName, String address) throws Exception {
         for (String url : address.split(",")) {
             String host = StringUtils.substringBefore(url, ":");
@@ -33,8 +32,6 @@ public class LocalServiceDiscovery<T> extends AbstractServiceDiscovery<T> {
             registerService(serviceInstance);
         }
     }
-
-    private Map<String, List<AbstractServiceEventListener<T>>> listenerForNameMap = Maps.newConcurrentMap();
 
     @Override
     public void registerService(ServiceInstance<T> service) throws Exception {
@@ -54,7 +51,6 @@ public class LocalServiceDiscovery<T> extends AbstractServiceDiscovery<T> {
         serviceMap.remove(service.getId());
         notify(service, IServiceEventListener.ServiceEvent.ON_REMOVE);
     }
-
 
     @Override
     public Collection<String> queryForNames() throws Exception {
