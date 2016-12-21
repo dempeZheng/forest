@@ -17,7 +17,8 @@
 
 # Protocol
 
-./proto.png
+![Alt text](./proto.png)
+
 
 # Quick Start
 
