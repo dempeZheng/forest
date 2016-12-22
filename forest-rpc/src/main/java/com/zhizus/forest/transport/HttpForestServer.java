@@ -9,7 +9,7 @@ import com.sun.net.httpserver.spi.HttpServerProvider;
 import com.zhizus.forest.ActionMethod;
 import com.zhizus.forest.IRouter;
 import com.zhizus.forest.MethodParam;
-import com.zhizus.forest.ServerConfig;
+import com.zhizus.forest.common.config.ServerConfig;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import org.apache.commons.lang3.StringUtils;

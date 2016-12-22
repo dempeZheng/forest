@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.zhizus.forest.ForestRouter;
 import com.zhizus.forest.MetricInterceptor;
-import com.zhizus.forest.ServerConfig;
+import com.zhizus.forest.common.config.ServerConfig;
 import com.zhizus.forest.client.proxy.processor.AnnotationProcessorsProvider;
 import com.zhizus.forest.client.proxy.processor.IAnnotationProcessor;
 import com.zhizus.forest.client.proxy.processor.ServiceExportProcessor;

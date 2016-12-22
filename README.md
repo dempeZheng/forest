@@ -29,13 +29,13 @@ Add dependencies to pom.
 <dependency>
     <groupId>com.zhizus</groupId>
     <artifactId>forest-rpc</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.1</version>
 </dependency>
 
 <dependency>
     <groupId>com.zhizus</groupId>
     <artifactId>forest-common</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.1</version>
 </dependency>
 ```
 

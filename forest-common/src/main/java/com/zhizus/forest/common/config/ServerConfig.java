@@ -1,4 +1,4 @@
-package com.zhizus.forest;
+package com.zhizus.forest.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 

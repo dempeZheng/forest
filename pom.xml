@@ -57,7 +57,6 @@
         <google.guava.version>17.0</google.guava.version>
         <commons-pool2.version>2.2</commons-pool2.version>
         <alibaba.fastjson.version>1.1.36</alibaba.fastjson.version>
-        <aeonbits.owner.version>1.0.8</aeonbits.owner.version>
         <logback-classic.version>1.0.13</logback-classic.version>
         <log4j.version>1.2.16</log4j.version>
         <commons-lang3.version>3.1</commons-lang3.version>
@@ -171,13 +170,6 @@
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.aeonbits.owner</groupId>
-            <artifactId>owner</artifactId>
-            <version>${aeonbits.owner.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>

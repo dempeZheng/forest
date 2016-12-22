@@ -1,9 +1,8 @@
 package com.zhizus.forest.transport;
 
 import com.zhizus.forest.ForestRouter;
-import com.zhizus.forest.ServerConfig;
+import com.zhizus.forest.common.config.ServerConfig;
 import com.zhizus.forest.common.config.ServiceExportConfig;
-import org.aeonbits.owner.ConfigFactory;
 
 /**
  * Created by Dempe on 2016/12/9.
