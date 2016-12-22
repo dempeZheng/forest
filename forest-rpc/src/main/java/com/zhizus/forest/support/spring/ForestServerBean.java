@@ -69,7 +69,7 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
             serviceProviderKey.add(serviceKey);
             try {
                 NettyServer server = factory.createServer(router, config);
-                server.doBind();
+                server.start();
                 // 注册服务
                 ServiceInstance<MetaInfo> serviceInstance = ServiceInstance.<MetaInfo>builder()
                         .name(serviceName)

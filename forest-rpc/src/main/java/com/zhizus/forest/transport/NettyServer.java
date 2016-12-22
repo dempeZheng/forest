@@ -27,25 +27,18 @@ public class NettyServer {
     private EventLoopGroup worker;
     private ServerBootstrap bootstrap;
     private Channel channel;
-    private IRouter iRouter;
     private ServerConfig config;
     private int port;
+
     protected enum ServerState {Created, Starting, Started, Shutdown}
+
     protected final AtomicReference<ServerState> serverStateRef;
 
 
-    public NettyServer(IRouter iRouter, ServerConfig config, int port) throws InterruptedException {
-        this.iRouter = iRouter;
+    public NettyServer(final IRouter iRouter, ServerConfig config, int port) throws InterruptedException {
         this.port = port;
         this.config = config;
         serverStateRef = new AtomicReference<ServerState>(ServerState.Created);
-    }
-
-
-    public ChannelFuture doBind() throws InterruptedException {
-        if (!serverStateRef.compareAndSet(ServerState.Created, ServerState.Starting)) {
-            throw new IllegalStateException("Server already started");
-        }
         boss = new NioEventLoopGroup();
         worker = new NioEventLoopGroup();
         bootstrap = new ServerBootstrap();
@@ -62,6 +55,13 @@ public class NettyServer {
                 ch.pipeline().addLast("processor", new ProcessorHandler(iRouter));
             }
         });
+    }
+
+
+    public ChannelFuture start() throws InterruptedException {
+        if (!serverStateRef.compareAndSet(ServerState.Created, ServerState.Starting)) {
+            throw new IllegalStateException("Server already started");
+        }
 
         ChannelFuture channelFuture = bootstrap.bind(port);
         LOGGER.info("NettyServer bind port:{}, soBacklog:{}, soKeepLive:{}, tcpNodDelay:{}", port,
@@ -71,6 +71,23 @@ public class NettyServer {
         channel = channelFuture.channel();
         channel.closeFuture();
         return channelFuture;
+    }
+
+    public void startAndWait() throws InterruptedException {
+        start();
+        try {
+            waitTillShutdown();
+        } catch (InterruptedException e) {
+            Thread.interrupted();
+        }
+    }
+
+    public void shutdown() throws InterruptedException {
+        if (!serverStateRef.compareAndSet(ServerState.Started, ServerState.Shutdown)) {
+            throw new IllegalStateException("The server is already shutdown.");
+        } else {
+            channel.close().sync();
+        }
     }
 
     public void waitTillShutdown() throws InterruptedException {
