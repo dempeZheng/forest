@@ -20,7 +20,6 @@ public class MethodConfig {
 
     private String methodName;
 
-
     public CompressType getCompressType() {
         return compressType;
     }
