@@ -1,4 +1,4 @@
-package com.zhizus.forest.core.interceptor;
+package com.zhizus.forest.common.interceptor;
 
 import com.google.common.collect.Lists;
 

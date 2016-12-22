@@ -1,4 +1,4 @@
-package com.zhizus.forest.registry;
+package com.zhizus.forest.common.registry;
 
 import org.apache.curator.x.discovery.ServiceInstance;
 

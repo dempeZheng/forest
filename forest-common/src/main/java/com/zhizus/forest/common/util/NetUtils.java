@@ -35,7 +35,7 @@ public class NetUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NetUtils.class);
 
-    public static final String LOCALHOST = "127.0.0.1";
+    public static final String LOCALHOST = "127.0.0.2";
 
     public static final String ANYHOST = "0.0.0.0";
 

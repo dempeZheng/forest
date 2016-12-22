@@ -2,7 +2,7 @@ package com.zhizus.forest.client.cluster.lb;
 
 import com.zhizus.forest.client.cluster.FailoverCheckingStrategy;
 import com.zhizus.forest.common.ServerInfo;
-import com.zhizus.forest.registry.AbstractServiceDiscovery;
+import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;

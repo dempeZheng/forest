@@ -5,7 +5,7 @@
     <parent>
         <artifactId>forest</artifactId>
         <groupId>com.zhizus</groupId>
-        <version>0.0.1</version>
+        <version>0.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,8 +15,40 @@
         <dependency>
             <groupId>com.zhizus</groupId>
             <artifactId>forest-common</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>${netty.groupId}</groupId>
+            <artifactId>netty-buffer</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${netty.groupId}</groupId>
+            <artifactId>netty-common</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${netty.groupId}</groupId>
+            <artifactId>netty-codec</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${netty.groupId}</groupId>
+            <artifactId>netty-transport</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${netty.groupId}</groupId>
+            <artifactId>netty-handler</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${netty.groupId}</groupId>
+            <artifactId>netty-codec-http</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

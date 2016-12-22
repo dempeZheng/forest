@@ -3,7 +3,7 @@ package com.zhizus.forest.support.spring;
 import com.zhizus.forest.Forest;
 import com.zhizus.forest.common.config.MethodConfig;
 import com.zhizus.forest.common.config.ServiceProviderConfig;
-import com.zhizus.forest.registry.AbstractServiceDiscovery;
+import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;

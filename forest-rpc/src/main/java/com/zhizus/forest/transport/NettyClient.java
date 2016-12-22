@@ -2,10 +2,10 @@ package com.zhizus.forest.transport;
 
 import com.zhizus.forest.client.Connection;
 import com.zhizus.forest.common.ServerInfo;
-import com.zhizus.forest.common.codec.ForestDecoder;
-import com.zhizus.forest.common.codec.ForestEncoder;
+import com.zhizus.forest.codec.ForestDecoder;
+import com.zhizus.forest.codec.ForestEncoder;
 import com.zhizus.forest.common.codec.Response;
-import com.zhizus.forest.core.handler.ClientHandler;
+import com.zhizus.forest.handler.ClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;

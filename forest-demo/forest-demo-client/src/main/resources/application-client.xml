@@ -24,11 +24,11 @@
         <property name="timeout" value="5000"/>
     </bean>
 
-    <!--<bean id="localRegistry" class="com.zhizus.forest.registry.impl.LocalServiceDiscovery">-->
+    <!--<bean id="localRegistry" class="com.zhizus.forest.common.registry.impl.LocalServiceDiscovery">-->
     <!--<constructor-arg name="address" value="localhost:9999"/>-->
     <!--</bean>-->
 
-    <bean id="zkRegistry" class="com.zhizus.forest.registry.impl.ZkServiceDiscovery">
+    <bean id="zkRegistry" class="com.zhizus.forest.common.registry.impl.ZkServiceDiscovery">
         <property name="connStr" value="localhost:2181"/>
     </bean>
 

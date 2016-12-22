@@ -1,4 +1,4 @@
-package com.zhizus.forest.core.handler;
+package com.zhizus.forest.handler;
 
 import com.zhizus.forest.ForestContext;
 import com.zhizus.forest.IRouter;
@@ -9,7 +9,7 @@ import com.zhizus.forest.common.codec.Request;
 import com.zhizus.forest.common.codec.Response;
 import com.zhizus.forest.common.exception.ForestErrorMsgConstant;
 import com.zhizus.forest.common.util.ForestUtil;
-import com.zhizus.forest.core.ActionMethod;
+import com.zhizus.forest.ActionMethod;
 import com.zhizus.forest.support.StandardThreadExecutor;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

@@ -9,7 +9,9 @@ public class SampleServer {
 
     public static void main(String[] args) throws Exception {
 
-        new ClassPathXmlApplicationContext(new String[]{"application.xml"});
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application.xml"});
+        Object metricInterceptor = context.getBean("metricInterceptor");
+        System.out.println(metricInterceptor);
 
     }
 

@@ -1,8 +1,8 @@
-package com.zhizus.forest.registry;
+package com.zhizus.forest.common.registry;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.zhizus.forest.registry.impl.LocalServiceDiscovery;
+import com.zhizus.forest.common.registry.impl.LocalServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceInstance;
 
 import java.util.List;

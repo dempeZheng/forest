@@ -1,4 +1,4 @@
-package com.zhizus.forest.core.handler;
+package com.zhizus.forest.handler;
 
 import com.zhizus.forest.client.Connection;
 import com.zhizus.forest.common.Constants;

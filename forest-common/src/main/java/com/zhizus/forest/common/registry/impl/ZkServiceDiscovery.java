@@ -1,9 +1,9 @@
-package com.zhizus.forest.registry.impl;
+package com.zhizus.forest.common.registry.impl;
 
 import com.zhizus.forest.common.Constants;
 import com.zhizus.forest.common.MetaInfo;
-import com.zhizus.forest.registry.AbstractServiceDiscovery;
-import com.zhizus.forest.registry.IServiceEventListener;
+import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
+import com.zhizus.forest.common.registry.IServiceEventListener;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.ChildData;

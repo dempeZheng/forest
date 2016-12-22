@@ -9,6 +9,7 @@ import com.zhizus.forest.common.Constants;
 import com.zhizus.forest.common.ServerInfo;
 import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Response;
+import com.zhizus.forest.common.exception.ForestFrameworkException;
 import com.zhizus.forest.transport.NettyClient;
 import com.zhizus.forest.transport.NettyResponseFuture;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
@@ -35,7 +36,7 @@ public abstract class AbstractHAStrategy implements IHaStrategy<ServerInfo<Netty
         Object result;
         Connection connection = null;
         if (key == null) {
-            return null;
+            throw new ForestFrameworkException("cannot get available key for server");
         }
         try {
             connection = poolProvider.borrowObject(key);

@@ -9,9 +9,9 @@
 
     <context:component-scan base-package="com.zhizus.forest.demo"/>
 
-    <bean id="metricInterceptor" class="com.zhizus.forest.core.interceptor.MetricInterceptor"/>
+    <bean id="metricInterceptor" class="com.zhizus.forest.MetricInterceptor"/>
 
-    <bean id="registry" class="com.zhizus.forest.registry.impl.ZkServiceDiscovery">
+    <bean id="registry" class="com.zhizus.forest.common.registry.impl.ZkServiceDiscovery">
         <property name="connStr" value="localhost:2181"/>
     </bean>
 

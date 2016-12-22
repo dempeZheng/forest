@@ -1,8 +1,10 @@
-package com.zhizus.forest.common.codec;
+package com.zhizus.forest.codec;
 
 import com.zhizus.forest.common.CompressType;
 import com.zhizus.forest.common.EventType;
 import com.zhizus.forest.common.SerializeType;
+import com.zhizus.forest.common.codec.Header;
+import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.compress.Compress;
 import com.zhizus.forest.common.codec.serialize.Serialization;
 import io.netty.buffer.ByteBuf;

@@ -1,4 +1,4 @@
-package com.zhizus.forest.core.interceptor;
+package com.zhizus.forest.common.interceptor;
 
 import java.lang.reflect.Method;
 

@@ -1,6 +1,8 @@
-package com.zhizus.forest.common.codec;
+package com.zhizus.forest.codec;
 
 import com.zhizus.forest.common.*;
+import com.zhizus.forest.common.codec.Header;
+import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.compress.Compress;
 import com.zhizus.forest.common.codec.serialize.Serialization;
 import com.zhizus.forest.common.exception.ForestFrameworkException;

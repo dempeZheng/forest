@@ -24,7 +24,7 @@ public class SampleServiceImpl implements SampleService {
     @MethodExport
     @Override
     public String echo(String msg) {
-        return "echo " + msg;
+        return "echo>>> " + msg;
     }
 
 

@@ -11,7 +11,7 @@ import com.zhizus.forest.common.MetaInfo;
 import com.zhizus.forest.common.annotation.ServiceExport;
 import com.zhizus.forest.common.config.ServiceExportConfig;
 import com.zhizus.forest.common.util.NetUtils;
-import com.zhizus.forest.registry.AbstractServiceDiscovery;
+import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.transport.ForestServerFactory;
 import com.zhizus.forest.transport.NettyServer;
 import org.aeonbits.owner.ConfigFactory;

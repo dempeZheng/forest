@@ -3,7 +3,7 @@ package com.zhizus.forest;
 import com.zhizus.forest.client.cluster.FailoverCheckingStrategy;
 import com.zhizus.forest.client.proxy.ForestDynamicProxy;
 import com.zhizus.forest.common.config.ServiceProviderConfig;
-import com.zhizus.forest.registry.AbstractServiceDiscovery;
+import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

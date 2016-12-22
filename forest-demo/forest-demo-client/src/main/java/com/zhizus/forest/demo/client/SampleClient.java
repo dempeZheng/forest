@@ -51,7 +51,7 @@ public class SampleClient {
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    for (int i = 0; i < 1000000; i++) {
+                    for (int i = 0; i < 1000000000; i++) {
                         String say = sampleService.echo("hello");
                         if (i % 10000 == 0) {
                             System.out.println(say);
