@@ -13,10 +13,8 @@ import java.lang.reflect.Method;
 public class ActionMethod {
 
     private Object target;
-    private String[] argsName;
     private Method method;
     private RateLimiter rateLimiter;
-    private String group;
     private ChainInvokerInterceptor chainInvokerInterceptor;
 
     public ActionMethod(Object target, Method method) {
@@ -101,19 +99,5 @@ public class ActionMethod {
         return chainInvokerInterceptor.addInvokerInterceptor(invokerInterceptor);
     }
 
-    public String[] getArgsName() {
-        return argsName;
-    }
 
-    public void setArgsName(String[] argsName) {
-        this.argsName = argsName;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
 }

@@ -1,7 +1,7 @@
 package com.zhizus.forest.client.cluster;
 
 import com.google.common.collect.Lists;
-import com.zhizus.forest.common.InstanceDetails;
+import com.zhizus.forest.common.MetaInfo;
 import com.zhizus.forest.common.ServerInfo;
 import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.common.registry.AbstractServiceEventListener;
@@ -58,16 +58,16 @@ public class ServerInfoList<T> extends AbstractServiceEventListener {
 
     public void init() {
         try {
-            Collection<ServiceInstance<InstanceDetails>> serviceInstances = discovery.queryForInstances(serviceName);
+            Collection<ServiceInstance<MetaInfo>> serviceInstances = discovery.queryForInstances(serviceName);
             initServerInfoByServiceInstance(serviceInstances);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
     }
 
-    protected void initServerInfoByServiceInstance(Collection<ServiceInstance<InstanceDetails>> serviceInstances) {
+    protected void initServerInfoByServiceInstance(Collection<ServiceInstance<MetaInfo>> serviceInstances) {
         List<ServerInfo<T>> list = Lists.newArrayList();
-        for (ServiceInstance<InstanceDetails> serviceInstance : serviceInstances) {
+        for (ServiceInstance<MetaInfo> serviceInstance : serviceInstances) {
             ServerInfo<T> serverInfo = new ServerInfo<>(serviceInstance);
             list.add(serverInfo);
         }

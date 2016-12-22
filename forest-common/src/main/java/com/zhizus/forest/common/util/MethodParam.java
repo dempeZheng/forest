@@ -1,4 +1,4 @@
-package com.zhizus.forest;
+package com.zhizus.forest.common.util;
 
 import com.zhizus.forest.common.annotation.Var;
 import org.apache.commons.lang3.StringUtils;
