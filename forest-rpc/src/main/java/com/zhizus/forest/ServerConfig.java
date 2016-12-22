@@ -1,53 +1,44 @@
 package com.zhizus.forest;
 
-import org.aeonbits.owner.Config;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Created by Dempe on 2016/12/7.
  */
-@Config.Sources("classpath:server.properties")
-public interface ServerConfig extends Config {
+public class ServerConfig {
 
     // *********************system configuration*********************
 
-    @Key("forest.port")
-    @DefaultValue("9999")
-    int port();
+    @Value("${tcp.noDelay:true}")
+    public boolean tcpNoDelay;
 
-    @DefaultValue("true")
-    boolean tcpNoDelay();
+    @Value("${tcp.keepAlive:true}")
+    public boolean soKeepAlive;
 
-    @DefaultValue("true")
-    boolean soKeepAlive();
-
-    @DefaultValue("65535")
-    int soBacklog();
+    @Value("${tcp.backlog:65535}")
+    public int soBacklog;
 
 
     // StandardThreadExecutor 业务线程池配置
 
-    @DefaultValue("20")
-    int coreThread();
+    @Value("${biz.executor.core.thread:20}")
+    public int coreThread;
 
-    @DefaultValue("200")
-    int maxThreads();
+    @Value("${biz.executor.max.thread:200}")
+    public int maxThreads;
 
     //
-    @Key("http.port")
-    @DefaultValue("8080")
-    public int httpPort();
+    @Value("${http.port:8888}")
+    public int httpPort;
 
-    @Key("http.backlog")
-    @DefaultValue("50")
-    int httpBacklog();
+    @Value("${http.backlog:50}")
+    public int httpBacklog;
 
-    @Key("zookeeper.connectString")
-    @DefaultValue("")
-    String zkConnectStr();
+    @Value("${zookeeper.connectString:localhost:2181}")
+    public String zkConnectStr;
 
-    @Key("zookeeper.basePath")
-    @DefaultValue("forest")
-    String zkBasePath();
+    @Value("${zookeeper.basePath:forest/service}")
+    public String zkBasePath;
 
 
 }

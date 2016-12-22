@@ -3,6 +3,7 @@ package com.zhizus.forest.support.spring;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.zhizus.forest.ForestRouter;
+import com.zhizus.forest.MetricInterceptor;
 import com.zhizus.forest.ServerConfig;
 import com.zhizus.forest.client.proxy.processor.AnnotationProcessorsProvider;
 import com.zhizus.forest.client.proxy.processor.IAnnotationProcessor;
@@ -10,18 +11,20 @@ import com.zhizus.forest.client.proxy.processor.ServiceExportProcessor;
 import com.zhizus.forest.common.MetaInfo;
 import com.zhizus.forest.common.annotation.ServiceExport;
 import com.zhizus.forest.common.config.ServiceExportConfig;
-import com.zhizus.forest.common.util.NetUtils;
 import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
+import com.zhizus.forest.common.util.NetUtils;
 import com.zhizus.forest.transport.ForestServerFactory;
 import com.zhizus.forest.transport.NettyServer;
-import org.aeonbits.owner.ConfigFactory;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -35,16 +38,13 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
 
     AnnotationProcessorsProvider processors = AnnotationProcessorsProvider.DEFAULT;
 
-    private ApplicationContext context;
+    private ClassPathXmlApplicationContext context;
 
     private ForestServerFactory factory;
 
     private AbstractServiceDiscovery registry;
 
-    private final static ServerConfig serverConfig = ConfigFactory.create(ServerConfig.class);
-
     private Set<String> serviceProviderKey = Sets.newHashSet();
-
 
     public void init() {
         for (String beanName : context.getBeanNamesForAnnotation(ServiceExport.class)) {
@@ -102,14 +102,33 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
 
     @Override
     public void setApplicationContext(ApplicationContext context) throws BeansException {
-        this.context = context;
+        this.context = (ClassPathXmlApplicationContext) context;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        factory = new ForestServerFactory(serverConfig);
+        registerServerConfig();
+        registerMetricsInterceptor();
+        factory = new ForestServerFactory(context.getBean(ServerConfig.class));
         register();
-
         init();
+    }
+
+    public void registerServerConfig() {
+        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
+        GenericBeanDefinition serverConfig = new GenericBeanDefinition();
+        //参数参考上面配置文件里面
+        serverConfig.setBeanClass(ServerConfig.class);
+        //注册
+        beanFactory.registerBeanDefinition("serverConfig", serverConfig);
+    }
+
+    public void registerMetricsInterceptor() {
+        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
+        GenericBeanDefinition metricInterceptor = new GenericBeanDefinition();
+        //参数参考上面配置文件里面
+        metricInterceptor.setBeanClass(MetricInterceptor.class);
+        //注册
+        beanFactory.registerBeanDefinition("metricInterceptor", metricInterceptor);
     }
 }

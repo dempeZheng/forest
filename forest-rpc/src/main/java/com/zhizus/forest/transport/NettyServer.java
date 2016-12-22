@@ -44,9 +44,9 @@ public class NettyServer {
         bootstrap = new ServerBootstrap();
 
         bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
-                .option(ChannelOption.SO_BACKLOG, config.soBacklog())
-                .option(ChannelOption.SO_KEEPALIVE, config.soKeepAlive())
-                .option(ChannelOption.TCP_NODELAY, config.tcpNoDelay())
+                .option(ChannelOption.SO_BACKLOG, config.soBacklog)
+                .option(ChannelOption.SO_KEEPALIVE, config.soKeepAlive)
+                .option(ChannelOption.TCP_NODELAY, config.tcpNoDelay)
                 .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
@@ -57,8 +57,8 @@ public class NettyServer {
         });
 
         ChannelFuture channelFuture = bootstrap.bind(port);
-        LOGGER.info("NettyServer bind port:{}, soBacklog:{}, soKeepLive:{}, tcpNodDelay:{}", config.port(),
-                config.soBacklog(), config.soKeepAlive(), config.tcpNoDelay());
+        LOGGER.info("NettyServer bind port:{}, soBacklog:{}, soKeepLive:{}, tcpNodDelay:{}", port,
+                config.soBacklog, config.soKeepAlive, config.tcpNoDelay);
         channel = channelFuture.channel();
         channel.closeFuture();
         return channelFuture;
@@ -73,7 +73,4 @@ public class NettyServer {
         LOGGER.info("NettyServer stopped...");
     }
 
-    public Channel getChannel() {
-        return channel;
-    }
 }

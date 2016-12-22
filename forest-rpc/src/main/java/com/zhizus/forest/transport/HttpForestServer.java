@@ -6,10 +6,10 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.spi.HttpServerProvider;
-import com.zhizus.forest.IRouter;
-import com.zhizus.forest.ServerConfig;
 import com.zhizus.forest.ActionMethod;
+import com.zhizus.forest.IRouter;
 import com.zhizus.forest.MethodParam;
+import com.zhizus.forest.ServerConfig;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import org.apache.commons.lang3.StringUtils;
@@ -44,8 +44,8 @@ public class HttpForestServer {
 
     public void start() {
         try {
-            httpServer = provider.createHttpServer(new InetSocketAddress(config.httpPort()), config.httpBacklog());
-            LOGGER.info("HttpForestServer start. bind port:{}, backlog:{}", config.httpPort(), config.httpBacklog());
+            httpServer = provider.createHttpServer(new InetSocketAddress(config.httpPort), config.httpBacklog);
+            LOGGER.info("HttpForestServer start. bind port:{}, backlog:{}", config.httpPort, config.httpBacklog);
         } catch (IOException e) {
             LOGGER.warn("createHttpServer error", e);
             return;
