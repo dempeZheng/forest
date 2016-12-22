@@ -37,11 +37,9 @@ public class HttpProcessorHandler extends HttpStaticFileServerHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IllegalAccessException, InvocationTargetException {
-
         if (msg instanceof FullHttpRequest) {
             handleHttpRequest(ctx, (FullHttpRequest) msg);
         }
-
     }
 
     private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) throws IllegalAccessException, InvocationTargetException {
@@ -49,12 +47,12 @@ public class HttpProcessorHandler extends HttpStaticFileServerHandler {
         if (HttpUtil.is100ContinueExpected(req)) {
             ctx.write(new DefaultFullHttpResponse(HTTP_1_1, CONTINUE));
         }
-        if (!req.getDecoderResult().isSuccess()) {
+        if (!req.decoderResult().isSuccess()) {
             new DefaultFullHttpResponse(HTTP_1_1, BAD_REQUEST);
             return;
         }
 
-        String uri = req.getUri();
+        String uri = req.uri();
 
         QueryStringDecoder decoder = new QueryStringDecoder(uri);
         String path = decoder.path();
