@@ -2,8 +2,7 @@ package com.zhizus.forest.handler;
 
 import com.zhizus.forest.ActionMethod;
 import com.zhizus.forest.IRouter;
-import com.zhizus.forest.common.codec.Message;
-import com.zhizus.forest.common.codec.Request;
+import com.zhizus.forest.support.StandardThreadExecutor;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.TooLongFrameException;
@@ -18,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
@@ -30,6 +30,9 @@ public class HttpProcessorHandler extends HttpStaticFileServerHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpProcessorHandler.class);
 
     private final IRouter iRouter;
+
+    // 业务线程池
+    private static Executor executor = new StandardThreadExecutor();
 
     public HttpProcessorHandler(IRouter iRouter) {
         this.iRouter = iRouter;
@@ -73,7 +76,7 @@ public class HttpProcessorHandler extends HttpStaticFileServerHandler {
             new DefaultFullHttpResponse(HTTP_1_1, FORBIDDEN);
             return;
 
-        } else if (req.getMethod() == HttpMethod.GET) {
+        } else if (req.method() == HttpMethod.GET) {
             params = decoder.parameters();
         }
         ActionMethod actionMethod = iRouter.router(uri);
@@ -82,6 +85,7 @@ public class HttpProcessorHandler extends HttpStaticFileServerHandler {
             new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND);
             return;
         }
+        executor.execute(new HttpInvokerRunnable(actionMethod, ctx));
 
     }
 
@@ -123,11 +127,9 @@ class HttpInvokerRunnable implements Runnable {
 
     private ChannelHandlerContext ctx;
     private ActionMethod actionMethod;
-    private Message<Request> message;
 
-    public HttpInvokerRunnable(ActionMethod actionMethod, Message<Request> message, ChannelHandlerContext ctx) {
+    public HttpInvokerRunnable(ActionMethod actionMethod, ChannelHandlerContext ctx) {
         this.actionMethod = actionMethod;
-        this.message = message;
         this.ctx = ctx;
     }
 
