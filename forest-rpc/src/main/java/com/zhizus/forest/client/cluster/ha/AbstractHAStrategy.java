@@ -32,7 +32,7 @@ public abstract class AbstractHAStrategy implements IHaStrategy<ServerInfo<Netty
         poolProvider = new KeyedConnectionPool(new KeyedConnectionPoolFactory(), config);
     }
 
-    protected Object call(ServerInfo<NettyClient> key, Message message, AbstractLoadBalance<ServerInfo<NettyClient>> loadBalance) {
+    protected Object wrapCall(ServerInfo<NettyClient> key, Message message, AbstractLoadBalance<ServerInfo<NettyClient>> loadBalance) {
         Object result;
         Connection connection = null;
         if (key == null) {

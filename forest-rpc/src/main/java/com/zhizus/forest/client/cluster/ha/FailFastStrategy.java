@@ -11,15 +11,14 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  */
 public class FailFastStrategy extends AbstractHAStrategy {
 
-
     public FailFastStrategy(GenericKeyedObjectPoolConfig config) {
         super(config);
     }
 
     @Override
     public Object call(Message message, AbstractLoadBalance<ServerInfo<NettyClient>> loadBalance) throws Exception {
-        ServerInfo select = loadBalance.select();
-        return call(select, message, loadBalance);
+        ServerInfo select = loadBalance.select(null);
+        return wrapCall(select, message, loadBalance);
     }
 }
 

@@ -24,11 +24,13 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message<Response>
         NettyResponseFuture responseFuture = Connection.callbackMap.remove(message.getHeader().getMessageID());
         if (responseFuture == null) {
             // 服务端响应超时，NettyResponseFuture已经被回收，理论上应该将callbackMap的超时回收时间大于客户端设置的服务超时时间
+            LOGGER.warn("response future is null for messageID:{}, It is likely to be time out.");
             return;
         }
         Response response = message.getContent();
+        // 心跳消息特殊处理
         if (EventType.typeofHeartBeat(message.getHeader().getExtend()) && response == null) {
-            response= new Response();
+            response = new Response();
             response.setCode(Constants.DEF_PING_CODE);
         }
         responseFuture.getPromise().onReceive(response);

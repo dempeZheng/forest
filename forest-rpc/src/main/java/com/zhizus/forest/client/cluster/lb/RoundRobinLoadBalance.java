@@ -6,21 +6,22 @@ import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by Dempe on 2016/12/7.
+ * Created by Dempe on 2016/12/22.
  */
-public class RandomLoadBalance<T> extends AbstractLoadBalance<T> {
+public class RoundRobinLoadBalance<T> extends AbstractLoadBalance<T> {
 
-    public RandomLoadBalance(FailoverCheckingStrategy failoverCheckingStrategy, String serviceName, AbstractServiceDiscovery discovery) {
+    private AtomicInteger idx = new AtomicInteger(0);
+
+    public RoundRobinLoadBalance(FailoverCheckingStrategy failoverCheckingStrategy, String serviceName, AbstractServiceDiscovery discovery) {
         super(failoverCheckingStrategy, serviceName, discovery);
     }
 
     @Override
     public ServerInfo<T> select(Message message) {
         List<ServerInfo<T>> availableServerList = getAvailableServerList();
-        int idx = (int) (ThreadLocalRandom.current().nextDouble() * availableServerList.size());
-        return availableServerList.get((idx) % availableServerList.size());
+        return availableServerList.get(idx.incrementAndGet() % availableServerList.size());
     }
 }

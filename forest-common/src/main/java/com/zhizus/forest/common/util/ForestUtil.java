@@ -3,11 +3,9 @@ package com.zhizus.forest.common.util;
 
 import com.zhizus.forest.common.CompressType;
 import com.zhizus.forest.common.SerializeType;
-import com.zhizus.forest.common.annotation.MethodExport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -18,19 +16,12 @@ public class ForestUtil {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ForestUtil.class);
 
-
     public static byte getExtend(SerializeType serializeType, CompressType invokeType) {
         return (byte) (serializeType.getValue() | invokeType.getValue());
     }
 
     public static String buildUri(String actionBeanName, String uri) {
         return "/" + actionBeanName + "/" + uri;
-    }
-
-
-    public static String getGroup(Method method) {
-        MethodExport methodExport = method.getAnnotation(MethodExport.class);
-        return methodExport.group();
     }
 
     /*
@@ -59,4 +50,5 @@ public class ForestUtil {
         }
         return null;
     }
+
 }
