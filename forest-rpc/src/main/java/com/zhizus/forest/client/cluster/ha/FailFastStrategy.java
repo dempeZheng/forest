@@ -18,7 +18,7 @@ public class FailFastStrategy extends AbstractHAStrategy {
     @Override
     public Object call(Message message, AbstractLoadBalance<ServerInfo<NettyClient>> loadBalance) throws Exception {
         ServerInfo select = loadBalance.select(null);
-        return wrapCall(select, message, loadBalance);
+        return remoteCall(select, message, loadBalance);
     }
 }
 

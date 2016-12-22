@@ -2,6 +2,8 @@ package com.zhizus.forest.common;
 
 import org.apache.curator.x.discovery.ServiceInstance;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Created by Dempe on 2016/12/20.
  */
@@ -12,6 +14,8 @@ public class ServerInfo<T> {
     private int port;
 
     private T client;
+
+    private AtomicInteger activeCount = new AtomicInteger(0);
 
     public ServerInfo(ServiceInstance instance) {
         this.host = instance.getAddress();
@@ -40,6 +44,15 @@ public class ServerInfo<T> {
 
     public void setClient(T client) {
         this.client = client;
+    }
+
+
+    public int activeCountIncrementAndGet() {
+        return activeCount.incrementAndGet();
+    }
+
+    public int activeCountGet() {
+        return activeCount.incrementAndGet();
     }
 
     @Override

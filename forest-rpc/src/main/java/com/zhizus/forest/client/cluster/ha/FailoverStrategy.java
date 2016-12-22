@@ -36,7 +36,7 @@ public class FailoverStrategy extends AbstractHAStrategy {
         List<ServerInfo<NettyClient>> availableServerList = loadBalance.getAvailableServerList();
         for (int i = 0; i < tryNum; i++) {
             try {
-                return wrapCall(availableServerList.get(i % availableServerList.size()), message, loadBalance);
+                return remoteCall(availableServerList.get(i % availableServerList.size()), message, loadBalance);
             } catch (RuntimeException e) {
                 // 对于业务异常，直接抛出
                 if (e instanceof ForestBizException) {
