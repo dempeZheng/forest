@@ -15,9 +15,9 @@ public class ForestServerFactory {
         this.serverConfig = serverConfig;
     }
 
-    public NettyServer createServer(ForestRouter router, ServiceExportConfig config) throws InterruptedException {
-        NettyServer nettyServer = new NettyServer(router,serverConfig, config.getPort());
-        return nettyServer;
+    public ForestServer createServer(ForestRouter router, ServiceExportConfig config) throws InterruptedException {
+        ForestServer forestServer = new ForestServer(router,serverConfig, config.getPort());
+        return forestServer;
     }
 
 

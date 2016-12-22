@@ -13,8 +13,8 @@ import com.zhizus.forest.common.annotation.ServiceExport;
 import com.zhizus.forest.common.config.ServiceExportConfig;
 import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.common.util.NetUtils;
+import com.zhizus.forest.transport.ForestServer;
 import com.zhizus.forest.transport.ForestServerFactory;
-import com.zhizus.forest.transport.NettyServer;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +68,7 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
             }
             serviceProviderKey.add(serviceKey);
             try {
-                NettyServer server = factory.createServer(router, config);
+                ForestServer server = factory.createServer(router, config);
                 server.start();
                 // 注册服务
                 ServiceInstance<MetaInfo> serviceInstance = ServiceInstance.<MetaInfo>builder()

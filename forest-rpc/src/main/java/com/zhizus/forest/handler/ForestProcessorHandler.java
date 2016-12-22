@@ -21,14 +21,14 @@ import java.util.concurrent.Executor;
 /**
  * Created by Dempe on 2016/12/7.
  */
-public class ProcessorHandler extends SimpleChannelInboundHandler<Message<Request>> {
+public class ForestProcessorHandler extends SimpleChannelInboundHandler<Message<Request>> {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ProcessorHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ForestProcessorHandler.class);
     // 业务线程池
     private static Executor executor = new StandardThreadExecutor();
     private IRouter router;
 
-    public ProcessorHandler(IRouter router) {
+    public ForestProcessorHandler(IRouter router) {
         this.router = router;
     }
 
