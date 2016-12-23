@@ -9,10 +9,7 @@ import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -51,6 +48,10 @@ public class ServerInfoList<T> extends AbstractServiceEventListener {
             if (!failed.contains(serverInfo)) {
                 returnList.add(serverInfo);
             }
+        }
+        // 如果所有的节点都failover，那就降级，把failover的服务拿出来用
+        if (returnList.isEmpty()) {
+            returnList = new ArrayList<>(failed);
         }
         return returnList;
     }
