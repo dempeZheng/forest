@@ -31,13 +31,13 @@ Add dependencies to pom.
 <dependency>
     <groupId>com.zhizus</groupId>
     <artifactId>forest-rpc</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 
 <dependency>
     <groupId>com.zhizus</groupId>
     <artifactId>forest-common</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
@@ -47,10 +47,17 @@ Add dependencies to pom.
 >通过注解`@ServiceProvider`暴露服务，通过`@MethodProvide`暴露方法默认配置，如：`压缩方式，序列化方式，客户端超时时间`
 
 ``` java
-@ServiceProvider
+@ServiceProvider(serviceName = "sampleService", haStrategyType = HaStrategyType.FAIL_FAST,
+        loadBalanceType = LoadBalanceType.RANDOM, connectionTimeout = Constants.CONNECTION_TIMEOUT)
 public interface SampleService {
-    @MethodProvider
+
+    @MethodProvider(methodName = "say")
     String say(String str);
+
+    @MethodProvider(methodName = "echo", serializeType = SerializeType.Hession2, compressType = CompressType.None)
+    String echo(String msg);
+
+
 }
  ```
 
@@ -59,15 +66,36 @@ public interface SampleService {
 >基于注解`@ServiceExport`发布服务，基于注解 `@MethodExport`发布方法，
 
 ``` java
+@Path("/sample")
 @ServiceExport
 public class SampleServiceImpl implements SampleService {
 
+    /**
+     * 支持jersey，可以通过配置打开，同时启动http服务
+     *
+     * @param str
+     * @return
+     */
+    @Path("/hello/{str}")
+    @GET
+    @Produces("text/plain")
+    @MethodExport
+    @Rate(2)
+    @Override
+    public String say(@PathParam("str") String str) {
+        return "say " + str;
+    }
+
+    @Interceptor("metricInterceptor")
     @MethodExport
     @Override
-    public String say(String str) {
-	return "say " + str;
+    public String echo(String msg) {
+        return "echo>>> " + msg;
     }
+
+
 }
+
 ```
 
 ## 3.服务端开发
@@ -106,8 +134,21 @@ public class SampleServer {
 ## 4.客户端开发
 
 ```java
-SampleService sampleService = Forest.from(SampleService.class);
-String result = sampleService.say("hello");
+  final SampleService sampleService = Forest.from(SampleService.class);
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        for (int i = 0; i < 20; i++) {
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < 1000000000; i++) {
+                        String say = sampleService.echo("hello");
+                        if (i % 10000 == 0) {
+                            System.out.println(say);
+                        }
+                    }
+                }
+            });
+        }
 ```
 
 ### Console输出
