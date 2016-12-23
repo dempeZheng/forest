@@ -3,18 +3,19 @@ package com.zhizus.forest.support.spring;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.zhizus.forest.ForestRouter;
-import com.zhizus.forest.support.MetricInterceptor;
-import com.zhizus.forest.common.config.ServerConfig;
 import com.zhizus.forest.client.proxy.processor.AnnotationProcessorsProvider;
 import com.zhizus.forest.client.proxy.processor.IAnnotationProcessor;
 import com.zhizus.forest.client.proxy.processor.ServiceExportProcessor;
 import com.zhizus.forest.common.MetaInfo;
 import com.zhizus.forest.common.annotation.ServiceExport;
+import com.zhizus.forest.common.config.ServerConfig;
 import com.zhizus.forest.common.config.ServiceExportConfig;
 import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
 import com.zhizus.forest.common.util.NetUtils;
+import com.zhizus.forest.support.MetricInterceptor;
 import com.zhizus.forest.transport.ForestServer;
 import com.zhizus.forest.transport.ForestServerFactory;
+import com.zhizus.forest.transport.HttpServer;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,8 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
     private AbstractServiceDiscovery registry;
 
     private Set<String> serviceProviderKey = Sets.newHashSet();
+
+    private HttpServer httpServer;
 
     public void init() {
         for (String beanName : context.getBeanNamesForAnnotation(ServiceExport.class)) {
@@ -85,6 +88,7 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
             }
 
         }
+
     }
 
     public void register() {
@@ -109,9 +113,19 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
     public void afterPropertiesSet() throws Exception {
         registerServerConfig();
         registerMetricsInterceptor();
-        factory = new ForestServerFactory(context.getBean(ServerConfig.class));
+        ServerConfig serverConfig = context.getBean(ServerConfig.class);
+        factory = new ForestServerFactory(serverConfig);
         register();
         init();
+
+        if (serverConfig.startHttpServer) {
+            startHttp();
+        }
+    }
+
+    public void startHttp() throws InterruptedException {
+        httpServer = new HttpServer(context.getBean(ServerConfig.class));
+        httpServer.start();
     }
 
     public void registerServerConfig() {

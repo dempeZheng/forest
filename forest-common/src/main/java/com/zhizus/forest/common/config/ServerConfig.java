@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class ServerConfig {
 
+    @Value("${scan.base.package:com.zhizus.forest}")
+    public String basePackage;
+
     // *********************system configuration*********************
 
     @Value("${tcp.noDelay:true}")
@@ -28,8 +31,11 @@ public class ServerConfig {
     public int maxThreads;
 
     //
-    @Value("${http.port:8888}")
+    @Value("${http.port:8080}")
     public int httpPort;
+
+    @Value("${http.server.start:false}")
+    public boolean startHttpServer;
 
     @Value("${http.backlog:50}")
     public int httpBacklog;
@@ -39,6 +45,8 @@ public class ServerConfig {
 
     @Value("${zookeeper.basePath:forest/service}")
     public String zkBasePath;
+
+
 
 
 }

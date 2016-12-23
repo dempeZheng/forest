@@ -25,8 +25,8 @@ public abstract class AbstractServer {
     private EventLoopGroup worker;
     private ServerBootstrap bootstrap;
     private Channel channel;
-    private ServerConfig config;
-    private int port;
+    protected ServerConfig config;
+    protected int port;
 
     protected enum ServerState {Created, Starting, Started, Shutdown}
 

@@ -11,7 +11,6 @@ public class SampleServer {
 
         new ClassPathXmlApplicationContext(new String[]{"application.xml"});
 
-
     }
 
 
