@@ -46,7 +46,7 @@ public class HttpServer extends AbstractServer {
         };
     }
 
-    public NettyHandlerContainer createJerseyHandler() {
+    protected NettyHandlerContainer createJerseyHandler() {
         PackagesResourceConfig resourceConfig = new PackagesResourceConfig(config.basePackage);
         Map<String, Object> props = new HashMap<String, Object>();
         props.put(NettyHandlerContainer.PROPERTY_BASE_URI, BASE_URI.toString());

@@ -74,12 +74,12 @@ public final class NettyHandlerContainer extends ChannelInboundHandlerAdapter im
         if (msg instanceof HttpRequest) {
             FullHttpRequest req = (FullHttpRequest) msg;
 
-            if (HttpHeaders.is100ContinueExpected(req)) {
+            if (HttpUtil.is100ContinueExpected(req)) {
                 ctx.writeAndFlush(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.CONTINUE));
             }
 
             final URI baseUri = getBaseUri(ctx, req);
-            final URI requestUri = baseUri.resolve(req.getUri());
+            final URI requestUri = baseUri.resolve(req.uri());
             final InBoundHeaders inBoundHeaders = getHeaders(req);
             final InputStream entityStream = new ByteBufInputStream(req.content());
 
@@ -103,14 +103,14 @@ public final class NettyHandlerContainer extends ChannelInboundHandlerAdapter im
              */
             final ContainerRequest cRequest = new ContainerRequest(
                     webApplication,
-                    req.getMethod().name(),
+                    req.method().name(),
                     baseUri,
                     requestUri,
                     inBoundHeaders,
                     entityStream
             );
 
-            webApplication.handleRequest(cRequest, new ResponseWriter(ctx, HttpHeaders.isKeepAlive(req), req.getProtocolVersion()));
+            webApplication.handleRequest(cRequest, new ResponseWriter(ctx, HttpUtil.isKeepAlive(req), req.protocolVersion()));
         }
     }
 
@@ -146,10 +146,10 @@ public final class NettyHandlerContainer extends ChannelInboundHandlerAdapter im
             // Ensure that the base path ends with a '/'
             return baseUri.trim().endsWith("/") ? URI.create(baseUri) : URI.create(baseUri + "/");
         }
-        final String reqUri = req.getUri();
-        final String protocol = req.getProtocolVersion().protocolName().toLowerCase();
+        final String reqUri = req.uri();
+        final String protocol = req.protocolVersion().protocolName().toLowerCase();
         final String basePath = reqUri.split("/")[reqUri.indexOf('/') + 1];
-        String host = HttpHeaders.getHost(req);
+        String host = req.headers().get(HttpHeaderNames.HOST);
         if (host == null) {
             InetSocketAddress address = (InetSocketAddress) ctx.channel().localAddress();
             host = address.getHostName() + ":" + address.getPort();
@@ -199,30 +199,30 @@ public final class NettyHandlerContainer extends ChannelInboundHandlerAdapter im
                 for (Object v : e.getValue()) {
                     values.add(ContainerResponse.getHeaderValue(v));
                 }
-                HttpHeaders.setHeader(httpResponse, e.getKey(), values);
+                httpResponse.headers().set(e.getKey(), values);
             }
 
-            httpResponse.headers().add(HttpHeaders.Names.DATE, HttpDateFormat.getPreferedDateFormat().format(new Date()));
+            httpResponse.headers().add(HttpHeaderNames.DATE, HttpDateFormat.getPreferedDateFormat().format(new Date()));
 
             final boolean isContentLengthUnknown = contentLength < 0 &&
-                    !cResponse.getHttpHeaders().containsKey(HttpHeaders.Names.CONTENT_LENGTH) &&
-                    !HttpHeaders.isContentLengthSet(httpResponse);
+                    !cResponse.getHttpHeaders().containsKey(HttpHeaderNames.CONTENT_LENGTH) &&
+                    !HttpUtil.isContentLengthSet(httpResponse);
 
             if (isContentLengthUnknown && keepAlive && httpVersion == HttpVersion.HTTP_1_1) {
-                HttpHeaders.setTransferEncodingChunked(httpResponse);
+                HttpUtil.setTransferEncodingChunked(httpResponse, true);
 //                ctx.write(httpResponse);
                 // TODO return chunked output stream ?
             } else if (isContentLengthUnknown) {
                 if (cResponse.getEntityType() == String.class) {
                     String entity = (String) cResponse.getEntity();
                     byte[] bytes = entity.getBytes(CharsetUtil.UTF_8);
-                    HttpHeaders.setContentLength(httpResponse, bytes.length);
+                    HttpUtil.setContentLength(httpResponse, bytes.length);
 //                    ByteBuf byteBuf = Unpooled.copiedBuffer(entity, CharsetUtil.UTF_8);
 //                    HttpHeaders.setContentLength(httpResponse, byteBuf.readableBytes());
                 }
             } else {
-                long length = contentLength > 0 ? contentLength : (Long) cResponse.getHttpHeaders().getFirst(HttpHeaders.Names.CONTENT_LENGTH);
-                HttpHeaders.setContentLength(httpResponse, length);
+                long length = contentLength > 0 ? contentLength : (Long) cResponse.getHttpHeaders().getFirst(HttpHeaderNames.CONTENT_LENGTH.toString());
+                HttpUtil.setContentLength(httpResponse, length);
             }
 
             return new ByteBufOutputStream(httpResponse.content());
@@ -231,10 +231,10 @@ public final class NettyHandlerContainer extends ChannelInboundHandlerAdapter im
         @Override
         public void finish() throws IOException {
             if (keepAlive) {
-                httpResponse.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+                httpResponse.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
                 ctx.write(httpResponse).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
             } else {
-                httpResponse.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
+                httpResponse.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
                 ctx.write(httpResponse).addListener(ChannelFutureListener.CLOSE);
             }
         }

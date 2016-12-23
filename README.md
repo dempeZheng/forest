@@ -8,6 +8,7 @@
 # Features
 - 服务端支持多种序列化方式：fastjson，hession，kryo
 - 服务端支持多种压缩方式：gzip，snappy
+- 服务端支持同时基于jersey暴露restful服务
 - 支持注解配置，也支持spring xml配置
 - 支持服务发现服务注册
 - client端支持多种负载均衡策略和容灾策略
