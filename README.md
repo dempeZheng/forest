@@ -128,8 +128,6 @@ String result = sampleService.say("hello");
 
 # TODO
 
-- 服务降级功能
-- http服务支持
 - 跨语言协议支持
 - 服务治理管理后台
 
