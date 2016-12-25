@@ -165,7 +165,7 @@ public class SampleServer {
 
 # Documents
 
-* [Wiki(中文)](https://github.com/dempeZheng/forestRPC)
+* [Wiki(中文)](https://github.com/dempeZheng/forest/wiki/zh_quick_start)
 
 # TODO
 
