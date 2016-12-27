@@ -93,7 +93,6 @@ public class SampleServiceImpl implements SampleService {
         return "echo>>> " + msg;
     }
 
-
 }
 
 ```
