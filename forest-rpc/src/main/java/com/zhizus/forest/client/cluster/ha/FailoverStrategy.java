@@ -18,12 +18,13 @@ public class FailoverStrategy extends AbstractHAStrategy {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FailoverStrategy.class);
 
-    public final static int DEF_TRY_COUNT = 3;
+    private final static int DEF_RETRY_COUNT = 3;
+    private static final long MAX_RETRY_TIMEOUT = 5000L;//最大重试连接超时时间
     private int tryNum;
 
     public FailoverStrategy(GenericKeyedObjectPoolConfig config) {
         super(config);
-        this.tryNum = DEF_TRY_COUNT;
+        this.tryNum = DEF_RETRY_COUNT;
     }
 
     public FailoverStrategy(GenericKeyedObjectPoolConfig config, int tryNum) {
@@ -34,7 +35,8 @@ public class FailoverStrategy extends AbstractHAStrategy {
     @Override
     public Object call(Message message, AbstractLoadBalance<ServerInfo<NettyClient>> loadBalance) throws Exception {
         List<ServerInfo<NettyClient>> availableServerList = loadBalance.getAvailableServerList();
-        for (int i = 0; i < tryNum; i++) {
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < tryNum && System.currentTimeMillis() - startTime < MAX_RETRY_TIMEOUT; i++) {
             try {
                 return remoteCall(availableServerList.get(i % availableServerList.size()), message, loadBalance);
             } catch (RuntimeException e) {
