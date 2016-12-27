@@ -38,13 +38,13 @@ Add dependencies to pom.
     <groupId>com.zhizus</groupId>
     <artifactId>forest-common</artifactId>
     <version>0.0.2</version>
-</dependency>
-```
+</dependency>人
+```人
 
 
 ## 1.定义接口
 
->通过注解`@ServiceProvider`暴露服务，通过`@MethodProvide`暴露方法默认配置，如：`压缩方式，序列化方式，客户端超时时间`
+>通过注解`@ServiceProvider`暴露服务，通过`@MethodProvider`暴露方法默认配置，如：`压缩方式，序列化方式，客户端超时时间`
 
 ``` java
 @ServiceProvider(serviceName = "sampleService", haStrategyType = HaStrategyType.FAIL_FAST,
