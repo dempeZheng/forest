@@ -26,5 +26,8 @@ public abstract class AbstractServiceEventListener<T> implements IServiceEventLi
 
     }
 
+    @Override
+    public void onRegister(ServiceInstance<T> serviceInstance) {
 
+    }
 }
