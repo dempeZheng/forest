@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.zhizus.forest.client.cluster.FailoverCheckingStrategy;
 import com.zhizus.forest.client.cluster.IHaStrategy;
+import com.zhizus.forest.client.cluster.ha.AbstractHAStrategy;
 import com.zhizus.forest.client.cluster.ha.FailFastStrategy;
 import com.zhizus.forest.client.cluster.ha.FailoverStrategy;
 import com.zhizus.forest.client.cluster.lb.AbstractLoadBalance;
@@ -40,7 +41,7 @@ public class ForestDynamicProxy implements InvocationHandler {
 
     private ServiceProviderConfig config;
     private String serviceName;
-    private IHaStrategy<ServerInfo<NettyClient>> haStrategy;
+    private AbstractHAStrategy haStrategy;
     private AbstractLoadBalance<ServerInfo<NettyClient>> loadBalance;
 
     public Map<Method, Header> headerMapCache = Maps.newConcurrentMap();
@@ -81,6 +82,8 @@ public class ForestDynamicProxy implements InvocationHandler {
                 break;
             // TODO: 2016/12/20
         }
+        // 订阅事件，onRemove事件时，清楚keyedPool里面连接
+        discovery.subscribe(serviceName,haStrategy);
 
     }
 

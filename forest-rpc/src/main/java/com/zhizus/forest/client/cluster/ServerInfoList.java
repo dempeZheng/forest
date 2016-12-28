@@ -28,6 +28,7 @@ public class ServerInfoList<T> extends AbstractServiceEventListener {
         this.failoverCheckingStrategy = failoverCheckingStrategy;
         this.serviceName = serviceName;
         this.discovery = discovery;
+        // 订阅感兴趣的服务
         discovery.subscribe(serviceName, this);
         init();
     }

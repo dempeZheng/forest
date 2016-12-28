@@ -10,9 +10,11 @@ import com.zhizus.forest.common.ServerInfo;
 import com.zhizus.forest.common.codec.Message;
 import com.zhizus.forest.common.codec.Response;
 import com.zhizus.forest.common.exception.ForestFrameworkException;
+import com.zhizus.forest.common.registry.AbstractServiceEventListener;
 import com.zhizus.forest.transport.NettyClient;
 import com.zhizus.forest.transport.NettyResponseFuture;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Dempe on 2016/12/20.
  */
-public abstract class AbstractHAStrategy implements IHaStrategy<ServerInfo<NettyClient>> {
+public abstract class AbstractHAStrategy extends AbstractServiceEventListener implements IHaStrategy<ServerInfo<NettyClient>> {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(AbstractHAStrategy.class);
 
@@ -59,5 +61,16 @@ public abstract class AbstractHAStrategy implements IHaStrategy<ServerInfo<Netty
             key.activeCountIncrementAndGet();
         }
         return result;
+    }
+
+    @Override
+    public void clearPool(ServerInfo<NettyClient> key) {
+        poolProvider.clear(key);
+    }
+
+
+    @Override
+    public void onRemove(ServiceInstance serviceInstance) {
+        clearPool(new ServerInfo<NettyClient>(serviceInstance));
     }
 }

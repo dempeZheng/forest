@@ -90,6 +90,7 @@ public class ZkServiceDiscovery extends AbstractServiceDiscovery<MetaInfo> imple
                 .basePath(Constants.BASE_PATH)
                 .serializer(serializer)
                 .build();
+        serviceDiscovery.start();
     }
 
     public String getConnStr() {
