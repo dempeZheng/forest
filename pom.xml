@@ -12,6 +12,7 @@
         <module>forest-demo</module>
         <module>forest-rpc</module>
         <module>forest-common</module>
+        <module>forest-web</module>
     </modules>
 
     <name>Forest RPC</name>
