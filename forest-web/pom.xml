@@ -28,6 +28,11 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.zhizus</groupId>
+            <artifactId>forest-common</artifactId>
+            <version>0.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>

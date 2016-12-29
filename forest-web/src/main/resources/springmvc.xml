@@ -40,6 +40,10 @@
     <mvc:annotation-driven/>
 
 
+    <bean id="zkRegistry" class="com.zhizus.forest.common.registry.impl.ZkServiceDiscovery">
+        <property name="connStr" value="localhost:2181"/>
+    </bean>
+
     <!-- configure the InternalResourceViewResolver -->
     <bean
             class="org.springframework.web.servlet.view.InternalResourceViewResolver"
