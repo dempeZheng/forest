@@ -95,14 +95,9 @@
 <script src="/plugins/fastclick/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="/dist/js/app.min.js"></script>
-<%--<script src="/dist/js/pages/dashboard2.js"></script>--%>
-<script src="/plugins/chartjs/Chart.min.js"></script>
 
 <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
 
-<!-- jvectormap -->
-<script src="/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script src="/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="/dist/js/demo.js"></script>
 <%--<script src="/dist/js/pages/dashboard.js"></script>--%>
@@ -166,8 +161,8 @@
                             width: '20%',
                             formatter: function (val, row, index) {
                                 return [
-//                                    '<button class="btn btn-primary" onclick="initHandle.editModel(\'' + row.uid + '\')"><i class="glyphicon glyphicon-edit"></i>编辑</button>&nbsp;&nbsp;',
-                                    '<button class="btn btn-danger" onclick="initHandle.deleteModel(\'' + row.uid + '\')"><i class="glyphicon glyphicon-remove"></i>隔离</button>',
+                                    '<button class="btn btn-primary" onclick="initHandle.editModel(\'' + row.name + '\')"><i class="glyphicon glyphicon-edit"></i>监控</button>&nbsp;&nbsp;',
+                                    '<button class="btn btn-danger" onclick="initHandle.deleteModel(\'' + row.id + '\')">隔离</button>',
                                 ].join('');
                             }
                         },

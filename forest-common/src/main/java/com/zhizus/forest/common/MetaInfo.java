@@ -96,4 +96,17 @@ public class MetaInfo {
     public void setMinTime(int minTime) {
         this.minTime = minTime;
     }
+
+    @Override
+    public String toString() {
+        return "MetaInfo{" +
+                "haStrategyType=" + haStrategyType +
+                ", loadBalanceType=" + loadBalanceType +
+                ", avgTime=" + avgTime +
+                ", total=" + total +
+                ", successCount=" + successCount +
+                ", maxTime=" + maxTime +
+                ", minTime=" + minTime +
+                '}';
+    }
 }
