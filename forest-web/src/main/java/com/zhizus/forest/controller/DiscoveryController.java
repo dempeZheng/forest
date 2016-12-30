@@ -1,13 +1,17 @@
 package com.zhizus.forest.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.zhizus.forest.common.MetaInfo;
 import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
+import org.apache.curator.x.discovery.ServiceInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -18,22 +22,25 @@ import java.util.Collection;
 public class DiscoveryController {
 
     @Autowired
-    private AbstractServiceDiscovery discovery;
+    private AbstractServiceDiscovery<MetaInfo> discovery;
 
-    @RequestMapping("query")
-    @ResponseBody
-    public String query() {
-        return "{}";
+    @RequestMapping("/index")
+    public ModelAndView index(ModelAndView modelAndView) throws Exception {
+        Collection<String> names = discovery.queryForNames();
+        ArrayList<String> attributeValue = new ArrayList<String>(names);
+        modelAndView.addObject("names", attributeValue);
+        modelAndView.setViewName("forest/discovery");
+        return modelAndView;
     }
 
-    @RequestMapping("queryByName")
+    @RequestMapping("/queryByName")
     @ResponseBody
     public String queryByName(@RequestParam String name) throws Exception {
-        Collection collection = discovery.queryForInstances(name);
+        Collection<ServiceInstance<MetaInfo>> collection = discovery.queryForInstances(name);
         return JSON.toJSONString(collection);
     }
 
-    @RequestMapping("updateServiceInstance")
+    @RequestMapping("/updateServiceInstance")
     @ResponseBody
     public String updateServiceInstance() {
         return "{}";

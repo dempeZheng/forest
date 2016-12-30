@@ -11,7 +11,7 @@ public class Constants {
 
     public final static int CONNECTION_TIMEOUT = 2000;
 
-    public final static String BASE_PATH = "forest/service";
+    public final static String BASE_PATH = "/forest/service";
 
     public final static int DEF_PORT = 9999;
 
