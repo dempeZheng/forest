@@ -19,3 +19,6 @@
 <script src="/plugins/bootstrap-table/bootstrap-table-helper.js"></script>
 <script src="/plugins/jQuery-Validation-Engine/js/jquery.validationEngine.js"></script>
 <script src="/plugins/jQuery-Validation-Engine/js/languages/jquery.validationEngine-zh_CN.js"></script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>

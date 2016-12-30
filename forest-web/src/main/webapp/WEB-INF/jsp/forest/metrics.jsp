@@ -41,67 +41,43 @@
     <jsp:include page="../header.jsp"/>
     <jsp:include page="../siderbar.jsp"/>
     <div class="content-wrapper">
-        <%--<div id="container" class="col-md-12">--%>
-            <section class="content">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="box  box-default">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">服务列表</h3>
-                                <div class="box-tools pull-right">
-                                </div><!-- /.box-tools -->
-                            </div>
-                            <div class="box-body">
-                                <table id="table">
-                                    <div id="toolbar">
+        <div class="box">
+            <div id="container" class="col-md-12">
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box  box-default">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">服务列表</h3>
+                                    <div class="box-tools pull-right">
+                                    </div><!-- /.box-tools -->
+                                </div>
+                                <div class="box-body">
+                                    <table id="table">
+                                        <div id="toolbar">
 
-                                        <div class="form-inline" role="form">
-                                            <div class="form-group extend_query_choice">
-                                                <span>服务名:</span>
-                                                <select id="serviceName" class="form-control">
-                                                    <c:forEach var="name" items="${names}">
-                                                        <option value="${name}">${name}</option>
-                                                    </c:forEach>
-                                                </select>
+                                            <div class="form-inline" role="form">
+                                                <div class="form-group extend_query_choice">
+                                                    <span>服务名:</span>
+                                                    <select id="serviceName" class="form-control">
+                                                        <c:forEach  var="name" items="${names}">
+                                                            <option value="${name}">${name}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                                <button id="ok" type="submit" class=" form-control btn btn-default">查询</button>
                                             </div>
-                                            <button id="ok" type="submit" class=" form-control btn btn-default">查询
-                                            </button>
+
                                         </div>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
 
-                                    </div>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="content">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="box  box-default">
-                            <div class="box-body">
-                                <div id="timeDelayContainer"
-                                     style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section class="content">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="box  box-default">
-                            <div class="box-body">
-                                <div id="totalCountContainer"
-                                     style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </div>
-
     </div>
     <jsp:include page="../footer.jsp"/>
     <jsp:include page="../control-siderbar.jsp"/>
@@ -120,6 +96,7 @@
 <!-- AdminLTE App -->
 <script src="/dist/js/app.min.js"></script>
 
+<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
 
 <!-- AdminLTE for demo purposes -->
 <script src="/dist/js/demo.js"></script>
@@ -129,103 +106,6 @@
 
     $('#ok').click(function () {
         $('#table').bootstrapTable('refresh');
-    });
-    $(function () {
-        Highcharts.chart('timeDelayContainer', {
-            title: {
-                text: '时延',
-                x: -20 //center
-            },
-            subtitle: {
-                text: '单位：毫秒',
-                x: -20
-            },
-            xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            },
-            yAxis: {
-                title: {
-                    text: 'Temperature (°C)'
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            tooltip: {
-                valueSuffix: '°C'
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle',
-                borderWidth: 0
-            },
-            series: [{
-                name: 'Tokyo',
-                data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-            }, {
-                name: 'New York',
-                data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-            }, {
-                name: 'Berlin',
-                data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-            }, {
-                name: 'London',
-                data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-            }]
-        });
-    });
-
-    $(function () {
-        Highcharts.chart('totalCountContainer', {
-            title: {
-                text: '请求数',
-                x: -20 //center
-            },
-            subtitle: {
-                text: '单位：次',
-                x: -20
-            },
-            xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            },
-            yAxis: {
-                title: {
-                    text: 'Temperature (°C)'
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            tooltip: {
-                valueSuffix: '°C'
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle',
-                borderWidth: 0
-            },
-            series: [{
-                name: 'Tokyo',
-                data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-            }, {
-                name: 'New York',
-                data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-            }, {
-                name: 'Berlin',
-                data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-            }, {
-                name: 'London',
-                data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-            }]
-        });
     });
 
     $(function () {
@@ -334,7 +214,7 @@
                     type: "post",
                     url: url,
                     //data: $('#form').serialize(),
-                    data: {vuid: id, topSid: topSid, subSid: subSid},
+                    data: {vuid: id,topSid: topSid,subSid: subSid},
                     dataType: "json",
                     success: function (json) {
                         $("#modal").modal('hide');
