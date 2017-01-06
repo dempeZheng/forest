@@ -1,5 +1,6 @@
 package com.zhizus.forest.handler;
 
+import com.zhizus.forest.ActionMethod;
 import com.zhizus.forest.ForestContext;
 import com.zhizus.forest.IRouter;
 import com.zhizus.forest.common.EventType;
@@ -9,8 +10,9 @@ import com.zhizus.forest.common.codec.Request;
 import com.zhizus.forest.common.codec.Response;
 import com.zhizus.forest.common.exception.ForestErrorMsgConstant;
 import com.zhizus.forest.common.util.ForestUtil;
-import com.zhizus.forest.ActionMethod;
 import com.zhizus.forest.support.StandardThreadExecutor;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
@@ -36,7 +38,7 @@ public class ForestProcessorHandler extends SimpleChannelInboundHandler<Message<
     protected void channelRead0(final ChannelHandlerContext channelHandlerContext, Message<Request> message) throws Exception {
         Byte extend = message.getHeader().getExtend();
         // 心跳消息,原消息返回
-        if(EventType.typeofHeartBeat(extend)){
+        if (EventType.typeofHeartBeat(extend)) {
             channelHandlerContext.writeAndFlush(message);
             return;
         }
@@ -52,8 +54,14 @@ public class ForestProcessorHandler extends SimpleChannelInboundHandler<Message<
 
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(final ChannelHandlerContext ctx, Throwable cause) throws Exception {
         super.exceptionCaught(ctx, cause);
+        ctx.channel().close().addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                LOGGER.info("close channel address:{}", ctx.channel().remoteAddress());
+            }
+        });
     }
 }
 
