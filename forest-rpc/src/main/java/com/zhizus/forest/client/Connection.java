@@ -35,7 +35,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 
-public class Connection implements Closeable {
+public class
+
+Connection implements Closeable {
 
     public final static Map<Long, NettyResponseFuture<Response>> callbackMap = Maps.newConcurrentMap();
     private final static Logger LOGGER = LoggerFactory.getLogger(Connection.class);

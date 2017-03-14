@@ -41,7 +41,6 @@ public class ForestDecoder extends ByteToMessageDecoder {
             // TODO 限制最大包长
             byte[] payload = new byte[size];
             byteBuf.readBytes(payload);
-
             Serialization serialization = SerializeType.getSerializationByExtend(extend);
             Compress compress = CompressType.getCompressTypeByValueByExtend(extend);
             req = serialization.deserialize(compress.unCompress(payload), MessageType.getMessageTypeByExtend(extend));

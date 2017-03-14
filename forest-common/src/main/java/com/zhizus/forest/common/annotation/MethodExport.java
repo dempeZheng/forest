@@ -1,7 +1,6 @@
 package com.zhizus.forest.common.annotation;
 
 
-import com.zhizus.forest.common.Constants;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
