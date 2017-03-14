@@ -2,11 +2,11 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:forest="http://api.zhizus.com/schema/forest"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://api.zhizus.com/schema/forest http://api.zhizus.com/schema/forest.xsd">
 
     <context:component-scan base-package="com.zhizus.forest.demo.client"/>
 
@@ -28,14 +28,12 @@
     <!--<constructor-arg name="address" value="localhost:9999"/>-->
     <!--</bean>-->
 
-    <bean id="zkRegistry" class="com.zhizus.forest.common.registry.impl.ZkServiceDiscovery">
-        <property name="connStr" value="localhost:2181"/>
-    </bean>
+    <forest:registry id="registry" regProtocol="local"  name="registry" address="127.0.0.1:9999"/>
 
     <bean id="sampleServiceProxy" class="com.zhizus.forest.support.spring.ForestProxyFactoryBean">
         <property name="serviceInterface" value="com.zhizus.forest.demo.api.SampleService"/>
         <!--注册本地-->
-        <property name="discovery" ref="zkRegistry"/>
+        <property name="discovery" ref="registry"/>
         <!--methodConfMap如果不配置，则使用接口方法注解上面的配置-->
         <property name="methodConfigMap">
             <map>

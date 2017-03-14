@@ -1,10 +1,13 @@
 package com.zhizus.forest.common.util;
 
 
+import com.google.common.base.Strings;
 import com.zhizus.forest.common.CompressType;
 import com.zhizus.forest.common.SerializeType;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -50,5 +53,16 @@ public class ForestUtil {
         }
         return null;
     }
+
+
+    public static String getDefaultBeanName(Class<?> classType) {
+        return StringUtils.uncapitalize(classType.getSimpleName());
+    }
+
+    public static String getBeanId(Element element, Class<?> classType) {
+        String id = element.getAttribute("id");
+        return Strings.isNullOrEmpty(id) ? StringUtils.uncapitalize(classType.getSimpleName()) : id;
+    }
+
 
 }

@@ -15,20 +15,31 @@ import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.apache.curator.x.discovery.details.InstanceSerializer;
 import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
-import org.springframework.beans.factory.InitializingBean;
 
 import java.util.Collection;
 
 /**
  * Created by Dempe on 2016/12/8.
  */
-public class ZkServiceDiscovery extends AbstractServiceDiscovery<MetaInfo> implements InitializingBean, TreeCacheListener {
+public class ZkServiceDiscovery extends AbstractServiceDiscovery<MetaInfo> implements TreeCacheListener {
 
     private final static InstanceSerializer serializer = new JsonInstanceSerializer<>(MetaInfo.class);
 
     private ServiceDiscovery<MetaInfo> serviceDiscovery;
 
-    private String connStr = "localhost:2181";
+    private String address = "localhost:2181";
+
+    public void start() throws Exception {
+        CuratorFramework client = CuratorFrameworkFactory.newClient(address, new ExponentialBackoffRetry(1000, 3));
+        client.start();
+        serviceDiscovery = ServiceDiscoveryBuilder.builder(MetaInfo.class)
+                .client(client)
+                .basePath(Constants.BASE_PATH)
+                .serializer(serializer)
+                .build();
+
+        serviceDiscovery.start();
+    }
 
     @Override
     public void registerService(ServiceInstance service) throws Exception {
@@ -81,23 +92,11 @@ public class ZkServiceDiscovery extends AbstractServiceDiscovery<MetaInfo> imple
         }
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        CuratorFramework client = CuratorFrameworkFactory.newClient(connStr, new ExponentialBackoffRetry(1000, 3));
-        client.start();
-        serviceDiscovery = ServiceDiscoveryBuilder.builder(MetaInfo.class)
-                .client(client)
-                .basePath(Constants.BASE_PATH)
-                .serializer(serializer)
-                .build();
-        serviceDiscovery.start();
+    public String getAddress() {
+        return address;
     }
 
-    public String getConnStr() {
-        return connStr;
-    }
-
-    public void setConnStr(String connStr) {
-        this.connStr = connStr;
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

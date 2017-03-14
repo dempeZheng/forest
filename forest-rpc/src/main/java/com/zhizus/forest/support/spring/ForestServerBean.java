@@ -19,12 +19,9 @@ import com.zhizus.forest.transport.HttpServer;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.lang.reflect.Method;
@@ -33,13 +30,13 @@ import java.util.Set;
 /**
  * Created by Dempe on 2016/12/9.
  */
-public class ForestServerBean implements ApplicationContextAware, InitializingBean {
+public class ForestServerBean {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ForestServerBean.class);
 
     AnnotationProcessorsProvider processors = AnnotationProcessorsProvider.DEFAULT;
 
-    private ClassPathXmlApplicationContext context;
+    private ApplicationContext context;
 
     private ForestServerFactory factory;
 
@@ -47,7 +44,20 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
 
     private Set<String> serviceProviderKey = Sets.newHashSet();
 
-    private HttpServer httpServer;
+    private boolean startHttpServer;
+
+
+    public void start() throws InterruptedException {
+
+        ServerConfig serverConfig = context.getBean(ServerConfig.class);
+        factory = new ForestServerFactory(serverConfig);
+        register();
+        init();
+
+        if (startHttpServer) {
+            startHttp();
+        }
+    }
 
     public void init() {
         for (String beanName : context.getBeanNamesForAnnotation(ServiceExport.class)) {
@@ -104,45 +114,24 @@ public class ForestServerBean implements ApplicationContextAware, InitializingBe
         this.registry = registry;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext context) throws BeansException {
-        this.context = (ClassPathXmlApplicationContext) context;
+    public ApplicationContext getContext() {
+        return context;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        registerServerConfig();
-        registerMetricsInterceptor();
-        ServerConfig serverConfig = context.getBean(ServerConfig.class);
-        factory = new ForestServerFactory(serverConfig);
-        register();
-        init();
-
-        if (serverConfig.startHttpServer) {
-            startHttp();
-        }
+    public void setContext(ClassPathXmlApplicationContext context) {
+        this.context = context;
     }
 
     public void startHttp() throws InterruptedException {
-        httpServer = new HttpServer(context.getBean(ServerConfig.class));
-        httpServer.start();
+        new HttpServer(context.getBean(ServerConfig.class)).start();
     }
 
-    public void registerServerConfig() {
-        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
-        GenericBeanDefinition serverConfig = new GenericBeanDefinition();
-        //参数参考上面配置文件里面
-        serverConfig.setBeanClass(ServerConfig.class);
-        //注册
-        beanFactory.registerBeanDefinition("serverConfig", serverConfig);
+
+    public boolean isStartHttpServer() {
+        return startHttpServer;
     }
 
-    public void registerMetricsInterceptor() {
-        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
-        GenericBeanDefinition metricInterceptor = new GenericBeanDefinition();
-        //参数参考上面配置文件里面
-        metricInterceptor.setBeanClass(MetricInterceptor.class);
-        //注册
-        beanFactory.registerBeanDefinition("metricInterceptor", metricInterceptor);
+    public void setStartHttpServer(boolean startHttpServer) {
+        this.startHttpServer = startHttpServer;
     }
 }

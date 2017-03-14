@@ -3,12 +3,14 @@ package com.zhizus.forest.common.registry.impl;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.zhizus.forest.common.registry.AbstractServiceDiscovery;
-import com.zhizus.forest.common.registry.AbstractServiceEventListener;
 import com.zhizus.forest.common.registry.IServiceEventListener;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.x.discovery.ServiceInstance;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by Dempe on 2016/12/8.
@@ -21,6 +23,13 @@ public class LocalServiceDiscovery<T> extends AbstractServiceDiscovery<T> {
 
     public LocalServiceDiscovery(String address) {
         this.address = address;
+    }
+
+    public LocalServiceDiscovery() {
+    }
+
+    public void start() throws Exception {
+
     }
 
     public void registerLocal(String serviceName, String address) throws Exception {

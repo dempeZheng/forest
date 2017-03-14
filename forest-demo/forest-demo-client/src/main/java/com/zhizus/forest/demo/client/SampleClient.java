@@ -15,9 +15,9 @@ import java.util.concurrent.Executors;
 public class SampleClient {
 
     public static void main(String[] args) throws Exception {
-        serviceTest();
-//        serviceSpringTest();
-        benchmarkTest();
+//        serviceTest();
+        serviceSpringTest();
+//        benchmarkTest();
 
     }
 
