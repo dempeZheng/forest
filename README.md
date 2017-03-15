@@ -107,14 +107,27 @@ public class SampleServiceImpl implements SampleService {
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns="http://www.springframework.org/schema/beans"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:forest="http://api.zhizus.com/schema/forest"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans.xsd
-	http://www.springframework.org/schema/context
-	http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://api.zhizus.com/schema/forest http://api.zhizus.com/schema/forest.xsd">
 
     <context:component-scan base-package="com.zhizus.forest.demo"/>
-   <bean id="forestServer" class="com.zhizus.forest.support.spring.ForestServerBean"/>
+
+    <context:property-placeholder location="classpath:/*.properties"/>
+
+
+    <forest:registry id="registry" regProtocol="local"  name="registry" address="127.0.0.1:2181"/>
+    <!--<forest:registry id="registry" regProtocol="zookeeper" name="registry" address="127.0.0.1:2181"/>-->
+
+    <forest:server id="forestServer" registry="registry" startHttpServer="true"/>
+
+    <forest:interceptors>
+        <forest:interceptor id="metricInterceptor" class="com.zhizus.forest.support.MetricInterceptor" auto-match="public *(*)"/>
+    </forest:interceptors>
+
 
 </beans>
 ```
@@ -132,22 +145,35 @@ public class SampleServer {
 
 ## 4.客户端开发
 
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:forest="http://api.zhizus.com/schema/forest"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://api.zhizus.com/schema/forest http://api.zhizus.com/schema/forest.xsd">
+
+    <context:component-scan base-package="com.zhizus.forest.demo.client"/>
+
+    <forest:registry id="registry" regProtocol="local" name="registry" address="127.0.0.1:9999"/>
+
+    <forest:referer id="sampleService" interface="com.zhizus.forest.demo.api.SampleService" registry="registry">
+        <forest:method name="echo" timeout="5000" serializeType="Fastjson"/>
+        <forest:method name="say" timeout="5000" serializeType="Fastjson" compressType="GZIP"/>
+    </forest:referer>
+
+
+</beans>
+```
+
 ```java
-  final SampleService sampleService = Forest.from(SampleService.class);
-        ExecutorService executorService = Executors.newCachedThreadPool();
-        for (int i = 0; i < 20; i++) {
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < 1000000000; i++) {
-                        String say = sampleService.echo("hello");
-                        if (i % 10000 == 0) {
-                            System.out.println(say);
-                        }
-                    }
-                }
-            });
-        }
+ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-client.xml"});
+     SampleService bean = (SampleService) context.getBean("sampleService");
+     String test = bean.say("hello");
 ```
 
 ### Console输出
