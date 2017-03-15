@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 @Component
 public class SampleServiceCommand {
 
-    @Resource(name = "sampleServiceProxy")
+    @Resource(name = "sampleService")
     SampleService remoteServiceRef;
 
 

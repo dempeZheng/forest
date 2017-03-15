@@ -28,7 +28,7 @@ public class LocalServiceDiscovery<T> extends AbstractServiceDiscovery<T> {
     public LocalServiceDiscovery() {
     }
 
-    public void start() throws Exception {
+    public void start()  {
 
     }
 

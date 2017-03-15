@@ -5,7 +5,7 @@ import com.zhizus.forest.common.codec.compress.Compress;
 import com.zhizus.forest.common.codec.compress.GZipCompress;
 import com.zhizus.forest.common.codec.compress.NoCompress;
 import com.zhizus.forest.common.codec.compress.SnappyCompress;
-import com.zhizus.forest.common.util.ForestUtil;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Dempe on 2016/12/7.
@@ -18,6 +18,17 @@ public enum CompressType {
 
     CompressType(byte value) {
         this.value = value;
+    }
+
+    public static CompressType getCompressTypeByName(String name) {
+        if (StringUtils.equals(GZIP.name(), name)) {
+            return GZIP;
+        } else if (StringUtils.equals(Snappy.name(), name)) {
+            return Snappy;
+        } else if (StringUtils.equals(None.name(), name)) {
+            return None;
+        }
+        return null;
     }
 
     public static Compress getCompressTypeByValueByExtend(byte extend) {

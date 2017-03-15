@@ -35,7 +35,6 @@ public class GZipCompress implements Compress {
         if (array == null) {
             return null;
         }
-
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ByteArrayInputStream in = new ByteArrayInputStream(array);
 

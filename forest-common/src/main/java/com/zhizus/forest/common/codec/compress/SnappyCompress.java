@@ -17,7 +17,6 @@ public class SnappyCompress implements Compress {
         return Snappy.compress(array);
     }
 
-
     public byte[] unCompress(byte[] array) throws IOException {
         if (array == null) {
             return null;

@@ -11,6 +11,7 @@ public class ForestNamespaceHandler extends NamespaceHandlerSupport {
     public void init() {
         registerBeanDefinitionParser("interceptors", new InterceptorBeanDefinitionParser());
         registerBeanDefinitionParser("registry", new RegistryBeanDefinitionParser());
+        registerBeanDefinitionParser("referer", new RefererBeanDefinitionParser());
         registerBeanDefinitionParser("server", new ForestServerBeanDefinitionParser());
     }
 }

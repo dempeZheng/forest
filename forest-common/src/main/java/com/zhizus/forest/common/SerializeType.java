@@ -5,6 +5,7 @@ import com.zhizus.forest.common.codec.serialize.FastJsonSerialization;
 import com.zhizus.forest.common.codec.serialize.Hessian2Serialization;
 import com.zhizus.forest.common.codec.serialize.KryoSerialization;
 import com.zhizus.forest.common.codec.serialize.Serialization;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Dempe on 2016/12/7.
@@ -17,6 +18,17 @@ public enum SerializeType {
 
     SerializeType(byte value) {
         this.value = value;
+    }
+
+    public static SerializeType getSerializeTypeByName(String name) {
+        if (StringUtils.equals(Kyro.name(), name)) {
+            return Kyro;
+        } else if (StringUtils.equals(Fastjson.name(), name)) {
+            return Fastjson;
+        } else if (StringUtils.equals(Hession2.name(), name)) {
+            return Hession2;
+        }
+        return null;
     }
 
     public static Serialization getSerializationByExtend(byte value) {

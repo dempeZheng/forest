@@ -91,17 +91,23 @@ public class MethodConfig {
         }
 
         public Builder withSerializeType(SerializeType serializeType) {
-            config.setSerializeType(serializeType);
+            if (serializeType != null) {
+                config.setSerializeType(serializeType);
+            }
             return this;
         }
 
         public Builder withCompressType(CompressType compressType) {
-            config.setCompressType(compressType);
+            if (compressType != null) {
+                config.setCompressType(compressType);
+            }
             return this;
         }
 
         public Builder withTimeout(int timeout) {
-            config.setTimeout(timeout);
+            if (timeout > 0) {
+                config.setTimeout(timeout);
+            }
             return this;
         }
 

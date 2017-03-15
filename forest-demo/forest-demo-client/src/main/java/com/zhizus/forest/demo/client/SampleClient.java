@@ -39,7 +39,7 @@ public class SampleClient {
 
     public static void serviceSpringTest() {
         ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-client.xml"});
-        SampleService bean = (SampleService) context.getBean("sampleServiceProxy");
+        SampleService bean = (SampleService) context.getBean("sampleService");
         String test = bean.say("hello");
         System.out.println(test);
     }

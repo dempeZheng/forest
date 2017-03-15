@@ -21,6 +21,8 @@ public abstract class AbstractServiceDiscovery<T> implements IServiceDiscovery<T
 
     }
 
+    public abstract void start() throws Exception;
+
     @Override
     public void subscribe(String serviceName, AbstractServiceEventListener<T> listener) {
         List<AbstractServiceEventListener<T>> listenerList = listenerForNameMap.get(serviceName);

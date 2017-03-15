@@ -3,7 +3,6 @@ package com.zhizus.forest.client.proxy;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.zhizus.forest.client.cluster.FailoverCheckingStrategy;
-import com.zhizus.forest.client.cluster.IHaStrategy;
 import com.zhizus.forest.client.cluster.ha.AbstractHAStrategy;
 import com.zhizus.forest.client.cluster.ha.FailFastStrategy;
 import com.zhizus.forest.client.cluster.ha.FailoverStrategy;
@@ -30,7 +29,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by Dempe on 2016/12/7.
@@ -82,8 +80,8 @@ public class ForestDynamicProxy implements InvocationHandler {
                 break;
             // TODO: 2016/12/20
         }
-        // 订阅事件，onRemove事件时，清楚keyedPool里面连接
-        discovery.subscribe(serviceName,haStrategy);
+        // 订阅事件，onRemove事件时，
+        discovery.subscribe(serviceName, haStrategy);
 
     }
 
@@ -179,8 +177,7 @@ public class ForestDynamicProxy implements InvocationHandler {
                     .loadWithMethodConfig(methodConfig).make();
 
         }
-        Message message = new Message(header,
-                new Request(serviceName, methodName, args));
+        Message message = new Message(header, new Request(serviceName, methodName, args));
         return haStrategy.call(message, loadBalance);
 
     }
