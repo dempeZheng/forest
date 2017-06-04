@@ -16,7 +16,7 @@
 
     <forest:registry id="registry" regProtocol="local" name="registry" address="127.0.0.1:9999"/>
 
-    <forest:referer id="sampleService" interface="com.zhizus.forest.demo.api.SampleService" registry="registry">
+    <forest:referer id="sampleService" interface="com.zhizus.forest.demo.api.FooService" registry="registry">
         <forest:method name="echo" timeout="5000" serializeType="Fastjson"/>
         <forest:method name="say" timeout="5000" serializeType="Fastjson" compressType="GZIP"/>
     </forest:referer>
