@@ -54,7 +54,7 @@ public class ForestServiceAutoConfiguration {
     }
 
     @Configuration
-    @AutoConfigureAfter({ThriftService.class})
+    @AutoConfigureAfter({ForestService.class})
     public static class Registrar extends RegistrationBean implements ApplicationContextAware {
 
         private static final String TYPE_THRIFT = "thrift";
@@ -79,8 +79,8 @@ public class ForestServiceAutoConfiguration {
          * @param servletContext
          */
         private void addThrift(ServletContext servletContext) {
-            for (String beanName : applicationContext.getBeanNamesForAnnotation(ThriftService.class)) {
-                ThriftService annotation = applicationContext.findAnnotationOnBean(beanName, ThriftService.class);
+            for (String beanName : applicationContext.getBeanNamesForAnnotation(ForestService.class)) {
+                ForestService annotation = applicationContext.findAnnotationOnBean(beanName, ForestService.class);
                 try {
                     registerThriftHandler(servletContext, annotation.value(), applicationContext.getBean(beanName));
                 } catch (BeansException | ClassNotFoundException
