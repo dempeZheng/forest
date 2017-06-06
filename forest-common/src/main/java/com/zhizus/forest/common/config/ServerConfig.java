@@ -47,6 +47,4 @@ public class ServerConfig {
     public String zkBasePath;
 
 
-
-
 }

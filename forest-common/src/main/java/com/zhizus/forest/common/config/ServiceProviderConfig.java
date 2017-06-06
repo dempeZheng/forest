@@ -86,14 +86,17 @@ public class ServiceProviderConfig {
             config.setConnectionTimeout(connectionTimeout);
             return this;
         }
-        public Builder withHaStrategyType(HaStrategyType type){
+
+        public Builder withHaStrategyType(HaStrategyType type) {
             config.setHaStrategyType(type);
             return this;
         }
-        public Builder withLoadBalanceType(LoadBalanceType type){
+
+        public Builder withLoadBalanceType(LoadBalanceType type) {
             config.setLoadBalanceType(type);
             return this;
         }
+
         public Builder withMethodConfig(String methodName, MethodConfig methodConfig) {
             config.registerMethodConfig(methodName, methodConfig);
             return this;

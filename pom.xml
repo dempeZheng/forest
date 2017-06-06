@@ -56,7 +56,6 @@
         <netty.groupId>io.netty</netty.groupId>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.source.jdk>1.7</java.source.jdk>
-        <spring.version>4.2.5.RELEASE</spring.version>
         <snappy-java.version>1.1.1.6</snappy-java.version>
         <org.slf4j.version>1.7.5</org.slf4j.version>
         <apache.curator.version>2.7.1</apache.curator.version>
@@ -172,16 +171,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>

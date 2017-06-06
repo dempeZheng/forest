@@ -3,6 +3,7 @@ package com.zhizus.forest.demo.impl;
 
 import com.zhizus.forest.common.annotation.ForestService;
 import com.zhizus.forest.demo.api.FooService;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Dempe on 2016/12/7.

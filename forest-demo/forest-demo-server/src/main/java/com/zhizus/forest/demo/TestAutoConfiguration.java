@@ -1,4 +1,4 @@
-package com.zhizus.forest.common.config;
+package com.zhizus.forest.demo;
 
 import com.zhizus.forest.common.annotation.ForestService;
 import org.springframework.aop.framework.ProxyFactory;
@@ -20,8 +20,7 @@ import javax.servlet.ServletException;
  */
 @Configuration
 @ConditionalOnClass(ForestService.class)
-//@ConditionalOnWebApplication
-public class ForestServiceAutoConfiguration {
+public class TestAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ForestConfiguration.class)
