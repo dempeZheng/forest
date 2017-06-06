@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Configuration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
-import java.lang.reflect.Constructor;
 
 /**
  * Created by dempezheng on 2017/6/5.
@@ -31,7 +30,7 @@ public class ForestServiceAutoConfiguration {
 
 
     public interface ThriftConfigurer {
-        void configureProxyFactory(ProxyFactory proxyFactory , String path , String type);
+        void configureProxyFactory(ProxyFactory proxyFactory, String path, String type);
     }
 
     @Bean
@@ -48,9 +47,9 @@ public class ForestServiceAutoConfiguration {
 
     public static class DefaultThriftConfigurer implements ThriftConfigurer {
 
-        public void configureProxyFactory(ProxyFactory proxyFactory ,  String path , String type) {
+        public void configureProxyFactory(ProxyFactory proxyFactory, String path, String type) {
             proxyFactory.setOptimize(true);
-            proxyFactory.addAdvice(new CatServerMethodInterceptor(path , type));
+            proxyFactory.addAdvice(new CatServerMethodInterceptor(path, type));
         }
     }
 
@@ -58,7 +57,7 @@ public class ForestServiceAutoConfiguration {
     @AutoConfigureAfter({ThriftService.class})
     public static class Registrar extends RegistrationBean implements ApplicationContextAware {
 
-        private static final String TYPE_THRIFT = "thrift" ;
+        private static final String TYPE_THRIFT = "thrift";
 
 
         ApplicationContext applicationContext;
@@ -76,9 +75,7 @@ public class ForestServiceAutoConfiguration {
         }
 
 
-
         /**
-         *
          * @param servletContext
          */
         private void addThrift(ServletContext servletContext) {
@@ -135,7 +132,7 @@ public class ForestServiceAutoConfiguration {
                 throw new IllegalStateException("No Thrift Ifaces found on handler");
             }
 
-            handler = wrapHandler(ifaceClass, handler , urls[0]  , TYPE_THRIFT);
+            handler = wrapHandler(ifaceClass, handler, urls[0], TYPE_THRIFT);
 
             Constructor<TProcessor> processorConstructor = processorClass.getConstructor(ifaceClass);
 
@@ -147,7 +144,7 @@ public class ForestServiceAutoConfiguration {
 
             ServletRegistration.Dynamic registration = servletContext.addServlet(servletBeanName, servlet);
 
-            if(urls != null && urls.length > 0) {
+            if (urls != null && urls.length > 0) {
                 registration.addMapping(urls);
             } else {
                 registration.addMapping("/" + serviceClass.getSimpleName());
@@ -155,13 +152,13 @@ public class ForestServiceAutoConfiguration {
         }
 
         private Object wrapHandler(Class<?> ifaceClass, Object handler,
-                                   String path , String type) {
+                                   String path, String type) {
             ProxyFactory proxyFactory = new ProxyFactory(ifaceClass, new SingletonTargetSource(handler));
 
-            thriftConfigurer.configureProxyFactory(proxyFactory , path , type);
+            thriftConfigurer.configureProxyFactory(proxyFactory, path, type);
             //TODO remove from here?
             proxyFactory.setFrozen(true);
-            return   proxyFactory.getProxy();
+            return proxyFactory.getProxy();
         }
 
         protected TServlet getServlet(TProcessor processor, TProtocolFactory protocolFactory) {
@@ -171,7 +168,7 @@ public class ForestServiceAutoConfiguration {
         @Override
         public void setApplicationContext(ApplicationContext applicationContext)
                 throws BeansException {
-            this.applicationContext = applicationContext ;
+            this.applicationContext = applicationContext;
         }
     }
 
