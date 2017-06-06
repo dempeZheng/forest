@@ -85,7 +85,6 @@ public class ForestServiceAutoConfiguration {
                     registerThriftHandler(servletContext, annotation.value(), applicationContext.getBean(beanName));
                 } catch (BeansException | ClassNotFoundException
                         | NoSuchMethodException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
