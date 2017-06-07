@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.zhizus.forest.common.config.ForestServiceAutoConfiguration
