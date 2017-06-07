@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.kugou.rpc.server.thrift.ThriftAutoConfiguration,com.kugou.rpc.server.web.AutoConfiguration,\
+com.kugou.rpc.server.JettyServerFactory,com.kugou.rpc.client.ThriftClientAutoConfiguration
