@@ -1,4 +1,4 @@
-package com.zhizus.forest.rpc.support;
+package com.zhizus.forest.rpc.annotation;
 
 import java.lang.annotation.*;
 
